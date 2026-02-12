@@ -92,3 +92,30 @@ class LogoutView(View):
         messages.success(request, f'¡Hasta luego {username}! Tu sesión ha sido cerrada.')
         return redirect('web:home')
 
+
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+
+class CheckUserAPIView(View):
+    """
+    API endpoint para verificar disponibilidad de usuario/email en tiempo real.
+    """
+    def get(self, request, *args, **kwargs):
+        username = request.GET.get('username', None)
+        email = request.GET.get('email', None)
+        response = {
+            'is_taken': False
+        }
+        
+        if username:
+            if User.objects.filter(username__iexact=username).exists():
+                response['is_taken'] = True
+                response['error_message'] = 'Este nombre de usuario ya está en uso.'
+        
+        elif email:
+            if User.objects.filter(email__iexact=email).exists():
+                response['is_taken'] = True
+                response['error_message'] = 'Este correo electrónico ya está registrado.'
+        
+        return JsonResponse(response)
+

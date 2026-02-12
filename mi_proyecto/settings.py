@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # Local apps - Usar apps.py config para buenas prácticas
-    'login.apps.LoginConfig',
+    'apps.login.apps.LoginConfig',
     'web.apps.WebConfig',
 ]
 

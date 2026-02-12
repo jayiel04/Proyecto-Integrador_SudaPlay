@@ -15,7 +15,7 @@ urlpatterns = [
     
     # App URLs
     path('', include('web.urls')),
-    path('auth/', include('login.urls')),
+    path('auth/', include('apps.login.urls')),
 ]
 
 # Servir archivos estáticos en desarrollo

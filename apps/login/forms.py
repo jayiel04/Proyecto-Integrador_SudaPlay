@@ -15,34 +15,20 @@ class RegisterForm(UserCreationForm):
     Extiende UserCreationForm con campos adicionales.
     """
     email = forms.EmailField(
+        label='Correo electrónico',
         required=True,
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
             'placeholder': 'Correo electrónico'
         })
     )
-    first_name = forms.CharField(
-        max_length=30,
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Nombre'
-        })
-    )
-    last_name = forms.CharField(
-        max_length=150,
-        required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Apellido'
-        })
-    )
     username = forms.CharField(
+        label='Apodo',
         max_length=150,
         required=True,
         widget=forms.TextInput(attrs={
             'class': 'form-control',
-            'placeholder': 'Nombre de usuario'
+            'placeholder': 'Apodo'
         })
     )
     password1 = forms.CharField(
@@ -62,7 +48,7 @@ class RegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        fields = ('username', 'email', 'password1', 'password2')
 
     def clean_email(self):
         """Validar que el email no esté ya registrado."""
