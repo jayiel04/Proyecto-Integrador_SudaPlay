@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Iniciar Sesión - Firegames{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Iniciar Sesión</h1>
+            <p>Bienvenido de vuelta</p>
+        </div>
+
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="form-error">
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="remember-forgot">
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember" style="margin: 0;">Recuérdame</label>
+                </div>
+                <a href="#forgot">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+        </form>
+
+        <div class="divider">
+            <span>O continúa con</span>
+        </div>
+
+        <div class="social-login">
+            <button class="social-btn" title="Google" type="button">G</button>
+            <button class="social-btn" title="Facebook" type="button">f</button>
+            <button class="social-btn" title="GitHub" type="button">◆</button>
+        </div>
+
+        <div class="signup-link">
+            ¿No tienes cuenta? <a href="{% url 'login:register' %}">Regístrate aquí</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

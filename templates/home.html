@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio - Firegames{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="welcome-card">
+        <h1>¡Bienvenido {{ user.first_name|default:user.username }}!</h1>
+        <p>Estás conectado a tu cuenta.</p>
+        
+        <div class="dashboard">
+            <p>Esta es tu página de inicio. Aquí puedes agregar más contenido.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

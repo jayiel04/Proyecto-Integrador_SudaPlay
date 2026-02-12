@@ -1,0 +1,61 @@
+# Entorno virtual
+venv/
+env/
+ENV/
+.venv
+
+# Base de datos
+*.sqlite3
+*.db
+*.sqlite
+
+# Archivos estáticos
+staticfiles/
+/static/
+/media/
+
+# Caché Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Archivos temporales
+*.tmp
+*.bak
+.thumbs.db
+
+# Secrets
+secrets.json
+private_key.pem
+
+# Deploy
+*.pem
+.deploiment/

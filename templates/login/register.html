@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Registrarse - Firegames{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card">
+        <div class="login-header">
+            <h1>Crear Cuenta</h1>
+            <p>Únete a nuestra comunidad</p>
+        </div>
+
+        <form method="POST" class="login-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="form-error">
+                            {% for error in field.errors %}
+                                <p>✗ {{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="form-info">
+                <p class="help-text">
+                    <strong>Requisitos de contraseña:</strong>
+                    <ul style="margin: 5px 0; padding-left: 20px; font-size: 0.9em;">
+                        <li>Mínimo 8 caracteres</li>
+                        <li>No puede ser solo números</li>
+                        <li>No puede ser similar a tu nombre de usuario</li>
+                    </ul>
+                </p>
+            </div>
+
+            <button type="submit" class="btn-login">Crea tu Cuenta</button>
+        </form>
+
+        <div class="divider">
+            <span>O continúa con</span>
+        </div>
+
+        <div class="social-login">
+            <button class="social-btn" title="Google" type="button">G</button>
+            <button class="social-btn" title="Facebook" type="button">f</button>
+            <button class="social-btn" title="GitHub" type="button">◆</button>
+        </div>
+
+        <div class="signup-link">
+            ¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.form-info {
+    background-color: #f0f4ff;
+    border-left: 3px solid #3498db;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 15px 0;
+    font-size: 0.85em;
+}
+
+.help-text {
+    color: #555;
+    margin: 0;
+}
+
+.help-text ul {
+    color: #666;
+}
+</style>
+{% endblock %}
