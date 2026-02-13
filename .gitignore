@@ -9,10 +9,7 @@ ENV/
 *.db
 *.sqlite
 
-# Archivos estáticos
-staticfiles/
-/static/
-/media/
+
 
 # Caché Python
 __pycache__/
