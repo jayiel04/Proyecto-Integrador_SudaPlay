@@ -34,11 +34,34 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites', # <--- REVISA ESTA
+
+    # Allauth apps
+    'allauth',
+    'allauth.account', # <--- ESTA ES LA QUE CAUSA TU ERROR
+    'allauth.socialaccount',
     
-    # Local apps - Usar apps.py config para buenas prácticas
+    # Proveedores
+    'allauth.socialaccount.providers.google',
+    # 'allauth.socialaccount.providers.facebook',
+    
+    # Tu app (asegúrate de que el nombre coincida con tu carpeta)
+    'mi_proyecto', 
+    #Local apps - Usar apps.py config para buenas prácticas
     'apps.login.apps.LoginConfig',
     'web.apps.WebConfig',
 ]
+
+# Esto debe estar fuera de la lista, al final del archivo
+SITE_ID = 1
+    
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# LOGIN_REDIRECT_URL and LOGOUT_REDIRECT_URL moved to the bottom
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'mi_proyecto.urls'
@@ -63,6 +87,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                    
             ],
         },
     },
@@ -135,6 +161,31 @@ if not DEBUG:
 LOGIN_URL = 'login:login'
 LOGIN_REDIRECT_URL = 'web:home'
 LOGOUT_REDIRECT_URL = 'web:home'
+
+# Google OAuth Settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+            'prompt': 'select_account',
+        }
+    }
+}
+
+# Allauth Settings
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_ADAPTER = 'apps.login.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 
 
 # Default primary key field type

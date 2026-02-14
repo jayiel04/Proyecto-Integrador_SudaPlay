@@ -14,17 +14,17 @@
             {% csrf_token %}
 
             {% for field in form %}
-                <div class="form-group">
-                    {{ field.label_tag }}
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="form-error">
-                            {% for error in field.errors %}
-                                <p>{{ error }}</p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                <div class="form-error">
+                    {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
+                {% endif %}
+            </div>
             {% endfor %}
 
             <div class="remember-forgot">
@@ -43,8 +43,15 @@
         </div>
 
         <div class="social-login">
-            <button class="social-btn" title="Google" type="button">G</button>
+
+            {% load socialaccount %}
+            <a href="{% provider_login_url 'google' %}" class="social-btn" title="Google"
+                style="text-decoration: none; display: inline-block; line-height: normal;">G</a>
             <button class="social-btn" title="Facebook" type="button">f</button>
+            {% if user.is_authenticated %}
+            <p>¡Bienvenido, {{ user.username }}!</p>
+            <a href="{% url 'account_logout' %}">Cerrar sesión</a>
+            {% endif %}
         </div>
 
         <div class="signup-link">
