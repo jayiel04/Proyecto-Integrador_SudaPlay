@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}SudaPlay - Tu Arena de Juegos{% endblock %}
+
+{% block content %}
+<div class="container"
+    style="max-width: 1200px; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+    <div class="welcome-header" style="margin-bottom: 40px; text-align: left; width: 100%;">
+        <h1 style="font-size: 3rem; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--neon-green);">
+            ¡HOLA, {{ user.username }}!
+        </h1>
+        <p style="color: var(--neon-green); font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase;">
+            Estamos listos para la partida.
+        </p>
+    </div>
+
+    <div class="game-grid">
+        <!-- Juego 1 -->
+        <div class="game-item">
+            <div style="position: absolute; top: 10px; right: 10px; z-index: 2;">
+                <span class="badge badge-hot">¡En Vivo!</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=800&q=80"
+                alt="Cyberpunk" class="game-img">
+            <div class="game-info">
+                <div class="game-title">Neon Odyssey</div>
+                <div class="game-stats">
+                    <span><i class="fa fa-users"></i> 15k Jugando</span>
+                    <span><i class="fa fa-star" style="color: gold;"></i> 4.9</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Juego 2 -->
+        <div class="game-item">
+            <div style="position: absolute; top: 10px; right: 10px; z-index: 2;">
+                <span class="badge badge-new">Nuevo</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1552824734-8c60e4010a71?auto=format&fit=crop&w=800&q=80"
+                alt="Space" class="game-img">
+            <div class="game-info">
+                <div class="game-title">Stellar Siege</div>
+                <div class="game-stats">
+                    <span><i class="fa fa-users"></i> 8k Jugando</span>
+                    <span><i class="fa fa-star" style="color: gold;"></i> 4.7</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Juego 3 -->
+        <div class="game-item">
+            <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=800&q=80"
+                alt="Arena" class="game-img">
+            <div class="game-info">
+                <div class="game-title">Cyber Strike</div>
+                <div class="game-stats">
+                    <span><i class="fa fa-users"></i> 12k Jugando</span>
+                    <span><i class="fa fa-star" style="color: gold;"></i> 4.8</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Juego 4 -->
+        <div class="game-item">
+            <img src="https://images.unsplash.com/photo-1612287230202-1ff1d85d1bdf?auto=format&fit=crop&w=800&q=80"
+                alt="Racing" class="game-img">
+            <div class="game-info">
+                <div class="game-title">Vortex Velocity</div>
+                <div class="game-stats">
+                    <span><i class="fa fa-users"></i> 5k Jugando</span>
+                    <span><i class="fa fa-star" style="color: gold;"></i> 4.5</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
