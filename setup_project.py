@@ -75,13 +75,40 @@ def setup():
     except Exception as e:
         print(f"⚠️  Error: {e}")
     
-    # 8. Recolectar estáticos (opcional)
-    print("\n🎨 Recolectando archivos estáticos...")
+    # 8. Configurar Google SocialApp (Nuevo)
+    print("\n⚙️  Configurando Google OAuth...")
     try:
-        execute_from_command_line(['manage.py', 'collectstatic', '--noinput'])
-        print("✅ Estáticos recolectados")
+        from allauth.socialaccount.models import SocialApp
+        from django.contrib.sites.models import Site
+        from decouple import config, UndefinedValueError
+
+        try:
+            client_id = config('GOOGLE_CLIENT_ID')
+            client_secret = config('GOOGLE_CLIENT_SECRET')
+
+            if client_id and client_id != 'tu-google-client-id.apps.googleusercontent.com':
+                # Asegurar que el sitio por defecto existe
+                site, created = Site.objects.get_or_create(id=1, defaults={'domain': 'localhost:8000', 'name': 'localhost'})
+                
+                # Crear o actualizar la aplicación social
+                app, created = SocialApp.objects.update_or_create(
+                    provider='google',
+                    defaults={
+                        'name': 'Google Login',
+                        'client_id': client_id,
+                        'secret': client_secret,
+                    }
+                )
+                app.sites.add(site)
+                print(f"✅ Google SocialApp {'creada' if created else 'actualizada'}")
+            else:
+                print("⚠️  GOOGLE_CLIENT_ID no configurado en .env. Se saltará este paso.")
+        except (UndefinedValueError, KeyError):
+            print("⚠️  Variables de Google OAuth no encontradas en .env. Se saltará este paso.")
     except Exception as e:
-        print(f"⚠️  Error: {e}")
+        print(f"⚠️  Error configurando Google OAuth: {e}")
+
+    # 9. Recolectar estáticos (opcional)
     
     print("\n" + "=" * 60)
     print("✅ CONFIGURACIÓN COMPLETADA")
