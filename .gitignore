@@ -27,10 +27,8 @@ staticfiles/
 media/
 
 # Environments
-.env
-.venv
+
 venv/
-ENV/
 
 # IDEs
 .vscode/

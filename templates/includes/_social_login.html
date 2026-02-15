@@ -4,13 +4,17 @@
 </div>
 
 <div class="social-login">
-    {# Usamos un formulario POST para saltar la página de confirmación intermedia de Allauth #}
-    <form method="post" action="{% provider_login_url 'google' %}" id="google-login-form">
-        {% csrf_token %}
-        <button type="submit" class="social-btn google-btn-icon" title="Iniciar sesión con Google">
-            <i class="fab fa-google"></i>
-        </button>
-    </form>
+    {% get_providers as socialaccount_providers %}
+    {% for provider in socialaccount_providers %}
+        {% if provider.id == "google" %}
+            <form method="post" action="{% provider_login_url provider.id %}" id="google-login-form">
+                {% csrf_token %}
+                <button type="submit" class="social-btn google-btn-icon" title="Iniciar sesión con Google">
+                    <i class="fab fa-google"></i>
+                </button>
+            </form>
+        {% endif %}
+    {% endfor %}
 </div>
 
 <style>

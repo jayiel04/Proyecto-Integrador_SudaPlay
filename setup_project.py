@@ -102,9 +102,12 @@ def setup():
                 app.sites.add(site)
                 print(f"✅ Google SocialApp {'creada' if created else 'actualizada'}")
             else:
-                print("⚠️  GOOGLE_CLIENT_ID no configurado en .env. Se saltará este paso.")
+                print("\n❌ ERROR: GOOGLE_CLIENT_ID no configurado en .env")
+                print("👉 Asegúrate de copiar las credenciales reales en tu archivo .env")
+                print("👉 Se saltará la configuración de Google OAuth por ahora.")
         except (UndefinedValueError, KeyError):
-            print("⚠️  Variables de Google OAuth no encontradas en .env. Se saltará este paso.")
+            print("\n❌ ERROR: No se encontraron las variables de Google en el .env")
+            print("👉 Verifica que el archivo .env exista y contenga GOOGLE_CLIENT_ID y GOOGLE_CLIENT_SECRET")
     except Exception as e:
         print(f"⚠️  Error configurando Google OAuth: {e}")
 
