@@ -1,0 +1,53 @@
+{% load socialaccount %}
+<div class="divider">
+    <span>O continúa con</span>
+</div>
+
+<div class="social-login">
+    {# Usamos un formulario POST para saltar la página de confirmación intermedia de Allauth #}
+    <form method="post" action="{% provider_login_url 'google' %}" id="google-login-form">
+        {% csrf_token %}
+        <button type="submit" class="social-btn google-btn-icon" title="Iniciar sesión con Google">
+            <i class="fab fa-google"></i>
+        </button>
+    </form>
+</div>
+
+<style>
+    .social-login {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .google-btn-icon {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        width: 60px;
+        /* Tamaño fijo para que sea circular */
+        height: 60px;
+        /* Tamaño fijo para que sea circular */
+        border-radius: 50% !important;
+        /* Circular perfecto */
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        padding: 0;
+        outline: none;
+    }
+
+    .google-btn-icon:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: var(--neon-green);
+        box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .google-btn-icon i {
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+    }
+</style>

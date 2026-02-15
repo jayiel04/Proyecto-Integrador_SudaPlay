@@ -28,5 +28,6 @@ class HomeView(TemplateView):
         """Pasar contexto adicional al template."""
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
+        context['username'] = self.request.user.username
         return context
 

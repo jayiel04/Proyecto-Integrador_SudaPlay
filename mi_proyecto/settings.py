@@ -34,20 +34,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites', # <--- REVISA ESTA
+    'django.contrib.sites',
 
     # Allauth apps
     'allauth',
-    'allauth.account', # <--- ESTA ES LA QUE CAUSA TU ERROR
+    'allauth.account',
     'allauth.socialaccount',
     
     # Proveedores
     'allauth.socialaccount.providers.google',
-    # 'allauth.socialaccount.providers.facebook',
     
-    # Tu app (asegúrate de que el nombre coincida con tu carpeta)
+    # Core and local apps
     'mi_proyecto', 
-    #Local apps - Usar apps.py config para buenas prácticas
     'apps.login.apps.LoginConfig',
     'web.apps.WebConfig',
 ]
@@ -171,7 +169,6 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
-            'prompt': 'select_account',
         }
     }
 }
@@ -180,12 +177,16 @@ SOCIALACCOUNT_PROVIDERS = {
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 SOCIALACCOUNT_ADAPTER = 'apps.login.adapters.CustomSocialAccountAdapter'
 SOCIALACCOUNT_LOGIN_ON_GET = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_AUTO_SIGNUP = False
+
+SOCIALACCOUNT_FORMS = {
+    'signup': 'apps.login.forms.CustomSocialSignupForm',
+}
 
 
 # Default primary key field type

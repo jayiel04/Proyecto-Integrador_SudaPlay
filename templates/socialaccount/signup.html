@@ -1,33 +1,33 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Crear Cuenta - SudaPlay{% endblock title %}
+{% block title %}Finalizar Registro - SudaPlay{% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="login-card">
         <div class="login-header">
-            <h1>Crear Cuenta</h1>
-            <p>Únete a nuestra comunidad de jugadores</p>
+            <h1>Finalizar Registro</h1>
+            <p>Configura tu identidad en SudaPlay</p>
         </div>
 
-        <form method="POST" class="login-form" id="register-form">
+        <form method="post" action="{% url 'socialaccount_signup' %}" class="login-form" id="signup-form">
             {% csrf_token %}
 
             {% for field in form %}
+            {% if field.name == 'email' %}
+            <input type="hidden" name="{{ field.name }}" id="id_email"
+                value="{{ field.value|default:field.initial|default:'' }}">
+            {% else %}
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">
-                    {% if field.name == 'username' %}Apodo (Gamer ID)
-                    {% elif field.name == 'email' %}Correo Electrónico
-                    {% elif field.name == 'password1' %}Contraseña
-                    {% elif field.name == 'password2' %}Confirmar Contraseña
+                    {% if field.name == 'username' %}Nombre de Usuario (Apodo)
+                    {% elif 'password' in field.name %}Nueva Contraseña
                     {% else %}{{ field.label }}{% endif %}
                 </label>
                 <div class="input-wrapper" id="wrapper-{{ field.auto_id }}">
                     {% if field.name == 'username' %}
                     <i class="fa fa-user input-icon"></i>
-                    {% elif field.name == 'email' %}
-                    <i class="fa fa-envelope input-icon"></i>
                     {% elif 'password' in field.name %}
                     <i class="fa fa-lock input-icon"></i>
                     {% endif %}
@@ -36,20 +36,21 @@
                 <div class="validation-msg" id="msg-{{ field.auto_id }}"></div>
                 {% if field.errors %}
                 <div class="form-error">
-                    {% for error in field.errors %}
-                    <p>✗ {{ error }}</p>
-                    {% endfor %}
+                    {% for error in field.errors %}<p>✗ {{ error }}</p>{% endfor %}
                 </div>
                 {% endif %}
             </div>
+            {% endif %}
             {% endfor %}
 
-            <button type="submit" class="btn-login" id="submit-btn">Crea tu Cuenta</button>
-        </form>
+            {% if redirect_field_value %}
+            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %}
 
-        <div class="signup-link">
-            ¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
-        </div>
+            <button type="submit" class="btn-login" id="submit-btn" style="margin-top: 20px;">
+                Crea tu Cuenta
+            </button>
+        </form>
     </div>
 </div>
 
@@ -99,22 +100,20 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const usernameInput = document.getElementById('id_username');
-        const emailInput = document.getElementById('id_email');
         const pass1Input = document.getElementById('id_password1');
         const pass2Input = document.getElementById('id_password2');
         const submitBtn = document.getElementById('submit-btn');
 
         let isUsernameValid = false;
-        let isEmailValid = false;
         let isPasswordValid = false;
         let passwordsMatch = false;
 
         function updateSubmitButton() {
-            submitBtn.disabled = !(isUsernameValid && isEmailValid && isPasswordValid && passwordsMatch);
+            submitBtn.disabled = !(isUsernameValid && isPasswordValid && passwordsMatch);
             submitBtn.style.opacity = submitBtn.disabled ? '0.5' : '1';
         }
 
-        // Validación de Apodo
+        // Validación de Username
         if (usernameInput) {
             usernameInput.addEventListener('input', async function () {
                 const value = this.value;
@@ -129,6 +128,7 @@
                     try {
                         const response = await fetch(`{% url 'login:check_availability' %}?username=${encodeURIComponent(value)}`);
                         const data = await response.json();
+
                         if (data.is_taken) {
                             msgDiv.innerHTML = '✗ Apodo ya en uso';
                             msgDiv.className = 'validation-msg visible msg-error';
@@ -142,44 +142,9 @@
                             wrapper.classList.remove('invalid-field');
                             isUsernameValid = true;
                         }
-                    } catch (err) { console.error(err); }
-                }
-                updateSubmitButton();
-            });
-        }
-
-        // Validación de Email
-        if (emailInput) {
-            emailInput.addEventListener('input', async function () {
-                const value = this.value;
-                const msgDiv = document.getElementById('msg-id_email');
-                const wrapper = document.getElementById('wrapper-id_email');
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-                if (!emailRegex.test(value)) {
-                    msgDiv.innerHTML = '✗ Formato de email inválido';
-                    msgDiv.className = 'validation-msg visible msg-error';
-                    wrapper.classList.add('invalid-field');
-                    wrapper.classList.remove('valid-field');
-                    isEmailValid = false;
-                } else {
-                    try {
-                        const response = await fetch(`{% url 'login:check_availability' %}?email=${encodeURIComponent(value)}`);
-                        const data = await response.json();
-                        if (data.is_taken) {
-                            msgDiv.innerHTML = '✗ Email ya registrado';
-                            msgDiv.className = 'validation-msg visible msg-error';
-                            wrapper.classList.add('invalid-field');
-                            wrapper.classList.remove('valid-field');
-                            isEmailValid = false;
-                        } else {
-                            msgDiv.innerHTML = '✓ Email disponible';
-                            msgDiv.className = 'validation-msg visible msg-success';
-                            wrapper.classList.add('valid-field');
-                            wrapper.classList.remove('invalid-field');
-                            isEmailValid = true;
-                        }
-                    } catch (err) { console.error(err); }
+                    } catch (err) {
+                        console.error('Error validation:', err);
+                    }
                 }
                 updateSubmitButton();
             });
@@ -192,7 +157,11 @@
                 const msgDiv = document.getElementById('msg-id_password1');
                 const wrapper = document.getElementById('wrapper-id_password1');
 
-                if (value.length < 8) {
+                if (value.length === 0) {
+                    msgDiv.classList.remove('visible');
+                    wrapper.classList.remove('valid-field', 'invalid-field');
+                    isPasswordValid = false;
+                } else if (value.length < 8) {
                     msgDiv.innerHTML = '✗ Mínimo 8 caracteres';
                     msgDiv.className = 'validation-msg visible msg-error';
                     wrapper.classList.add('invalid-field');
@@ -210,6 +179,7 @@
             });
         }
 
+        // Validación de Match
         function checkMatch() {
             if (!pass2Input) return;
             const p1 = pass1Input.value;
@@ -244,4 +214,4 @@
         }
     });
 </script>
-{% endblock content %}
+{% endblock %}

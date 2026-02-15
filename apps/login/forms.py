@@ -1,49 +1,33 @@
 """
-Formularios para la aplicación login.
-
-Incluye formularios personalizados con validaciones adicionales.
+Formularios para la aplicación login de SudaPlay.
+Incluye validaciones personalizadas y soporte para registro social.
 """
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-
+from allauth.socialaccount.forms import SignupForm
 
 class RegisterForm(UserCreationForm):
-    """
-    Formulario personalizado para registro de usuarios.
-    Extiende UserCreationForm con campos adicionales.
-    """
+    """Formulario para registro manual estándar."""
     email = forms.EmailField(
         label='Correo electrónico',
         required=True,
-        widget=forms.EmailInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Correo electrónico'
-        })
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo electrónico'})
     )
     username = forms.CharField(
         label='Apodo',
         max_length=150,
         required=True,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Apodo'
-        })
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apodo'})
     )
     password1 = forms.CharField(
         label='Contraseña',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Contraseña'
-        })
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contraseña'})
     )
     password2 = forms.CharField(
         label='Confirmar contraseña',
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Confirmar contraseña'
-        })
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar contraseña'})
     )
 
     class Meta:
@@ -51,29 +35,55 @@ class RegisterForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2')
 
     def clean_email(self):
-        """Validar que el email no esté ya registrado."""
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
             raise ValidationError('Este correo electrónico ya está registrado.')
         return email
 
     def clean_username(self):
-        """Validar que el username no esté ya registrado."""
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise ValidationError('Este nombre de usuario ya existe.')
         return username
 
     def clean(self):
-        """Validación adicional del formulario completo."""
         cleaned_data = super().clean()
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
-
-        if password1 and password2:
-            if password1 != password2:
+        p1 = cleaned_data.get('password1')
+        p2 = cleaned_data.get('password2')
+        if p1 and p2:
+            if p1 != p2:
                 self.add_error('password2', 'Las contraseñas no coinciden.')
-            elif len(password1) < 8:
+            elif len(p1) < 8:
                 self.add_error('password1', 'La contraseña debe tener al menos 8 caracteres.')
-
         return cleaned_data
+
+class CustomSocialSignupForm(SignupForm):
+    """Formulario para finalizar el registro social (Google)."""
+    password1 = forms.CharField(
+        label='Nueva Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Mínimo 8 caracteres', 'id': 'id_password1'}),
+        required=True
+    )
+    password2 = forms.CharField(
+        label='Confirmar Contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Repite tu contraseña', 'id': 'id_password2'}),
+        required=True
+    )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get('password1')
+        p2 = cleaned_data.get('password2')
+        if p1 and p2:
+            if p1 != p2:
+                self.add_error('password2', 'Las contraseñas no coinciden.')
+            elif len(p1) < 8:
+                self.add_error('password1', 'La contraseña debe tener al menos 8 caracteres.')
+        return cleaned_data
+
+    def save(self, request):
+        user = super().save(request)
+        password = self.cleaned_data.get('password1')
+        user.set_password(password)
+        user.save()
+        return user

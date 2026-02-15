@@ -1,9 +1,9 @@
 // Funcionalidad para cerrar mensajes
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const closeButtons = document.querySelectorAll('.close');
-    
+
     closeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             this.closest('.alert').style.display = 'none';
         });
     });
@@ -15,4 +15,25 @@ document.addEventListener('DOMContentLoaded', function() {
             alert.style.display = 'none';
         }, 5000);
     });
+
+    // Funcionalidad para mostrar el footer
+    const footer = document.querySelector('.footer');
+    let displayTimeout;
+
+    if (footer) {
+        const showFooter = () => {
+            footer.classList.add('show');
+            clearTimeout(displayTimeout);
+            displayTimeout = setTimeout(() => {
+                footer.classList.remove('show');
+            }, 2000); // Se oculta tras 2 segundos
+        };
+
+        // Mostrar al hacer scroll
+        window.addEventListener('scroll', showFooter, { passive: true });
+        document.body.addEventListener('scroll', showFooter, { passive: true });
+
+        // Mostrar al tocar la pantalla (para móviles)
+        window.addEventListener('touchstart', showFooter, { passive: true });
+    }
 });
