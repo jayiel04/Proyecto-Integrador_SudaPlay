@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from allauth.socialaccount.forms import SignupForm
+from .models import UserProfile
 
 class RegisterForm(UserCreationForm):
     """Formulario para registro manual estándar."""
@@ -86,4 +87,52 @@ class CustomSocialSignupForm(SignupForm):
         password = self.cleaned_data.get('password1')
         user.set_password(password)
         user.save()
+        return user
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    """Formulario para editar apodo/correo e imagen de perfil."""
+    avatar = forms.ImageField(
+        label='Imagen de perfil',
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'})
+    )
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        labels = {
+            'username': 'Apodo',
+            'email': 'Correo electrónico',
+        }
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apodo'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Correo electrónico'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.order_fields(['username', 'email', 'avatar'])
+
+    def clean_username(self):
+        username = self.cleaned_data.get('username', '').strip()
+        if User.objects.filter(username__iexact=username).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Este nombre de usuario ya existe.')
+        return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '').strip()
+        if User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk).exists():
+            raise ValidationError('Este correo electrónico ya está registrado.')
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if commit:
+            user.save()
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            avatar = self.cleaned_data.get('avatar')
+            if avatar:
+                profile.avatar = avatar
+                profile.save()
         return user

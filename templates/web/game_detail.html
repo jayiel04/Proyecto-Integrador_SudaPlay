@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ game.title }} - Detalle{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1100px; align-items: flex-start;">
+    <div class="login-card" style="max-width: 100%; width: 100%;">
+        <div style="display: grid; grid-template-columns: minmax(220px, 320px) 1fr; gap: 24px; align-items: start;">
+            <div>
+                <img src="{{ game.cover_image.url }}" alt="{{ game.title }}"
+                    style="width: 100%; border-radius: 12px; border: 1px solid rgba(0, 240, 255, 0.25); object-fit: cover;">
+            </div>
+            <div>
+                <h1 style="margin-bottom: 8px;">{{ game.title }}</h1>
+                <p style="color: var(--neon-green); margin-bottom: 10px;">
+                    Creador: <strong style="color: #fff;">{{ game.uploaded_by.username }}</strong>
+                </p>
+
+                <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; color: #c6ced8; font-size: 0.9rem;">
+                    <span><i class="fa fa-eye"></i> {{ game.views }} vistas</span>
+                    <span><i class="fa fa-download"></i> {{ game.downloads }} descargas</span>
+                    <span><i class="fa fa-star" style="color: gold;"></i> {{ game.rating }}</span>
+                </div>
+
+                <p style="color: #d2d8e0; line-height: 1.65; margin-bottom: 14px;">
+                    {{ game.description }}
+                </p>
+
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    {% if can_play %}
+                    <a href="{% url 'web:game_play' game.pk %}" class="btn-login" style="width: auto; margin: 0; padding: 10px 16px;">
+                        Jugar ahora
+                    </a>
+                    {% endif %}
+
+                    {% if game.game_file %}
+                    <a href="{% url 'web:game_download' game.pk %}" class="btn-login" {% if not user.is_authenticated %}data-login-required="true"{% endif %} style="width: auto; margin: 0; padding: 10px 16px;">
+                        Descargar
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'web:home' %}" class="btn-login"
+                        style="width: auto; margin: 0; padding: 10px 16px; text-decoration: none; background: transparent; color: var(--neon-green); border: 1px solid var(--neon-green);">
+                        Volver al catálogo
+                    </a>
+                </div>
+
+                {% if not game.is_approved and is_owner %}
+                <p style="margin-top: 12px; color: #ffae00;">
+                    Este juego todavía no está publicado para otros usuarios.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

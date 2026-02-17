@@ -6,14 +6,14 @@
 <div class="social-login">
     {% get_providers as socialaccount_providers %}
     {% for provider in socialaccount_providers %}
-        {% if provider.id == "google" %}
-            <form method="post" action="{% provider_login_url provider.id %}" id="google-login-form">
-                {% csrf_token %}
-                <button type="submit" class="social-btn google-btn-icon" title="Iniciar sesión con Google">
-                    <i class="fab fa-google"></i>
-                </button>
-            </form>
-        {% endif %}
+    {% if provider.id == "google" %}
+    <form method="post" action="{% provider_login_url provider.id %}" id="google-login-form">
+        {% csrf_token %}
+        <button type="submit" class="social-btn google-btn-icon" title="Iniciar sesión con Google">
+            <i class="fab fa-google"></i>
+        </button>
+    </form>
+    {% endif %}
     {% endfor %}
 </div>
 
@@ -47,7 +47,7 @@
     .google-btn-icon:hover {
         background: rgba(255, 255, 255, 0.1);
         border-color: var(--neon-green);
-        box-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
         transform: scale(1.1) rotate(5deg);
     }
 

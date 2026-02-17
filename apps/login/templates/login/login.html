@@ -4,7 +4,7 @@
 {% block title %}Iniciar Sesión - SudaPlay{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container auth-page-layout">
     <div class="login-card">
         <div class="login-header">
             <h1>Iniciar Sesión</h1>
@@ -23,7 +23,7 @@
                     <input type="checkbox" id="remember" name="remember">
                     <label for="remember" style="margin: 0;">Recuérdame</label>
                 </div>
-                <a href="#forgot">¿Olvidaste tu contraseña?</a>
+                <a href="{% url 'account_reset_password' %}">¿Olvidaste tu contraseña?</a>
             </div>
 
             <button type="submit" class="btn-login">Iniciar Sesión</button>
@@ -35,5 +35,26 @@
             ¿No tienes cuenta? <a href="{% url 'login:register' %}">Regístrate aquí</a>
         </div>
     </div>
+    {% comment %}
+    <aside class="auth-side-panel auth-carousel-panel">
+        <h2>Catalogo de juegos</h2>
+        <p>Explora estilos y categorias en un vistazo rapido.</p>
+        <div class="auth-carousel" style="--carousel-image: url('{% static 'img/register-catalog-collage.png' %}');">
+            <div class="auth-carousel-slide slice-1 is-active"></div>
+            <div class="auth-carousel-slide slice-2"></div>
+            <div class="auth-carousel-slide slice-3"></div>
+            <div class="auth-carousel-slide slice-4"></div>
+            <div class="auth-carousel-slide slice-5"></div>
+            <div class="auth-carousel-slide slice-6"></div>
+        </div>
+        <p class="auth-carousel-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus feugiat arcu id purus tempor, nec
+            ullamcorper elit aliquam.
+        </p>
+    </aside>
+    {% endcomment %}
 </div>
 {% endblock %}
+
+
+

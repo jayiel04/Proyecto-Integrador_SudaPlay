@@ -1,20 +1,15 @@
 {% extends "base.html" %}
-{% load static %}
 
-{% block title %}SudaPlay - Tu Arena de Juegos{% endblock %}
+{% block title %}Mis juegos - SudaPlay{% endblock %}
 
 {% block content %}
 <div class="container" style="max-width: 1200px; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
-    <div class="welcome-header" style="margin-bottom: 40px; text-align: left; width: 100%;">
-        <h1 style="font-size: 3rem; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--neon-green);">
-            {% if user.is_authenticated %}
-            Hola, {{ user.username }}!
-            {% else %}
-            Hola, jugador!
-            {% endif %}
+    <div class="welcome-header" style="margin-bottom: 30px; text-align: left; width: 100%;">
+        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--neon-green);">
+            Mis juegos
         </h1>
-        <p style="color: var(--neon-green); font-size: 1.2rem; letter-spacing: 1px; text-transform: uppercase;">
-            Estamos listos para la partida.
+        <p style="color: var(--neon-green); font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;">
+            Gestiona y revisa todos los juegos que has publicado.
         </p>
     </div>
 
@@ -28,14 +23,25 @@
     </div>
     {% endif %}
 
+    <div style="width: 100%; margin-bottom: 16px;">
+        <a href="{% url 'web:game_create' %}" class="btn-login" style="display: inline-block; width: auto; margin: 0; padding: 10px 16px;">
+            Subir nuevo juego
+        </a>
+    </div>
+
     <div class="game-grid">
         {% for game in games %}
         <div class="game-item" data-detail-url="{% url 'web:game_detail' game.pk %}" role="link" tabindex="0" aria-label="Ver detalles de {{ game.title }}">
-            {% if game.is_featured %}
-            <div style="position: absolute; top: 10px; right: 10px; z-index: 2;">
+            <div style="position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px;">
+                {% if game.is_featured %}
                 <span class="badge badge-hot">Destacado</span>
+                {% endif %}
+                {% if game.is_approved %}
+                <span class="badge badge-new">Publicado</span>
+                {% else %}
+                <span class="badge" style="background: #ffae00; color: #111;">Pendiente</span>
+                {% endif %}
             </div>
-            {% endif %}
 
             <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img">
 
@@ -45,8 +51,8 @@
                     {{ game.short_description|truncatechars:75 }}
                 </div>
                 <div class="game-stats">
-                    <span><i class="fa fa-download"></i> {{ game.downloads }} Descargas</span>
-                    <span><i class="fa fa-star" style="color: gold;"></i> {{ game.rating }}</span>
+                    <span><i class="fa fa-eye"></i> {{ game.views }} Vistas</span>
+                    <span><i class="fa fa-download"></i> {{ game.downloads }}</span>
                 </div>
 
                 <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link" style="display: inline-block; margin-top: 10px; font-size: 0.75rem; padding: 6px 10px;">Ver detalles</a>
@@ -54,11 +60,10 @@
         </div>
         {% empty %}
         <div class="login-card" style="max-width: 100%; width: 100%;">
-            <h2 style="margin-bottom: 8px;">Aun no hay juegos publicados</h2>
-            <p style="color: #bbb;">Todavía no hay juegos disponibles en el catálogo.</p>
+            <h2 style="margin-bottom: 8px;">Aún no has subido juegos</h2>
+            <p style="color: #bbb;">Usa el botón "Subir nuevo juego" para publicar el primero.</p>
         </div>
         {% endfor %}
     </div>
-
 </div>
 {% endblock %}

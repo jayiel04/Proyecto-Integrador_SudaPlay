@@ -4,7 +4,7 @@
 {% block title %}Crear Cuenta - SudaPlay{% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="container auth-page-layout">
     <div class="login-card">
         <div class="login-header">
             <h1>Crear Cuenta</h1>
@@ -17,7 +17,7 @@
             {% for field in form %}
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">
-                    {% if field.name == 'username' %}Apodo (Gamer ID)
+                    {% if field.name == 'username' %}Apodo
                     {% elif field.name == 'email' %}Correo Electrónico
                     {% elif field.name == 'password1' %}Contraseña
                     {% elif field.name == 'password2' %}Confirmar Contraseña
@@ -51,6 +51,25 @@
             ¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
         </div>
     </div>
+    {% comment %}
+    <aside class="auth-side-panel auth-carousel-panel">
+        <h2>Catalogo de juegos</h2>
+        <p>Explora estilos y categorias en un vistazo rapido.</p>
+        <div class="auth-carousel" id="register-carousel"
+            style="--carousel-image: url('{% static 'img/register-catalog-collage.png' %}');">
+            <div class="auth-carousel-slide slice-1 is-active"></div>
+            <div class="auth-carousel-slide slice-2"></div>
+            <div class="auth-carousel-slide slice-3"></div>
+            <div class="auth-carousel-slide slice-4"></div>
+            <div class="auth-carousel-slide slice-5"></div>
+            <div class="auth-carousel-slide slice-6"></div>
+        </div>
+        <p class="auth-carousel-description">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus feugiat arcu id purus tempor, nec
+            ullamcorper elit aliquam.
+        </p>
+    </aside>
+    {% endcomment %}
 </div>
 
 <style>
@@ -87,7 +106,7 @@
 
     .input-wrapper.valid-field {
         border-color: var(--neon-green) !important;
-        box-shadow: 0 0 15px rgba(57, 255, 20, 0.3) !important;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3) !important;
     }
 
     .input-wrapper.invalid-field {
@@ -242,6 +261,10 @@
                 updateSubmitButton();
             });
         }
+
     });
 </script>
 {% endblock content %}
+
+
+

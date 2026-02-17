@@ -12,11 +12,14 @@ from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.utils.decorators import method_decorator
 from django.contrib import messages
+from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import RegisterForm
+from .forms import RegisterForm, ProfileUpdateForm
+from .models import UserProfile
 
 
 class LoginView(FormView):
@@ -93,8 +96,34 @@ class LogoutView(View):
         return redirect('web:home')
 
 
-from django.http import JsonResponse
-from django.contrib.auth.models import User
+class ProfileUpdateView(FormView):
+    """
+    Vista para editar el perfil del usuario autenticado.
+    """
+    template_name = 'login/profile_edit.html'
+    form_class = ProfileUpdateForm
+    success_url = reverse_lazy('web:home')
+
+    @method_decorator(login_required(login_url='login:login'))
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'Perfil actualizado correctamente.')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        profile = UserProfile.objects.filter(user=self.request.user).first()
+        context['current_avatar_url'] = profile.avatar.url if profile and profile.avatar else ''
+        return context
+
 
 class CheckUserAPIView(View):
     """
