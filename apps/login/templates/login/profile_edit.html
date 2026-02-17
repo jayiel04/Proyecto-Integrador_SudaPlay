@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Editar Perfil - SudaPlay{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
+<style>
+    .avatar-preview-wrap {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 14px;
+    }
+
+    .avatar-preview-img {
+        width: 96px;
+        height: 96px;
+        object-fit: cover;
+        border-radius: 999px;
+        border: 2px solid rgba(0, 240, 255, 0.5);
+        background: rgba(255, 255, 255, 0.08);
+        cursor: pointer;
+    }
+
+    .avatar-cropper-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(2, 7, 15, 0.85);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 16px;
+    }
+
+    .avatar-cropper-modal.is-open {
+        display: flex;
+    }
+
+    .avatar-cropper-dialog {
+        width: min(92vw, 560px);
+        background: rgba(8, 16, 28, 0.98);
+        border: 1px solid rgba(0, 240, 255, 0.35);
+        border-radius: 12px;
+        padding: 14px;
+    }
+
+    .avatar-cropper-dialog h3 {
+        color: #fff;
+        font-size: 1rem;
+        margin: 0 0 10px 0;
+    }
+
+    .avatar-cropper-stage {
+        width: 100%;
+        height: min(62vh, 380px);
+        background: #07111f;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .avatar-cropper-stage img {
+        display: block;
+        max-width: 100%;
+    }
+
+    .avatar-cropper-actions {
+        margin-top: 12px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .avatar-cropper-btn {
+        border-radius: 8px;
+        padding: 8px 14px;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .avatar-cropper-btn.cancel {
+        background: rgba(255, 255, 255, 0.08);
+        color: #d9dee4;
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+
+    .avatar-cropper-btn.apply {
+        background: linear-gradient(135deg, var(--neon-green), var(--neon-emerald));
+        color: #001014;
+        font-weight: 700;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card" style="max-width: 520px;">
+        <div class="login-header">
+            <h1>Editar perfil</h1>
+            <p>Actualiza la información de tu cuenta</p>
+        </div>
+
+        <div class="avatar-preview-wrap">
+            {% if current_avatar_url %}
+            <img src="{{ current_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
+            {% else %}
+            <img src="{% static 'img/logo.svg' %}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
+            {% endif %}
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="login-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+            {% include "includes/_field.html" with field=field %}
+            {% endfor %}
+
+            <button type="submit" class="btn-login">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+
+<div id="avatar-cropper-modal" class="avatar-cropper-modal" aria-hidden="true">
+    <div class="avatar-cropper-dialog">
+        <h3>Ajustar imagen de perfil</h3>
+        <div class="avatar-cropper-stage">
+            <img id="avatar-cropper-image" alt="Recorte de avatar">
+        </div>
+        <div class="avatar-cropper-actions">
+            <button type="button" class="avatar-cropper-btn cancel" id="cancel-avatar-crop">Cancelar</button>
+            <button type="button" class="avatar-cropper-btn apply" id="apply-avatar-crop">Aplicar recorte</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const avatarInput = document.getElementById('id_avatar');
+        const modal = document.getElementById('avatar-cropper-modal');
+        const cropImage = document.getElementById('avatar-cropper-image');
+        const cancelBtn = document.getElementById('cancel-avatar-crop');
+        const applyBtn = document.getElementById('apply-avatar-crop');
+        const previewImg = document.getElementById('current-avatar-preview');
+
+        if (!avatarInput || !modal || !cropImage || !cancelBtn || !applyBtn || !previewImg) {
+            return;
+        }
+
+        let cropper = null;
+        let sourceObjectUrl = null;
+        let previewObjectUrl = null;
+
+        const closeCropperModal = () => {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        };
+
+        const openCropperWithFile = (file) => {
+            if (!file) {
+                alert('Selecciona una imagen primero.');
+                return;
+            }
+            if (typeof Cropper === 'undefined') {
+                alert('No se pudo cargar el recortador de imagen.');
+                return;
+            }
+
+            if (sourceObjectUrl) {
+                URL.revokeObjectURL(sourceObjectUrl);
+            }
+            sourceObjectUrl = URL.createObjectURL(file);
+            cropImage.src = sourceObjectUrl;
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        };
+
+        cropImage.addEventListener('load', function () {
+            if (cropper) {
+                cropper.destroy();
+            }
+            cropper = new Cropper(cropImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                dragMode: 'move',
+                autoCropArea: 1,
+                background: false,
+                responsive: true
+            });
+        });
+
+        previewImg.addEventListener('click', function () {
+            const file = avatarInput.files && avatarInput.files[0] ? avatarInput.files[0] : null;
+            if (file) {
+                openCropperWithFile(file);
+            } else {
+                avatarInput.click();
+            }
+        });
+
+        avatarInput.addEventListener('change', function () {
+            const file = avatarInput.files && avatarInput.files[0] ? avatarInput.files[0] : null;
+            if (file) {
+                openCropperWithFile(file);
+            }
+        });
+
+        cancelBtn.addEventListener('click', closeCropperModal);
+
+        applyBtn.addEventListener('click', function () {
+            if (!cropper) {
+                return;
+            }
+
+            const canvas = cropper.getCroppedCanvas({
+                width: 512,
+                height: 512,
+                imageSmoothingQuality: 'high'
+            });
+
+            if (!canvas) {
+                return;
+            }
+
+            canvas.toBlob(function (blob) {
+                if (!blob) {
+                    return;
+                }
+
+                const croppedFile = new File([blob], 'avatar-cropped.png', { type: 'image/png' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(croppedFile);
+                avatarInput.files = dataTransfer.files;
+
+                if (previewImg) {
+                    if (previewObjectUrl) {
+                        URL.revokeObjectURL(previewObjectUrl);
+                    }
+                    previewObjectUrl = URL.createObjectURL(blob);
+                    previewImg.src = previewObjectUrl;
+                }
+
+                closeCropperModal();
+            }, 'image/png');
+        });
+    });
+</script>
+{% endblock %}

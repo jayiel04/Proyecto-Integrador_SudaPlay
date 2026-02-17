@@ -12,10 +12,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
     # App URLs
     path('', include('web.urls')),
-    path('auth/', include('login.urls')),
+    path('auth/', include('apps.login.urls')),
+    path('accounts/', include('allauth.urls')), # Esto crea las rutas de login/social
 ]
 
 # Servir archivos estáticos en desarrollo

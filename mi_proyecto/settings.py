@@ -34,11 +34,32 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # Allauth apps
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
     
-    # Local apps - Usar apps.py config para buenas prácticas
-    'login.apps.LoginConfig',
+    # Proveedores
+    'allauth.socialaccount.providers.google',
+    
+    # Core and local apps
+    'mi_proyecto', 
+    'apps.login.apps.LoginConfig',
     'web.apps.WebConfig',
 ]
+
+# Esto debe estar fuera de la lista, al final del archivo
+SITE_ID = 1
+    
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+# LOGIN_REDIRECT_URL and LOGOUT_REDIRECT_URL moved to the bottom
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -48,7 +69,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
+
+# Permite embeber paginas del mismo dominio en iframes (necesario para /juegos/<id>/jugar/).
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ROOT_URLCONF = 'mi_proyecto.urls'
 
@@ -63,6 +88,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'apps.login.context_processors.navbar_profile',
+
+                    
             ],
         },
     },
@@ -136,6 +164,44 @@ LOGIN_URL = 'login:login'
 LOGIN_REDIRECT_URL = 'web:home'
 LOGOUT_REDIRECT_URL = 'web:home'
 
+# Google OAuth Settings
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+# Allauth Settings
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+SOCIALACCOUNT_ADAPTER = 'apps.login.adapters.CustomSocialAccountAdapter'
+SOCIALACCOUNT_LOGIN_ON_GET = True
+SOCIALACCOUNT_AUTO_SIGNUP = False
+
+SOCIALACCOUNT_FORMS = {
+    'signup': 'apps.login.forms.CustomSocialSignupForm',
+}
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email Configuration
+EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
+# These will be used if a real SMTP backend is configured later
+EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
+SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')

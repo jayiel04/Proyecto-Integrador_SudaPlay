@@ -10,4 +10,6 @@ urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login'),
     path('register/', views.RegisterView.as_view(), name='register'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
+    path('perfil/editar/', views.ProfileUpdateView.as_view(), name='profile_edit'),
+    path('api/check_availability/', views.CheckUserAPIView.as_view(), name='check_availability'),
 ]

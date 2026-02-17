@@ -1,0 +1,20 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Logo "S" con las esquinas cortadas de forma real (transparente) -->
+    <path d="
+        M 30,30 
+        L 85,30 
+        L 85,50 
+        L 45,50 
+        L 45,55 
+        L 85,55 
+        L 85,70 
+        L 70,85 
+        L 15,85 
+        L 15,65 
+        L 55,65 
+        L 55,60 
+        L 15,60 
+        L 15,45 
+        Z" 
+        fill="#00f0ff" />
+</svg>
