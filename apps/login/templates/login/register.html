@@ -7,6 +7,7 @@
 <div class="container auth-page-layout">
     <div class="login-card">
         <div class="login-header">
+            <img src="{% static 'img/logo.svg' %}" alt="Logo" class="login-card-logo">
             <h1>Crear Cuenta</h1>
             <p>Únete a nuestra comunidad de jugadores</p>
         </div>
@@ -51,25 +52,6 @@
             ¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
         </div>
     </div>
-    {% comment %}
-    <aside class="auth-side-panel auth-carousel-panel">
-        <h2>Catalogo de juegos</h2>
-        <p>Explora estilos y categorias en un vistazo rapido.</p>
-        <div class="auth-carousel" id="register-carousel"
-            style="--carousel-image: url('{% static 'img/register-catalog-collage.png' %}');">
-            <div class="auth-carousel-slide slice-1 is-active"></div>
-            <div class="auth-carousel-slide slice-2"></div>
-            <div class="auth-carousel-slide slice-3"></div>
-            <div class="auth-carousel-slide slice-4"></div>
-            <div class="auth-carousel-slide slice-5"></div>
-            <div class="auth-carousel-slide slice-6"></div>
-        </div>
-        <p class="auth-carousel-description">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus feugiat arcu id purus tempor, nec
-            ullamcorper elit aliquam.
-        </p>
-    </aside>
-    {% endcomment %}
 </div>
 
 <style>
@@ -265,6 +247,7 @@
     });
 </script>
 {% endblock content %}
+
 
 
 
