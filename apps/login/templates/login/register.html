@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Crear Cuenta - SudaPlay{% endblock title %}
+
+{% block content %}
+<div class="container auth-page-layout">
+    <div class="login-card">
+        <div class="login-header">
+            <img src="{% static 'img/logo.svg' %}" alt="Logo" class="login-card-logo">
+            <h1>Crear Cuenta</h1>
+            <p>Únete a nuestra comunidad de jugadores</p>
+        </div>
+
+        <form method="POST" class="login-form" id="register-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {% if field.name == 'username' %}Apodo
+                    {% elif field.name == 'email' %}Correo Electrónico
+                    {% elif field.name == 'password1' %}Contraseña
+                    {% elif field.name == 'password2' %}Confirmar Contraseña
+                    {% else %}{{ field.label }}{% endif %}
+                </label>
+                <div class="input-wrapper" id="wrapper-{{ field.auto_id }}">
+                    {% if field.name == 'username' %}
+                    <i class="fa fa-user input-icon"></i>
+                    {% elif field.name == 'email' %}
+                    <i class="fa fa-envelope input-icon"></i>
+                    {% elif 'password' in field.name %}
+                    <i class="fa fa-lock input-icon"></i>
+                    {% endif %}
+                    {{ field }}
+                </div>
+                <div class="validation-msg" id="msg-{{ field.auto_id }}"></div>
+                {% if field.errors %}
+                <div class="form-error">
+                    {% for error in field.errors %}
+                    <p>✗ {{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-login" id="submit-btn">Crea tu Cuenta</button>
+        </form>
+
+        <div class="signup-link">
+            ¿Ya tienes cuenta? <a href="{% url 'login:login' %}">Inicia sesión aquí</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .validation-msg {
+        font-size: 0.8rem;
+        margin-top: 5px;
+        transition: all 0.3s ease;
+        height: 0;
+        overflow: hidden;
+        opacity: 0;
+    }
+
+    .validation-msg.visible {
+        height: auto;
+        opacity: 1;
+        margin-bottom: 5px;
+    }
+
+    .msg-error {
+        color: #ff4d4d;
+        border-left: 2px solid #ff4d4d;
+        padding-left: 8px;
+    }
+
+    .msg-success {
+        color: var(--neon-green);
+        border-left: 2px solid var(--neon-green);
+        padding-left: 8px;
+    }
+
+    .input-wrapper {
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .input-wrapper.valid-field {
+        border-color: var(--neon-green) !important;
+        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3) !important;
+    }
+
+    .input-wrapper.invalid-field {
+        border-color: #ff4d4d !important;
+        box-shadow: 0 0 15px rgba(255, 77, 77, 0.3) !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const usernameInput = document.getElementById('id_username');
+        const emailInput = document.getElementById('id_email');
+        const pass1Input = document.getElementById('id_password1');
+        const pass2Input = document.getElementById('id_password2');
+        const submitBtn = document.getElementById('submit-btn');
+
+        let isUsernameValid = false;
+        let isEmailValid = false;
+        let isPasswordValid = false;
+        let passwordsMatch = false;
+
+        function updateSubmitButton() {
+            submitBtn.disabled = !(isUsernameValid && isEmailValid && isPasswordValid && passwordsMatch);
+            submitBtn.style.opacity = submitBtn.disabled ? '0.5' : '1';
+        }
+
+        // Validación de Apodo
+        if (usernameInput) {
+            usernameInput.addEventListener('input', async function () {
+                const value = this.value;
+                const msgDiv = document.getElementById('msg-id_username');
+                const wrapper = document.getElementById('wrapper-id_username');
+
+                if (value.length < 3) {
+                    msgDiv.classList.remove('visible');
+                    wrapper.classList.remove('valid-field', 'invalid-field');
+                    isUsernameValid = false;
+                } else {
+                    try {
+                        const response = await fetch(`{% url 'login:check_availability' %}?username=${encodeURIComponent(value)}`);
+                        const data = await response.json();
+                        if (data.is_taken) {
+                            msgDiv.innerHTML = '✗ Apodo ya en uso';
+                            msgDiv.className = 'validation-msg visible msg-error';
+                            wrapper.classList.add('invalid-field');
+                            wrapper.classList.remove('valid-field');
+                            isUsernameValid = false;
+                        } else {
+                            msgDiv.innerHTML = '✓ ¡Apodo disponible!';
+                            msgDiv.className = 'validation-msg visible msg-success';
+                            wrapper.classList.add('valid-field');
+                            wrapper.classList.remove('invalid-field');
+                            isUsernameValid = true;
+                        }
+                    } catch (err) { console.error(err); }
+                }
+                updateSubmitButton();
+            });
+        }
+
+        // Validación de Email
+        if (emailInput) {
+            emailInput.addEventListener('input', async function () {
+                const value = this.value;
+                const msgDiv = document.getElementById('msg-id_email');
+                const wrapper = document.getElementById('wrapper-id_email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+                if (!emailRegex.test(value)) {
+                    msgDiv.innerHTML = '✗ Formato de email inválido';
+                    msgDiv.className = 'validation-msg visible msg-error';
+                    wrapper.classList.add('invalid-field');
+                    wrapper.classList.remove('valid-field');
+                    isEmailValid = false;
+                } else {
+                    try {
+                        const response = await fetch(`{% url 'login:check_availability' %}?email=${encodeURIComponent(value)}`);
+                        const data = await response.json();
+                        if (data.is_taken) {
+                            msgDiv.innerHTML = '✗ Email ya registrado';
+                            msgDiv.className = 'validation-msg visible msg-error';
+                            wrapper.classList.add('invalid-field');
+                            wrapper.classList.remove('valid-field');
+                            isEmailValid = false;
+                        } else {
+                            msgDiv.innerHTML = '✓ Email disponible';
+                            msgDiv.className = 'validation-msg visible msg-success';
+                            wrapper.classList.add('valid-field');
+                            wrapper.classList.remove('invalid-field');
+                            isEmailValid = true;
+                        }
+                    } catch (err) { console.error(err); }
+                }
+                updateSubmitButton();
+            });
+        }
+
+        // Validación de Password 1
+        if (pass1Input) {
+            pass1Input.addEventListener('input', function () {
+                const value = this.value;
+                const msgDiv = document.getElementById('msg-id_password1');
+                const wrapper = document.getElementById('wrapper-id_password1');
+
+                if (value.length < 8) {
+                    msgDiv.innerHTML = '✗ Mínimo 8 caracteres';
+                    msgDiv.className = 'validation-msg visible msg-error';
+                    wrapper.classList.add('invalid-field');
+                    wrapper.classList.remove('valid-field');
+                    isPasswordValid = false;
+                } else {
+                    msgDiv.innerHTML = '✓ Contraseña segura';
+                    msgDiv.className = 'validation-msg visible msg-success';
+                    wrapper.classList.add('valid-field');
+                    wrapper.classList.remove('invalid-field');
+                    isPasswordValid = true;
+                }
+                checkMatch();
+                updateSubmitButton();
+            });
+        }
+
+        function checkMatch() {
+            if (!pass2Input) return;
+            const p1 = pass1Input.value;
+            const p2 = pass2Input.value;
+            const msgDiv = document.getElementById('msg-id_password2');
+            const wrapper = document.getElementById('wrapper-id_password2');
+
+            if (p2.length === 0) {
+                msgDiv.classList.remove('visible');
+                wrapper.classList.remove('valid-field', 'invalid-field');
+                passwordsMatch = false;
+            } else if (p1 === p2) {
+                msgDiv.innerHTML = '✓ Las contraseñas coinciden';
+                msgDiv.className = 'validation-msg visible msg-success';
+                wrapper.classList.add('valid-field');
+                wrapper.classList.remove('invalid-field');
+                passwordsMatch = true;
+            } else {
+                msgDiv.innerHTML = '✗ Las contraseñas no coinciden';
+                msgDiv.className = 'validation-msg visible msg-error';
+                wrapper.classList.add('invalid-field');
+                wrapper.classList.remove('valid-field');
+                passwordsMatch = false;
+            }
+        }
+
+        if (pass2Input) {
+            pass2Input.addEventListener('input', () => {
+                checkMatch();
+                updateSubmitButton();
+            });
+        }
+
+    });
+</script>
+{% endblock content %}
+
+
+
+

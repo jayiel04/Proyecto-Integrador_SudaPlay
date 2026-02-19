@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Subir juego - SudaPlay{% endblock %}
+
+{% block extra_css %}
+<style>
+    #game-upload-form input[type="text"],
+    #game-upload-form input[type="url"],
+    #game-upload-form textarea,
+    #game-upload-form select,
+    #game-upload-form input[type="file"] {
+        width: 100%;
+        padding: 11px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-family: inherit;
+    }
+
+    #game-upload-form textarea {
+        resize: vertical;
+    }
+
+    #game-upload-form option {
+        color: #111;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card" style="max-width: 700px; width: 100%;">
+        <div class="login-header">
+            <h1>Subir juego</h1>
+            <p>Publicacion inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="game-upload-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-error" style="margin-bottom: 10px;">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <p style="font-size: 0.75rem; color: #999; margin-top: 4px;">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                <div class="form-error">
+                    {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; gap: 10px; margin-top: 14px;">
+                <button type="submit" class="btn-login" style="margin-bottom: 0;">Guardar juego</button>
+                <a href="{% url 'web:home' %}" class="btn-login"
+                    style="text-align: center; text-decoration: none; background: transparent; color: var(--neon-green); border: 1px solid var(--neon-green);">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
