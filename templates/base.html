@@ -15,7 +15,11 @@
     {% block extra_css %}{% endblock %}
 </head>
 
+<<<<<<< HEAD
 <body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page"{% endif %}>
+=======
+<body>
+>>>>>>> 0fa0690f59c8a1252530175064668fbf668aa318
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
@@ -24,6 +28,7 @@
         <i class="fa fa-ghost floating-icon" style="top: 80%; left: 85%; animation-delay: 6s;"></i>
         <i class="fa fa-rocket floating-icon" style="top: 40%; left: 50%; animation-delay: 8s;"></i>
     </div>
+<<<<<<< HEAD
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
     <a href="{% url 'web:home' %}" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span style="--i:1" class="body-left-brand-logo-wrap"><img src="{% static 'img/logo.svg' %}" alt="" class="body-left-brand-logo"></span><span style="--i:2">u</span><span style="--i:3">d</span><span
@@ -41,6 +46,17 @@
                     style="--i:7">a</span><span style="--i:8">y</span>
             </a>
             {% endif %}
+=======
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{% url 'web:home' %}" class="navbar-brand">
+                <img src="{% static 'img/logo.svg' %}" alt="Logo" class="navbar-logo">
+                <span style="--i:1">S</span><span style="--i:2">u</span><span style="--i:3">d</span><span
+                    style="--i:4">a</span><span style="--i:5">P</span><span style="--i:6">l</span><span
+                    style="--i:7">a</span><span style="--i:8">y</span>
+            </a>
+>>>>>>> 0fa0690f59c8a1252530175064668fbf668aa318
 
             <div class="nav-links nav-links-centered">
                 <a href="{% url 'web:home' %}" class="nav-item">Juegos</a>
