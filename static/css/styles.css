@@ -132,8 +132,6 @@ body {
     position: absolute;
     color: rgba(0, 240, 255, 0.05);
     font-size: 3.4rem;
-    font-size: 3.4rem;
-
     animation: floatAround 20s linear infinite;
 }
 
@@ -220,7 +218,6 @@ body {
     display: block;
     filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
 }
-
 
 /* Diferentes delays para el efecto ola */
 .navbar-brand span:nth-child(n) {
@@ -481,7 +478,6 @@ body {
     }
 }
 
-
 .nav-item {
     color: #aaa;
     text-decoration: none;
@@ -576,8 +572,6 @@ body {
 .container {
     width: 100%;
     min-height: 100%;
-    min-height: 100%;
-
     display: flex;
     justify-content: center;
 }
@@ -666,7 +660,6 @@ body {
     filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.42));
 }
 
-
 .login-header h1 {
     font-size: 1.8rem;
     margin-bottom: 8px;
@@ -695,10 +688,6 @@ body {
 .body-auth-page .auth-page-layout .login-card {
     animation: none;
     transition: none;
-.body-auth-page .auth-page-layout .login-card {
-    animation: none;
-    transition: none;
-
 }
 
 /* Formulario */
@@ -1042,7 +1031,6 @@ input:focus {
     .auth-page-layout .login-card {
         max-width: 400px;
     }
-
 }
 
 @media (max-width: 600px) {
@@ -1083,5 +1071,4 @@ input:focus {
         transform: scale(0.9);
     }
 }
-
 

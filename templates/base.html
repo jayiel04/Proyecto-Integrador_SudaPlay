@@ -16,8 +16,6 @@
 </head>
 
 <body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page"{% endif %}>
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page"{% endif %}>
-
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
@@ -43,7 +41,6 @@
                     style="--i:7">a</span><span style="--i:8">y</span>
             </a>
             {% endif %}
-
 
             <div class="nav-links nav-links-centered">
                 <a href="{% url 'web:home' %}" class="nav-item">Juegos</a>
