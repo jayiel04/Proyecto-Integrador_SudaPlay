@@ -1,6 +1,6 @@
 {% load socialaccount %}
 <div class="divider">
-    <span>O continúa con</span>
+    <span class="divider-login-text">O continúa con</span>
 </div>
 
 <div class="social-login">
@@ -18,6 +18,13 @@
 </div>
 
 <style>
+    .divider .divider-login-text {
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        color: #7fbfff;
+    }
+
     .social-login {
         display: flex;
         justify-content: center;
@@ -47,7 +54,7 @@
     .google-btn-icon:hover {
         background: rgba(255, 255, 255, 0.1);
         border-color: var(--neon-green);
-        box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+        box-shadow: 0 0 20px rgba(70, 123, 121, 0.4);
         transform: scale(1.1) rotate(5deg);
     }
 

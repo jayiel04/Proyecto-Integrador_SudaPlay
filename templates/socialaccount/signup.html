@@ -4,12 +4,10 @@
 {% block title %}Finalizar Registro - SudaPlay{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="login-card">
+<div class="container finalizar-registro-page">
+    <div class="login-card finalizar-registro-card">
         <div class="login-header">
-            <img src="{% static 'img/logo.svg' %}" alt="Logo" class="login-card-logo">
-            <h1>Finalizar Registro</h1>
-            <p>Configura tu identidad en SudaPlay</p>
+            <h1 class="finalizar-registro-title">Finalizar Registro</h1>
         </div>
 
         <form method="post" action="{% url 'socialaccount_signup' %}" class="login-form" id="signup-form">
@@ -56,8 +54,48 @@
 </div>
 
 <style>
-    .validation-msg {
-        font-size: 0.8rem;
+    .finalizar-registro-page .finalizar-registro-title {
+        font-size: 2.8rem;
+    }
+
+    .finalizar-registro-page .login-header p {
+        font-size: 1.12rem;
+    }
+
+    .finalizar-registro-page label {
+        font-size: 1.05rem;
+    }
+
+    .finalizar-registro-page input[type="text"],
+    .finalizar-registro-page input[type="password"],
+    .finalizar-registro-page input[type="email"] {
+        font-size: 1.1rem;
+    }
+
+    .finalizar-registro-page .btn-login {
+        font-size: 1.16rem;
+    }
+
+    .finalizar-registro-page .form-error p {
+        font-size: 1rem;
+    }
+
+    @media (max-width: 600px) {
+        .finalizar-registro-page .finalizar-registro-title {
+            font-size: 2.25rem;
+        }
+
+        .finalizar-registro-page .login-header p {
+            font-size: 1rem;
+        }
+
+        .finalizar-registro-page .btn-login {
+            font-size: 1.05rem;
+        }
+    }
+
+    .finalizar-registro-page .validation-msg {
+        font-size: 1rem;
         margin-top: 5px;
         transition: all 0.3s ease;
         height: 0;
@@ -89,7 +127,7 @@
 
     .input-wrapper.valid-field {
         border-color: var(--neon-green) !important;
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.3) !important;
+        box-shadow: 0 0 15px rgba(70, 123, 121, 0.3) !important;
     }
 
     .input-wrapper.invalid-field {

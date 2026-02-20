@@ -15,7 +15,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page"{% endif %}>
+<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}"{% endif %}>
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
@@ -53,7 +53,7 @@
                 <a href="{% url 'web:home' %}#acerca-de" class="nav-item">Acerca de</a>
             </div>
 
-            <div class="navbar-menu">
+            <div class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %} navbar-menu-guest{% endif %}">
                 {% if user.is_authenticated %}
                 <div class="profile-dropdown">
                     <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
@@ -74,7 +74,8 @@
                 </div>
                 {% else %}
                 {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
-                <a href="{% url 'login:login' %}" class="navbar-link">Iniciar sesión</a>
+                <a href="{% url 'login:register' %}" class="navbar-link navbar-auth-link">Registro</a>
+                <a href="{% url 'login:login' %}" class="navbar-link navbar-auth-link">Iniciar sesión</a>
                 {% endif %}
                 {% endif %}
             </div>
@@ -86,9 +87,11 @@
         {% block content %}{% endblock %}
     </main>
 
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
     <footer class="footer">
         <p>&copy; 2026 . Todos los derechos reservados.</p>
     </footer>
+    {% endif %}
 
     {% if not user.is_authenticated %}
     <div id="login-required-panel" class="login-required-panel" aria-hidden="true" data-login-base="{% url 'login:login' %}">

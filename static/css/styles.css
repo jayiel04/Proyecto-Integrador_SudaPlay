@@ -4,17 +4,17 @@
 
 /* Variables y Configuraciones */
 :root {
-    --primary-color: #00f0ff;
-    --secondary-color: #0088aa;
-    --neon-green: #00f0ff;
+    --primary-color: #467b79;
+    --secondary-color: #315c5a;
+    --neon-green: #467b79;
     /* Mantenemos el nombre para no romper referencias, pero cambiamos el color a turquesa */
-    --neon-lime: #00ffcc;
-    --neon-emerald: #00d4ff;
-    --neon-cyan: #00f0ff;
+    --neon-lime: #5f9a97;
+    --neon-emerald: #4e8a88;
+    --neon-cyan: #467b79;
     --danger-color: #ff4757;
-    --success-color: #00ffcc;
+    --success-color: #5f9a97;
     --light-gray: #f5f5f5;
-    --border-color: rgba(0, 240, 255, 0.1);
+    --border-color: rgba(70, 123, 121, 0.1);
     --bg-dark: #020b0b;
     --card-bg: rgba(5, 15, 15, 0.9);
 }
@@ -34,6 +34,30 @@ body {
     /* Un poco más de 100 para forzar scroll */
     overflow-x: hidden;
     padding-bottom: 50px;
+}
+
+body.body-auth-page {
+    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
+    padding-bottom: 0;
+}
+
+body.body-register-page {
+    height: auto;
+    overflow-y: auto;
+}
+
+.body-register-page .main-content {
+    height: auto;
+    min-height: calc(100dvh - 86px);
+    align-items: flex-start;
+}
+
+.body-register-page .auth-page-layout {
+    height: auto;
+    min-height: 100%;
+    align-items: flex-start;
 }
 
 /* Fondo Gamer Animado */
@@ -57,7 +81,7 @@ body {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 60%);
+    background: radial-gradient(circle, rgba(70, 123, 121, 0.1) 0%, transparent 60%);
     animation: pulse 8s infinite alternate;
 }
 
@@ -69,8 +93,8 @@ body {
     width: 200%;
     height: 200%;
     background: repeating-linear-gradient(45deg,
-            rgba(0, 240, 255, 0.05),
-            rgba(0, 240, 255, 0.05) 2px,
+            rgba(70, 123, 121, 0.05),
+            rgba(70, 123, 121, 0.05) 2px,
             transparent 2px,
             transparent 10px);
     animation: moveGrid 15s linear infinite;
@@ -130,7 +154,7 @@ body {
 
 .floating-icon {
     position: absolute;
-    color: rgba(0, 240, 255, 0.05);
+    color: rgba(70, 123, 121, 0.05);
     font-size: 3.4rem;
     animation: floatAround 20s linear infinite;
 }
@@ -216,7 +240,7 @@ body {
     width: 1.08em;
     height: 1.08em;
     display: block;
-    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
+    filter: drop-shadow(0 0 8px rgba(70, 123, 121, 0.5));
 }
 
 /* Diferentes delays para el efecto ola */
@@ -253,6 +277,11 @@ body {
     margin-left: auto;
 }
 
+.navbar-menu-guest {
+    gap: 0.9rem;
+    transform: translateX(8px);
+}
+
 .navbar-link {
     color: var(--neon-green);
     text-decoration: none;
@@ -262,11 +291,18 @@ body {
     border-radius: 5px;
 }
 
+.navbar-auth-link {
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 0.64rem 1.15rem;
+    letter-spacing: 0.02em;
+}
+
 .navbar-link:hover {
     color: #fff;
     border-color: var(--neon-green);
-    background: rgba(0, 240, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    background: rgba(70, 123, 121, 0.1);
+    box-shadow: 0 0 15px rgba(70, 123, 121, 0.3);
 }
 
 .profile-dropdown {
@@ -279,7 +315,7 @@ body {
     gap: 0.55rem;
     color: var(--neon-green);
     background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    border: 1px solid rgba(70, 123, 121, 0.35);
     border-radius: 8px;
     padding: 0.45rem 0.8rem;
     cursor: pointer;
@@ -292,7 +328,7 @@ body {
     height: 26px;
     border-radius: 999px;
     object-fit: cover;
-    border: 1px solid rgba(0, 240, 255, 0.45);
+    border: 1px solid rgba(70, 123, 121, 0.45);
 }
 
 .navbar-avatar-fallback {
@@ -303,8 +339,8 @@ body {
 .profile-dropdown.open .profile-dropdown-toggle {
     color: #fff;
     border-color: var(--neon-green);
-    background: rgba(0, 240, 255, 0.14);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.22);
+    background: rgba(70, 123, 121, 0.14);
+    box-shadow: 0 0 15px rgba(70, 123, 121, 0.22);
 }
 
 .profile-dropdown-toggle .fa-chevron-down {
@@ -322,7 +358,7 @@ body {
     right: 0;
     min-width: 180px;
     background: rgba(7, 10, 32, 0.96);
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    border: 1px solid rgba(70, 123, 121, 0.35);
     border-radius: 10px;
     padding: 0.35rem;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
@@ -351,7 +387,7 @@ body {
 
 .profile-dropdown-item:hover {
     color: #fff;
-    background: rgba(0, 240, 255, 0.14);
+    background: rgba(70, 123, 121, 0.14);
 }
 
 .profile-dropdown-item.logout-item {
@@ -411,8 +447,8 @@ body {
     text-decoration: none;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.92);
-    -webkit-text-stroke: 1px rgba(0, 240, 255, 0.45);
-    text-shadow: 0 0 16px rgba(0, 240, 255, 0.45);
+    -webkit-text-stroke: 1px rgba(70, 123, 121, 0.45);
+    text-shadow: 0 0 16px rgba(70, 123, 121, 0.45);
     pointer-events: auto;
     cursor: pointer;
     user-select: none;
@@ -435,7 +471,7 @@ body {
     height: 1.4em;
     display: block;
     transform: translateY(-8px);
-    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.5));
+    filter: drop-shadow(0 0 8px rgba(70, 123, 121, 0.5));
 }
 
 @keyframes bodyBrandFloat {
@@ -451,18 +487,86 @@ body {
 @keyframes bodyBrandGlow {
     0%,
     100% {
-        text-shadow: 0 0 12px rgba(0, 240, 255, 0.45), 0 0 24px rgba(0, 240, 255, 0.35);
+        text-shadow: 0 0 12px rgba(70, 123, 121, 0.45), 0 0 24px rgba(70, 123, 121, 0.35);
     }
 
     50% {
-        text-shadow: 0 0 18px rgba(0, 240, 255, 0.45), 0 0 32px rgba(0, 240, 255, 0.35);
+        text-shadow: 0 0 18px rgba(70, 123, 121, 0.45), 0 0 32px rgba(70, 123, 121, 0.35);
     }
 }
 
 .body-auth-page .main-content {
+    min-height: calc(100dvh - 86px);
+    height: calc(100dvh - 86px);
+    align-items: center;
     justify-content: flex-end;
-    padding-left: clamp(24px, 3vw, 42px);
-    padding-right: clamp(8px, 2.2vw, 40px);
+    padding: 12px clamp(8px, 2.2vw, 40px) 12px clamp(24px, 3vw, 42px);
+}
+
+.body-auth-page .footer {
+    display: none;
+}
+
+.body-auth-page .auth-page-layout {
+    height: 100%;
+    min-height: 0;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: clamp(28px, 6vw, 110px);
+}
+
+.body-auth-page .auth-page-layout .login-card {
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.body-auth-page .login-card {
+    padding: 30px 34px;
+}
+
+.body-auth-page .login-header {
+    margin-bottom: 14px;
+}
+
+.body-auth-page .login-header h1 {
+    font-size: 2.45rem;
+}
+
+.body-auth-page label {
+    font-size: 1.05rem;
+}
+
+.body-auth-page input[type="text"],
+.body-auth-page input[type="password"],
+.body-auth-page input[type="email"] {
+    font-size: 1.1rem;
+}
+
+.body-auth-page .form-group {
+    margin-bottom: 10px;
+}
+
+.body-auth-page .remember-forgot {
+    margin: 10px 0;
+}
+
+.body-auth-page .divider {
+    margin: 12px 0;
+}
+
+.body-auth-page .btn-login {
+    margin-top: 6px;
+    padding: 12px;
+    font-size: 1.16rem;
+}
+
+.body-auth-page .signup-link {
+    margin-top: 8px;
+    font-size: 1.08rem;
+}
+
+.body-auth-page .remember-forgot {
+    font-size: 1rem;
 }
 
 @media (max-width: 980px) {
@@ -474,7 +578,12 @@ body {
 
     .body-auth-page .main-content {
         justify-content: center;
-        padding-right: 20px;
+        padding: 8px 20px 10px;
+    }
+
+    .body-auth-page .auth-page-layout {
+        justify-content: center;
+        padding-right: 0;
     }
 }
 
@@ -515,7 +624,7 @@ body {
 .login-required-card {
     width: min(92vw, 430px);
     background: rgba(8, 16, 28, 0.98);
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    border: 1px solid rgba(70, 123, 121, 0.35);
     border-radius: 12px;
     padding: 18px;
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
@@ -556,7 +665,7 @@ body {
 .login-required-btn.primary {
     border: 1px solid transparent;
     background: linear-gradient(135deg, var(--neon-green), var(--neon-emerald));
-    color: #001014;
+    color: #f4fffe;
     font-weight: 700;
 }
 
@@ -613,10 +722,10 @@ body {
     max-width: 400px;
     background: var(--card-bg);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(0, 240, 255, 0.2);
+    border: 1px solid rgba(70, 123, 121, 0.2);
     border-radius: 24px;
     padding: 26px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 240, 255, 0.05);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(70, 123, 121, 0.05);
     animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
@@ -657,7 +766,7 @@ body {
     padding: 0;
     margin: -8px auto 8px;
     display: block;
-    filter: drop-shadow(0 0 12px rgba(0, 240, 255, 0.42));
+    filter: drop-shadow(0 0 12px rgba(70, 123, 121, 0.42));
 }
 
 .login-header h1 {
@@ -681,8 +790,8 @@ body {
 }
 
 .auth-page-layout .login-card {
-    flex: 0 1 420px;
-    max-width: 420px;
+    flex: 0 1 500px;
+    max-width: 500px;
 }
 
 .body-auth-page .auth-page-layout .login-card {
@@ -748,9 +857,9 @@ input[type="file"] {
 input[type="file"]::file-selector-button {
     margin-right: 10px;
     padding: 7px 10px;
-    border: 1px solid rgba(0, 240, 255, 0.35);
+    border: 1px solid rgba(70, 123, 121, 0.35);
     border-radius: 6px;
-    background: rgba(0, 240, 255, 0.12);
+    background: rgba(70, 123, 121, 0.12);
     color: #d5fff8;
     cursor: pointer;
 }
@@ -759,7 +868,7 @@ input:focus {
     outline: none;
     border-color: var(--neon-green);
     background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 15px rgba(70, 123, 121, 0.2);
 }
 
 .btn-login {
@@ -767,7 +876,7 @@ input:focus {
     padding: 15px;
     margin-top: 10px;
     background: linear-gradient(135deg, var(--neon-green), var(--neon-emerald));
-    color: #000;
+    color: #f4fffe;
     border: none;
     border-radius: 12px;
     font-weight: 800;
@@ -775,12 +884,12 @@ input:focus {
     letter-spacing: 2px;
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 15px rgba(70, 123, 121, 0.3);
 }
 
 .btn-login:hover {
     transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 25px rgba(70, 123, 121, 0.5);
     filter: brightness(1.2);
 }
 
@@ -862,7 +971,7 @@ input:focus {
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--neon-green);
     color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    box-shadow: 0 0 20px rgba(70, 123, 121, 0.4);
     transform: scale(1.1) rotate(5deg);
 }
 
@@ -907,7 +1016,7 @@ input:focus {
     transform: translateY(100%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border-top: 1px solid var(--neon-green);
-    box-shadow: 0 -5px 20px rgba(0, 240, 255, 0.1);
+    box-shadow: 0 -5px 20px rgba(70, 123, 121, 0.1);
 }
 
 .footer.show {
@@ -938,7 +1047,7 @@ input:focus {
 .game-item:hover {
     transform: translateY(-10px) scale(1.05);
     border-color: var(--neon-green);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+    box-shadow: 0 0 20px rgba(70, 123, 121, 0.3);
 }
 
 .game-img {
@@ -986,7 +1095,7 @@ input:focus {
 
 .badge-new {
     background: var(--neon-green);
-    color: #000;
+    color: #f4fffe;
 }
 
 .badge-hot {
@@ -1010,6 +1119,16 @@ input:focus {
         display: none;
     }
 
+    .navbar-menu-guest {
+        transform: translateX(0);
+        gap: 0.55rem;
+    }
+
+    .navbar-auth-link {
+        font-size: 0.9rem;
+        padding: 0.52rem 0.86rem;
+    }
+
     .navbar-brand {
         font-size: 1.5rem;
     }
@@ -1022,21 +1141,29 @@ input:focus {
 
 @media (max-width: 980px) {
     .auth-page-layout {
-        max-width: 420px;
+        max-width: 500px;
         gap: 14px;
         flex-direction: column;
         align-items: center;
     }
 
     .auth-page-layout .login-card {
-        max-width: 400px;
+        max-width: 460px;
     }
 }
 
 @media (max-width: 600px) {
     .login-card {
-        padding: 22px 14px;
-        max-width: 90%;
+        padding: 24px 16px;
+        max-width: 94%;
+    }
+
+    .body-auth-page .login-header h1 {
+        font-size: 2.05rem;
+    }
+
+    .body-auth-page .btn-login {
+        font-size: 1.05rem;
     }
 }
 
@@ -1058,11 +1185,21 @@ input:focus {
         transform: scale(0.98);
         transform-origin: top center;
     }
+
+    .body-auth-page .auth-page-layout {
+        align-self: center;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 }
 
 @media (max-height: 740px) {
     .auth-page-layout .login-card {
         transform: scale(0.94);
+    }
+
+    .body-auth-page .auth-page-layout .login-card {
+        transform: scale(0.92);
     }
 }
 
@@ -1070,5 +1207,38 @@ input:focus {
     .auth-page-layout .login-card {
         transform: scale(0.9);
     }
+
+    .body-auth-page .auth-page-layout .login-card {
+        transform: scale(0.86);
+    }
+}
+
+
+.login-signup-link .signup-link-cta {
+    margin-left: 12px;
+    display: inline-block;
+}
+
+.login-signup-link {
+    color: #7fbfff;
+}
+
+.body-auth-page .auth-page-layout .register-card {
+    max-height: none;
+    overflow: hidden;
+}
+
+/* Keep register pinned at the top so it only grows downward. */
+body.body-auth-page.body-register-page .main-content {
+    align-items: flex-start;
+}
+
+body.body-auth-page.body-register-page .auth-page-layout {
+    height: auto;
+    min-height: auto;
+    align-items: flex-start;
+    align-self: flex-start;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
