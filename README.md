@@ -48,7 +48,7 @@ Proyecto Integrador/
 ├── media/                   # Archivos subidos
 ├── manage.py                # Comando principal de Django
 ├── db.sqlite3               # Base de datos
-├── .env                     # Variables de entorno
+├── .env.example             # Ejemplo de variables de entorno
 ├── requirements.txt         # Dependencias del proyecto
 └── README.md                # Este archivo
 ```
@@ -71,7 +71,8 @@ pip install -r requirements.txt
 
 ### 3. Configurar variables de entorno
 ```bash
-# Crear y editar .env con tus valores
+cp .env.example .env
+# Editar .env con tus valores
 ```
 
 ### 4. Migraciones

@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     # Core and local apps
     'mi_proyecto', 
     'apps.login.apps.LoginConfig',
-    'web.apps.WebConfig',
+    'apps.web.apps.WebConfig',
 ]
 
 # Esto debe estar fuera de la lista, al final del archivo

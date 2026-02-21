@@ -1,100 +1,15 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Editar Perfil - SudaPlay{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.6.2/dist/cropper.min.css">
-<style>
-    .avatar-preview-wrap {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 14px;
-    }
-
-    .avatar-preview-img {
-        width: 96px;
-        height: 96px;
-        object-fit: cover;
-        border-radius: 999px;
-        border: 2px solid rgba(70, 123, 121, 0.5);
-        background: rgba(255, 255, 255, 0.08);
-        cursor: pointer;
-    }
-
-    .avatar-cropper-modal {
-        position: fixed;
-        inset: 0;
-        background: rgba(2, 7, 15, 0.85);
-        display: none;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        padding: 16px;
-    }
-
-    .avatar-cropper-modal.is-open {
-        display: flex;
-    }
-
-    .avatar-cropper-dialog {
-        width: min(92vw, 560px);
-        background: rgba(8, 16, 28, 0.98);
-        border: 1px solid rgba(70, 123, 121, 0.35);
-        border-radius: 12px;
-        padding: 14px;
-    }
-
-    .avatar-cropper-dialog h3 {
-        color: #fff;
-        font-size: 1rem;
-        margin: 0 0 10px 0;
-    }
-
-    .avatar-cropper-stage {
-        width: 100%;
-        height: min(62vh, 380px);
-        background: #07111f;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .avatar-cropper-stage img {
-        display: block;
-        max-width: 100%;
-    }
-
-    .avatar-cropper-actions {
-        margin-top: 12px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-    }
-
-    .avatar-cropper-btn {
-        border-radius: 8px;
-        padding: 8px 14px;
-        border: 1px solid transparent;
-        cursor: pointer;
-    }
-
-    .avatar-cropper-btn.cancel {
-        background: rgba(255, 255, 255, 0.08);
-        color: #d9dee4;
-        border-color: rgba(255, 255, 255, 0.18);
-    }
-
-    .avatar-cropper-btn.apply {
-        background: linear-gradient(135deg, var(--neon-green), var(--neon-emerald));
-        color: #f4fffe;
-        font-weight: 700;
-    }
-</style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-    <div class="login-card" style="max-width: 520px;">
+    <div class="login-card profile-edit-card">
         <div class="profile-back-row">
             <a href="{% url 'web:home' %}" class="profile-back-link" onclick="if (window.history.length > 1) { window.history.back(); return false; }" aria-label="Volver a la pagina anterior">
                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -111,7 +26,7 @@
             {% if current_avatar_url %}
             <img src="{{ current_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
             {% else %}
-            <img src="{% static 'img/logo.svg' %}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
+            <img src="{% static 'img/SudaPlay.png' %}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
             {% endif %}
         </div>
 
@@ -259,4 +174,6 @@
     });
 </script>
 {% endblock %}
+
+
 

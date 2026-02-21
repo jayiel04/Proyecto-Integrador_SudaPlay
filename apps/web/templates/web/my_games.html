@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block title %}Mis juegos - SudaPlay{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1200px; flex-direction: column; align-items: flex-start; justify-content: flex-start;">
+<div class="container page-stack-container">
     <div class="profile-back-row">
         <a href="{% url 'web:home' %}" class="profile-back-link" onclick="if (window.history.length > 1) { window.history.back(); return false; }" aria-label="Volver a la página anterior">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -11,27 +11,25 @@
         </a>
     </div>
 
-    <div class="welcome-header" style="margin-bottom: 30px; text-align: left; width: 100%;">
-        <h1 style="font-size: 2.5rem; margin-bottom: 10px; color: #fff; text-shadow: 0 0 20px var(--neon-green);">
+    <div class="welcome-header welcome-header-left welcome-header-my-games">
+        <h1 class="my-games-title">
             Mis juegos
         </h1>
-        <p style="color: var(--neon-green); font-size: 1rem; letter-spacing: 1px; text-transform: uppercase;">
+        <p class="my-games-subtitle">
             Gestiona y revisa todos los juegos que has publicado.
         </p>
     </div>
 
     {% if messages %}
-    <div style="width: 100%; margin-bottom: 20px;">
+    <div class="inline-messages">
         {% for message in messages %}
-        <div style="padding: 10px 14px; border-radius: 8px; border: 1px solid rgba(70, 123, 121, 0.4); background: rgba(70, 123, 121, 0.1); color: #fff; margin-bottom: 8px;">
-            {{ message }}
-        </div>
+        <p class="inline-message-text">{{ message }}</p>
         {% endfor %}
     </div>
     {% endif %}
 
-    <div style="width: 100%; margin-bottom: 16px;">
-        <a href="{% url 'web:game_create' %}" class="btn-login" style="display: inline-block; width: auto; margin: 0; padding: 10px 16px;">
+    <div class="my-games-upload-wrap">
+        <a href="{% url 'web:game_create' %}" class="btn-login my-games-upload-btn">
             Subir nuevo juego
         </a>
     </div>
@@ -39,14 +37,14 @@
     <div class="game-grid">
         {% for game in games %}
         <div class="game-item" data-detail-url="{% url 'web:game_detail' game.pk %}" role="link" tabindex="0" aria-label="Ver detalles de {{ game.title }}">
-            <div style="position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px;">
+            <div class="game-badge-wrap game-badge-wrap-multi">
                 {% if game.is_featured %}
                 <span class="badge badge-hot">Destacado</span>
                 {% endif %}
                 {% if game.is_approved %}
                 <span class="badge badge-new">Publicado</span>
                 {% else %}
-                <span class="badge" style="background: #ffae00; color: #111;">Pendiente</span>
+                <span class="badge badge-pending">Pendiente</span>
                 {% endif %}
             </div>
 
@@ -54,7 +52,7 @@
 
             <div class="game-info">
                 <div class="game-title">{{ game.title }}</div>
-                <div style="font-size: 0.75rem; color: #bbb; margin-bottom: 8px;">
+                <div class="game-short-description">
                     {{ game.short_description|truncatechars:75 }}
                 </div>
                 <div class="game-stats">
@@ -62,15 +60,16 @@
                     <span><i class="fa fa-download"></i> {{ game.downloads }}</span>
                 </div>
 
-                <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link" style="display: inline-block; margin-top: 10px; font-size: 0.75rem; padding: 6px 10px;">Ver detalles</a>
+                <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link game-detail-link">Ver detalles</a>
             </div>
         </div>
         {% empty %}
-        <div class="login-card" style="max-width: 100%; width: 100%;">
-            <h2 style="margin-bottom: 8px;">Aún no has subido juegos</h2>
-            <p style="color: #bbb;">Usa el botón "Subir nuevo juego" para publicar el primero.</p>
+        <div class="login-card full-width-card">
+            <h2 class="card-title-small">Aún no has subido juegos</h2>
+            <p class="card-muted-text">Usa el botón "Subir nuevo juego" para publicar el primero.</p>
         </div>
         {% endfor %}
     </div>
 </div>
 {% endblock %}
+

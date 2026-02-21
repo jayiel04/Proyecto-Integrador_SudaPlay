@@ -1,6 +1,6 @@
 # Requerimientos para Desarrollo
 -r requirements.txt
-django-debug-toolbar==4.1.0
-django-extensions==3.2.3
-pytest==7.4.0
-pytest-django==4.5.2
+django-debug-toolbar
+django-extensions
+pytest
+pytest-django

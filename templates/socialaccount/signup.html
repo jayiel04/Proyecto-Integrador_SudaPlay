@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Finalizar Registro - SudaPlay{% endblock %}
@@ -46,96 +46,16 @@
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
 
-            <button type="submit" class="btn-login" id="submit-btn" style="margin-top: 20px;">
+            <button type="submit" class="btn-login finalizar-registro-submit" id="submit-btn">
                 Crea tu Cuenta
             </button>
         </form>
+
+        <div class="signup-footer">
+            <p>¿Ya tienes cuenta? <a href="{% url 'login:login' %}" class="signup-login-link">Inicia sesión</a></p>
+        </div>
     </div>
 </div>
-
-<style>
-    .finalizar-registro-page .finalizar-registro-title {
-        font-size: 2.8rem;
-    }
-
-    .finalizar-registro-page .login-header p {
-        font-size: 1.12rem;
-    }
-
-    .finalizar-registro-page label {
-        font-size: 1.05rem;
-    }
-
-    .finalizar-registro-page input[type="text"],
-    .finalizar-registro-page input[type="password"],
-    .finalizar-registro-page input[type="email"] {
-        font-size: 1.1rem;
-    }
-
-    .finalizar-registro-page .btn-login {
-        font-size: 1.16rem;
-    }
-
-    .finalizar-registro-page .form-error p {
-        font-size: 1rem;
-    }
-
-    @media (max-width: 600px) {
-        .finalizar-registro-page .finalizar-registro-title {
-            font-size: 2.25rem;
-        }
-
-        .finalizar-registro-page .login-header p {
-            font-size: 1rem;
-        }
-
-        .finalizar-registro-page .btn-login {
-            font-size: 1.05rem;
-        }
-    }
-
-    .finalizar-registro-page .validation-msg {
-        font-size: 1rem;
-        margin-top: 5px;
-        transition: all 0.3s ease;
-        height: 0;
-        overflow: hidden;
-        opacity: 0;
-    }
-
-    .validation-msg.visible {
-        height: auto;
-        opacity: 1;
-        margin-bottom: 5px;
-    }
-
-    .msg-error {
-        color: #ff4d4d;
-        border-left: 2px solid #ff4d4d;
-        padding-left: 8px;
-    }
-
-    .msg-success {
-        color: var(--neon-green);
-        border-left: 2px solid var(--neon-green);
-        padding-left: 8px;
-    }
-
-    .input-wrapper {
-        transition: border-color 0.3s, box-shadow 0.3s;
-    }
-
-    .input-wrapper.valid-field {
-        border-color: var(--neon-green) !important;
-        box-shadow: 0 0 15px rgba(70, 123, 121, 0.3) !important;
-    }
-
-    .input-wrapper.invalid-field {
-        border-color: #ff4d4d !important;
-        box-shadow: 0 0 15px rgba(255, 77, 77, 0.3) !important;
-    }
-</style>
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const usernameInput = document.getElementById('id_username');
@@ -254,3 +174,5 @@
     });
 </script>
 {% endblock %}
+
+

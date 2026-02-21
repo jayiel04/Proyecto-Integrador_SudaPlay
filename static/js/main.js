@@ -1,5 +1,186 @@
 // Funcionalidad para cerrar mensajes
 document.addEventListener('DOMContentLoaded', function () {
+    // ========= Audio de interfaz: click =========
+    // Compatibilidad de AudioContext entre navegadores.
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    const audioContext = AudioContextClass ? new AudioContextClass() : null;
+    // Referencia al <audio> global del template base.
+    const backgroundMusic = document.getElementById('background-music');
+    // Contenedor visual de botones de audio.
+    const musicControls = document.querySelector('.music-controls');
+    // Botones de control de volumen en la esquina inferior.
+    const volumeDownBtn = document.getElementById('music-volume-down');
+    const volumeUpBtn = document.getElementById('music-volume-up');
+    const muteToggleBtn = document.getElementById('music-mute-toggle');
+    // Claves para persistir estado de mÃºsica entre pÃ¡ginas (ej: login -> juegos).
+    const MUSIC_STATE_KEYS = {
+        shouldPlay: 'sudaplay_music_should_play',
+        volume: 'sudaplay_music_volume',
+        muted: 'sudaplay_music_muted',
+        time: 'sudaplay_music_time',
+    };
+    // Evita intentar iniciar la pista de fondo en cada click.
+    let backgroundMusicStarted = false;
+
+    // Guarda estado actual para restaurarlo tras navegaciÃ³n.
+    const persistMusicState = () => {
+        if (!backgroundMusic) {
+            return;
+        }
+        localStorage.setItem(MUSIC_STATE_KEYS.shouldPlay, backgroundMusic.paused ? '0' : '1');
+        localStorage.setItem(MUSIC_STATE_KEYS.volume, String(backgroundMusic.volume));
+        localStorage.setItem(MUSIC_STATE_KEYS.muted, backgroundMusic.muted ? '1' : '0');
+        sessionStorage.setItem(MUSIC_STATE_KEYS.time, String(backgroundMusic.currentTime || 0));
+    };
+
+    // Restaura estado guardado (volumen/mute/tiempo) y trata de seguir reproduciendo.
+    const restoreMusicState = () => {
+        if (!backgroundMusic) {
+            return;
+        }
+
+        const savedVolume = parseFloat(localStorage.getItem(MUSIC_STATE_KEYS.volume) || '');
+        const savedMuted = localStorage.getItem(MUSIC_STATE_KEYS.muted);
+        const savedTime = parseFloat(sessionStorage.getItem(MUSIC_STATE_KEYS.time) || '');
+        const shouldPlay = localStorage.getItem(MUSIC_STATE_KEYS.shouldPlay) === '1';
+
+        if (!Number.isNaN(savedVolume)) {
+            backgroundMusic.volume = Math.min(1, Math.max(0, savedVolume));
+        } else {
+            backgroundMusic.volume = 0.20;
+        }
+
+        if (savedMuted === '1' || savedMuted === '0') {
+            backgroundMusic.muted = savedMuted === '1';
+        }
+
+        const applySavedTime = () => {
+            if (!Number.isNaN(savedTime) && savedTime > 0 && Number.isFinite(backgroundMusic.duration)) {
+                backgroundMusic.currentTime = Math.min(savedTime, Math.max(0, backgroundMusic.duration - 0.2));
+            }
+        };
+        backgroundMusic.addEventListener('loadedmetadata', applySavedTime, { once: true });
+        if (backgroundMusic.readyState >= 1) {
+            applySavedTime();
+        }
+        // Intenta restaurar la reproduccion automaticamente.
+        backgroundMusic.play().then(() => {
+            backgroundMusicStarted = true;
+        }).catch(() => { });
+    };
+
+    // Genera un sonido corto tipo click cada vez que el usuario toca o hace click.
+    const playClickTone = () => {
+        if (!audioContext) {
+            return;
+        }
+
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        const filterNode = audioContext.createBiquadFilter();
+        const now = audioContext.currentTime;
+
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(920, now);
+        oscillator.frequency.exponentialRampToValueAtTime(380, now + 0.06);
+
+        filterNode.type = 'bandpass';
+        filterNode.frequency.setValueAtTime(1100, now);
+        filterNode.Q.value = 1.8;
+
+        gainNode.gain.setValueAtTime(0.0001, now);
+        gainNode.gain.exponentialRampToValueAtTime(0.045, now + 0.008);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+        oscillator.connect(filterNode);
+        filterNode.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        oscillator.start(now);
+        oscillator.stop(now + 0.09);
+    };
+
+    // El navegador bloquea autoplay: se reanuda el audio al primer gesto
+    // y se reproduce el click en cada pointerdown.
+    const activateAudioFromGesture = () => {
+        if (!audioContext) {
+            return;
+        }
+        audioContext.resume().then(() => {
+            playClickTone();
+        }).catch(() => { });
+
+        // Inicia el MP3 de fondo en la primera interacciÃ³n del usuario.
+        if (backgroundMusic && !backgroundMusicStarted) {
+            if (!localStorage.getItem(MUSIC_STATE_KEYS.volume)) {
+                backgroundMusic.volume = 0.24;
+            }
+            backgroundMusic.play().then(() => {
+                backgroundMusicStarted = true;
+                persistMusicState();
+            }).catch(() => { });
+        }
+    };
+
+    document.addEventListener('pointerdown', activateAudioFromGesture, { passive: true });
+
+    // Mantiene el texto/estado visual del botÃ³n de mute.
+    const updateMuteButtonState = () => {
+        if (!backgroundMusic || !muteToggleBtn) {
+            return;
+        }
+        const isMuted = backgroundMusic.muted || backgroundMusic.volume === 0;
+        muteToggleBtn.textContent = isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
+        muteToggleBtn.classList.toggle('is-muted', isMuted);
+    };
+
+    // Controles: bajar/subir volumen y mutear.
+    if (backgroundMusic) {
+        const changeVolume = (delta) => {
+            const nextVolume = Math.min(1, Math.max(0, backgroundMusic.volume + delta));
+            backgroundMusic.volume = Number(nextVolume.toFixed(2));
+            if (backgroundMusic.volume > 0 && backgroundMusic.muted) {
+                backgroundMusic.muted = false;
+            }
+            updateMuteButtonState();
+            persistMusicState();
+        };
+
+        if (volumeDownBtn) {
+            volumeDownBtn.addEventListener('click', () => {
+                changeVolume(-0.1);
+            });
+        }
+
+        if (volumeUpBtn) {
+            volumeUpBtn.addEventListener('click', () => {
+                changeVolume(0.1);
+            });
+        }
+
+        if (muteToggleBtn) {
+            muteToggleBtn.addEventListener('click', () => {
+                backgroundMusic.muted = !backgroundMusic.muted;
+                updateMuteButtonState();
+                persistMusicState();
+            });
+        }
+
+        // Manejo del botÃ³n de toggle para expandir/contraer controles
+        const musicControls = document.querySelector('.music-controls');
+        const toggleExpandBtn = document.getElementById('music-toggle-expand');
+        
+        if (toggleExpandBtn && musicControls) {
+            toggleExpandBtn.addEventListener('click', () => {
+                musicControls.classList.toggle('expanded');
+            });
+        }
+
+        restoreMusicState();
+        updateMuteButtonState();
+        window.addEventListener('pagehide', persistMusicState);
+    }
+
     const closeButtons = document.querySelectorAll('.close');
 
     closeButtons.forEach(button => {
@@ -8,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Auto-cerrar mensajes después de 5 segundos
+    // Auto-cerrar mensajes despuÃ©s de 5 segundos
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -33,12 +214,13 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('scroll', showFooter, { passive: true });
         document.body.addEventListener('scroll', showFooter, { passive: true });
 
-        // Mostrar al tocar la pantalla (para móviles)
+        // Mostrar al tocar la pantalla (para mÃ³viles)
         window.addEventListener('touchstart', showFooter, { passive: true });
     }
 
     const profileDropdown = document.querySelector('.profile-dropdown');
     const profileToggle = document.querySelector('.profile-dropdown-toggle');
+
 
     if (profileDropdown && profileToggle) {
         const closeMenu = () => {
@@ -168,7 +350,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (closeLoginRequiredPanelBtn) {
-            closeLoginRequiredPanelBtn.addEventListener('click', closeLoginRequiredPanel);
+            closeLoginRequiredPanelBtn.addEventListener('click', () => {
+                closeLoginRequiredPanel();
+            });
         }
 
         loginRequiredPanel.addEventListener('click', (event) => {
@@ -184,3 +368,5 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+

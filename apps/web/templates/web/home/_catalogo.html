@@ -1,0 +1,40 @@
+<section id="catalogo-juegos">
+    <div class="welcome-header welcome-header-left welcome-header-home">
+        <h1 class="my-games-title">Catalogo de juegos</h1>
+        <p class="my-games-subtitle">Explora y juega titulos de la comunidad</p>
+    </div>
+
+    {% if games %}
+    <div class="game-grid">
+        {% for game in games %}
+        <div class="game-item" data-detail-url="{% url 'web:game_detail' game.pk %}" role="link" tabindex="0" aria-label="Ver detalles de {{ game.title }}">
+            {% if game.is_featured %}
+            <div class="game-badge-wrap">
+                <span class="badge badge-hot">Destacado</span>
+            </div>
+            {% endif %}
+
+            <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img">
+
+            <div class="game-info">
+                <div class="game-title">{{ game.title }}</div>
+                <div class="game-short-description">
+                    {{ game.short_description|truncatechars:75 }}
+                </div>
+                <div class="game-stats">
+                    <span><i class="fa fa-download"></i> {{ game.downloads }} Descargas</span>
+                    <span><i class="fa fa-star star-gold"></i> {{ game.rating }}</span>
+                </div>
+
+                <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link game-detail-link">Ver detalles</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="login-card full-width-card">
+        <h2 class="card-title-small">Aun no hay juegos publicados</h2>
+        <p class="card-muted-text">Todavia no hay juegos disponibles en el catalogo.</p>
+    </div>
+    {% endif %}
+</section>

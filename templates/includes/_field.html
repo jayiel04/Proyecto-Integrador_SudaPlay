@@ -1,4 +1,4 @@
-<div class="form-group">
+﻿<div class="form-group">
     {{ field.label_tag }}
     <div class="input-wrapper">
         {% if field.name == 'username' %}
@@ -10,7 +10,7 @@
         {% endif %}
         {{ field }}
     </div>
-    <div class="form-error ajax-error" id="error-{{ field.auto_id }}" style="display: none;"></div>
+    <div class="form-error ajax-error ajax-error-hidden" id="error-{{ field.auto_id }}"></div>
     {% if field.errors %}
     <div class="form-error">
         {% for error in field.errors %}

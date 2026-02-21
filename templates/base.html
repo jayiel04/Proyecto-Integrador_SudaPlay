@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SudaPlay{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/template_overrides.css' %}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
@@ -15,45 +16,53 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}"{% endif %}>
+<body{% if request.resolver_match.url_name=='login' or request.resolver_match.url_name=='register' or
+    request.resolver_match.url_name=='account_reset_password' or
+    request.resolver_match.url_name=='account_reset_password_from_key' or
+    request.resolver_match.url_name=='account_reset_password_done' or
+    request.resolver_match.url_name=='account_reset_password_from_key_done' or
+    request.resolver_match.url_name=='socialaccount_signup' %}
+    class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}" {% endif
+    %}>
     <div class="background"></div>
     <div class="floating-icons">
-        <i class="fa fa-gamepad floating-icon" style="top: 10%; left: 10%; animation-delay: 0s;"></i>
-        <i class="fa fa-trophy floating-icon" style="top: 20%; left: 80%; animation-delay: 2s;"></i>
-        <i class="fa fa-crosshairs floating-icon" style="top: 70%; left: 15%; animation-delay: 4s;"></i>
-        <i class="fa fa-ghost floating-icon" style="top: 80%; left: 85%; animation-delay: 6s;"></i>
-        <i class="fa fa-rocket floating-icon" style="top: 40%; left: 50%; animation-delay: 8s;"></i>
+        <i class="fa fa-gamepad floating-icon"></i>
+        <i class="fa fa-trophy floating-icon"></i>
+        <i class="fa fa-crosshairs floating-icon"></i>
+        <i class="fa fa-ghost floating-icon"></i>
+        <i class="fa fa-rocket floating-icon"></i>
     </div>
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
     <a href="{% url 'web:home' %}" class="body-left-brand" aria-label="Ir a la sección de juegos">
-        <span style="--i:1" class="body-left-brand-logo-wrap"><img src="{% static 'img/logo.svg' %}" alt="" class="body-left-brand-logo"></span><span style="--i:2">u</span><span style="--i:3">d</span><span
-            style="--i:4">a</span><span style="--i:5">P</span><span style="--i:6">l</span><span
-            style="--i:7">a</span><span style="--i:8">y</span>
+        <span class="body-left-brand-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
+                class="body-left-brand-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
     </a>
     {% endif %}
 
-    <nav class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %} navbar-auth{% endif %}">
+    <nav
+        class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
         <div class="navbar-container">
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
             <a href="{% url 'web:home' %}" class="navbar-brand">
-                <span style="--i:1" class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/logo.svg' %}" alt="" class="navbar-brand-letter-logo"></span><span style="--i:2">u</span><span style="--i:3">d</span><span
-                    style="--i:4">a</span><span style="--i:5">P</span><span style="--i:6">l</span><span
-                    style="--i:7">a</span><span style="--i:8">y</span>
+                <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
+                        class="navbar-brand-letter-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
             </a>
             {% endif %}
 
             <div class="nav-links nav-links-centered">
-                <a href="{% url 'web:home' %}" class="nav-item">Juegos</a>
                 {% if user.is_authenticated %}
-                <a href="{% url 'web:game_create' %}" class="nav-item">Subir juego</a>
+                <a href="{% url 'web:home' %}" class="nav-item">Inicio</a>
+                <a href="{% url 'web:my_games' %}" class="nav-item">Mis juegos</a>
                 {% else %}
+                <a href="{% url 'web:home' %}" class="nav-item">Juegos</a>
                 <a href="{% url 'web:game_create' %}" class="nav-item" data-login-required="true">Subir juego</a>
                 {% endif %}
-                <a href="{% url 'web:home' %}#contactos" class="nav-item">Contactos</a>
-                <a href="{% url 'web:home' %}#acerca-de" class="nav-item">Acerca de</a>
+                <a href="{% url 'web:normas' %}" class="nav-item">Normas</a>
+                <a href="{% url 'web:about' %}" class="nav-item">Acerca de</a>
             </div>
 
-            <div class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %} navbar-menu-guest{% endif %}">
+            <div
+                class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %} navbar-menu-guest{% endif %}">
                 {% if user.is_authenticated %}
                 <div class="profile-dropdown">
                     <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
@@ -66,15 +75,17 @@
                         <i class="fa fa-chevron-down"></i>
                     </button>
                     <div class="profile-dropdown-menu" role="menu">
-                        <a href="{% url 'web:game_create' %}" class="profile-dropdown-item" role="menuitem">Subir juego</a>
+                        <a href="{% url 'web:game_create' %}" class="profile-dropdown-item" role="menuitem">Subir
+                            juego</a>
                         <a href="{% url 'web:my_games' %}" class="profile-dropdown-item" role="menuitem">Mis juegos</a>
-                        <a href="{% url 'login:profile_edit' %}" class="profile-dropdown-item" role="menuitem">Editar perfil</a>
-                        <a href="{% url 'login:logout' %}" class="profile-dropdown-item logout-item" role="menuitem">Cerrar sesión</a>
+                        <a href="{% url 'login:profile_edit' %}" class="profile-dropdown-item" role="menuitem">Editar
+                            perfil</a>
+                        <a href="{% url 'login:logout' %}" class="profile-dropdown-item logout-item"
+                            role="menuitem">Cerrar sesión</a>
                     </div>
                 </div>
                 {% else %}
-                {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
-                <a href="{% url 'login:register' %}" class="navbar-link navbar-auth-link">Registro</a>
+                {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %}
                 <a href="{% url 'login:login' %}" class="navbar-link navbar-auth-link">Iniciar sesión</a>
                 {% endif %}
                 {% endif %}
@@ -87,27 +98,49 @@
         {% block content %}{% endblock %}
     </main>
 
-    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' and request.resolver_match.url_name != 'game_play' %}
     <footer class="footer">
         <p>&copy; 2026 . Todos los derechos reservados.</p>
     </footer>
     {% endif %}
 
     {% if not user.is_authenticated %}
-    <div id="login-required-panel" class="login-required-panel" aria-hidden="true" data-login-base="{% url 'login:login' %}">
+    <div id="login-required-panel" class="login-required-panel" aria-hidden="true"
+        data-login-base="{% url 'login:login' %}">
         <div class="login-required-card" role="dialog" aria-modal="true" aria-labelledby="login-required-title">
             <h3 id="login-required-title">Se requiere iniciar sesión</h3>
             <p>Debes iniciar sesión para utilizar esta funcionalidad.</p>
             <div class="login-required-actions">
-                <button type="button" id="close-login-required-panel" class="login-required-btn secondary">Cancelar</button>
-                <a href="{% url 'login:login' %}" id="continue-login-required-panel" class="login-required-btn primary">Iniciar sesión</a>
+                <button type="button" id="close-login-required-panel"
+                    class="login-required-btn secondary">Cancelar</button>
+                <a href="{% url 'login:login' %}" id="continue-login-required-panel"
+                    class="login-required-btn primary">Iniciar sesión</a>
             </div>
         </div>
     </div>
     {% endif %}
 
+    {% if request.resolver_match.url_name != 'game_play' %}
+    <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
+    <audio id="background-music" preload="auto" loop
+        src="{% static 'audio/bouncyrunner-arcade-all-night-396133.mp3' %}">
+    </audio>
+
+    <!-- Controles de volumen del audio de fondo. -->
+    <div class="music-controls" aria-label="Controles de volumen">
+        <button type="button" id="music-toggle-expand" class="music-control-btn music-toggle-btn"
+            title="Mostrar controles de volumen">&#128266;</button>
+        <div class="music-controls-expanded">
+            <button type="button" id="music-volume-down" class="music-control-btn" title="Bajar volumen">-</button>
+            <button type="button" id="music-volume-up" class="music-control-btn" title="Subir volumen">+</button>
+            <button type="button" id="music-mute-toggle" class="music-control-btn"
+                title="Silenciar o activar sonido">&#128263;</button>
+        </div>
+    </div>
+
+    {% endif %}
     <script src="{% static 'js/main.js' %}"></script>
     {% block extra_js %}{% endblock %}
-</body>
+    </body>
 
 </html>

@@ -1,0 +1,49 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Subir juego - SudaPlay{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-card game-upload-card">
+        <div class="login-header">
+            <h1>Subir juego</h1>
+            <p>Publicacion inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" id="game-upload-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="form-error game-upload-non-field-error">
+                {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <p class="game-upload-help-text">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                <div class="form-error">
+                    {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="game-upload-actions">
+                <button type="submit" class="btn-login game-upload-submit-btn">Guardar juego</button>
+                <a href="{% url 'web:home' %}" class="btn-login game-upload-cancel-link">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

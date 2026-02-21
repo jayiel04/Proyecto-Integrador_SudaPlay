@@ -1,0 +1,56 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ game.title }} - Detalle{% endblock %}
+
+{% block content %}
+<div class="container game-detail-container">
+    <div class="login-card game-detail-card">
+        <div class="game-detail-grid">
+            <div>
+                <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-detail-cover">
+            </div>
+            <div>
+                <h1 class="game-detail-title">{{ game.title }}</h1>
+                <p class="game-detail-author">
+                    Creador: <strong class="game-detail-author-name">{{ game.uploaded_by.username }}</strong>
+                </p>
+
+                <div class="game-detail-stats">
+                    <span><i class="fa fa-eye"></i> {{ game.views }} vistas</span>
+                    <span><i class="fa fa-download"></i> {{ game.downloads }} descargas</span>
+                    <span><i class="fa fa-star star-gold"></i> {{ game.rating }}</span>
+                </div>
+
+                <p class="game-detail-description">
+                    {{ game.description }}
+                </p>
+
+                <div class="game-detail-actions">
+                    {% if can_play %}
+                    <a href="{% url 'web:game_play' game.pk %}" class="btn-login game-detail-action-btn">
+                        Jugar ahora
+                    </a>
+                    {% endif %}
+
+                    {% if game.game_file %}
+                    <a href="{% url 'web:game_download' game.pk %}" class="btn-login game-detail-action-btn" {% if not user.is_authenticated %}data-login-required="true"{% endif %}>
+                        Descargar
+                    </a>
+                    {% endif %}
+
+                    <a href="{% url 'web:home' %}" class="btn-login game-detail-action-btn game-detail-back-btn">
+                        Volver al catálogo
+                    </a>
+                </div>
+
+                {% if not game.is_approved and is_owner %}
+                <p class="game-detail-unapproved-note">
+                    Este juego todavía no está publicado para otros usuarios.
+                </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

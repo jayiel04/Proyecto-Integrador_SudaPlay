@@ -29,7 +29,7 @@ class HomeView(TemplateView):
     Vista para la página de inicio.
     Muestra el catálogo de juegos publicado.
     """
-    template_name = 'home.html'
+    template_name = "web/home.html"
 
     def get_context_data(self, **kwargs):
         """Pasar contexto adicional al template."""
@@ -38,6 +38,20 @@ class HomeView(TemplateView):
         context['username'] = self.request.user.username
         context["games"] = Game.objects.filter(is_approved=True)
         return context
+
+
+class AboutView(TemplateView):
+    """
+    Vista para la pagina Acerca de.
+    """
+    template_name = "web/about.html"
+
+
+class NormasView(TemplateView):
+    """
+    Vista para las Normas de Convivencia.
+    """
+    template_name = "web/normas.html"
 
 
 class GameCreateView(LoginRequiredMixin, CreateView):

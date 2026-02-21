@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Iniciar Sesión - SudaPlay{% endblock %}
@@ -14,7 +14,7 @@
 <div class="container auth-page-layout">
     <div class="login-card">
         <div class="login-header">
-            <img src="{% static 'img/logo.svg' %}" alt="Logo" class="login-card-logo">
+            <img src="{% static 'img/SudaPlay.png' %}" alt="Logo" class="login-card-logo">
             <h1>Iniciar Sesión</h1>
         </div>
 
@@ -28,7 +28,7 @@
             <div class="remember-forgot">
                 <div class="checkbox-wrapper">
                     <input type="checkbox" id="remember" name="remember">
-                    <label for="remember" style="margin: 0;">Recuérdame</label>
+                    <label for="remember" class="remember-label-reset">Recuérdame</label>
                 </div>
                 <a href="{% url 'account_reset_password' %}">¿Olvidaste tu contraseña?</a>
             </div>
@@ -39,75 +39,12 @@
         {% include "includes/_social_login.html" %}
 
         <div class="signup-link login-signup-link">
-            ¿No tienes cuenta? <a href="{% url 'login:register' %}" class="signup-link-cta">Regístrate aquí</a>
+            <span class="signup-link-text">¿No tienes cuenta?</span><a href="{% url 'login:register' %}" class="signup-link-cta">Regístrate aquí</a>
         </div>
     </div>
 </div>
 
 {% if form.errors %}
-<style>
-    .login-error-popup {
-        position: fixed;
-        top: 14px;
-        right: 24px;
-        left: auto;
-        transform: none;
-        z-index: 1200;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        background: rgba(20, 0, 0, 0.92);
-        border: 1px solid rgba(255, 77, 77, 0.9);
-        border-radius: 10px;
-        box-shadow: 0 0 18px rgba(255, 77, 77, 0.35);
-        padding: 10px 14px;
-        max-width: min(92vw, 560px);
-        opacity: 1;
-        transition: opacity 0.25s ease;
-    }
-
-    .login-error-popup.is-hiding {
-        opacity: 0;
-    }
-
-    .login-error-popup-text {
-        color: #ff4d4d;
-        font-weight: 800;
-        font-size: 1rem;
-        text-transform: lowercase;
-    }
-
-    .login-error-popup-close {
-        border: 1px solid rgba(255, 77, 77, 0.55);
-        background: transparent;
-        color: #ff8f8f;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.95rem;
-        line-height: 1;
-        padding: 4px 8px;
-    }
-
-    .login-error-popup-close:hover {
-        background: rgba(255, 77, 77, 0.15);
-    }
-
-    .login-input-error-flash {
-        border-color: #ff4d4d !important;
-        box-shadow: 0 0 14px rgba(255, 77, 77, 0.45) !important;
-    }
-
-    @media (max-width: 600px) {
-        .login-error-popup {
-            top: 10px;
-            right: 12px;
-            left: auto;
-            transform: none;
-            width: calc(100vw - 24px);
-            max-width: none;
-        }
-    }
-</style>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const popup = document.getElementById('login-error-popup');
@@ -139,6 +76,9 @@
 </script>
 {% endif %}
 {% endblock %}
+
+
+
 
 
 

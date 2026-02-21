@@ -1,5 +1,5 @@
 """
-URLs para la aplicación login.
+URLs para la aplicaciÃ³n login.
 """
 from django.urls import path
 from . import views
@@ -12,4 +12,5 @@ urlpatterns = [
     path('logout/', views.LogoutView.as_view(), name='logout'),
     path('perfil/editar/', views.ProfileUpdateView.as_view(), name='profile_edit'),
     path('api/check_availability/', views.CheckUserAPIView.as_view(), name='check_availability'),
+    path('api/validate_password/', views.ValidatePasswordAPIView.as_view(), name='validate_password'),
 ]

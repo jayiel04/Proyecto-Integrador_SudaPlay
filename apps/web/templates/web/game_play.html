@@ -1,0 +1,269 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Jugar {{ game.title }} - SudaPlay{% endblock %}
+
+{% block content %}
+<div class="play-shell">
+    <div class="play-meta">
+        <h1 class="play-meta-title">{{ game.title }}</h1>
+        <p class="play-meta-description">{{ game.short_description }}</p>
+    </div>
+
+    {% if messages %}
+    <div class="inline-messages">
+        {% for message in messages %}
+        <p class="inline-message-text">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="play-rating-panel">
+        <p class="play-rating-summary">
+            Calificación actual:
+            <strong class="play-rating-score">{{ game.rating|floatformat:1 }}</strong>/5
+            ({{ game.rating_votes }} votos)
+        </p>
+        {% if user.is_authenticated %}
+        {% if user_has_rated %}
+        <p class="play-user-rated">
+            Ya calificaste este juego con <strong>{{ user_rating }}/5</strong>.
+        </p>
+        {% else %}
+        <form method="post" class="play-rating-form">
+            {% csrf_token %}
+            <label for="id_rating" class="play-rating-label">Tu calificación:</label>
+            <select name="rating" id="id_rating" required>
+                <option value="" selected disabled>Selecciona</option>
+                <option value="1">1 - Muy malo</option>
+                <option value="2">2 - Malo</option>
+                <option value="3">3 - Regular</option>
+                <option value="4">4 - Bueno</option>
+                <option value="5">5 - Excelente</option>
+            </select>
+            <button type="submit" class="btn-login play-rating-btn">
+                Calificar
+            </button>
+        </form>
+        {% endif %}
+        {% else %}
+        <p class="play-login-required">
+            Debes <a href="{% url 'login:login' %}?next={{ request.path|urlencode }}" class="play-login-link">iniciar
+                sesión</a>
+            para calificar este juego.
+        </p>
+        {% endif %}
+    </div>
+
+    {% if play_mode == "embedded" or play_mode == "external" %}
+    <div class="play-toolbar">
+        <button id="fullscreen-btn" class="btn-login play-rating-btn">
+            Pantalla completa
+        </button>
+    </div>
+
+    <div class="play-stage" id="play-stage">
+        <div class="play-pause-overlay" id="play-pause-overlay" aria-live="polite">
+            <button type="button" id="play-resume-btn" class="btn-login play-resume-btn">
+                Jugar
+            </button>
+        </div>
+        {% if play_mode == "embedded" %}
+        <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+            allow="autoplay; fullscreen; gamepad *; xr-spatial-tracking"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+            allowfullscreen></iframe>
+        {% else %}
+        <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+            allow="autoplay; fullscreen; gamepad *"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+            allowfullscreen></iframe>
+        {% endif %}
+    </div>
+
+    {% if play_mode == "external" %}
+    <p class="play-external-note">
+        Si no carga en el marco, abre el juego en
+        <a href="{{ play_url }}" target="_blank" rel="noopener">una nueva pestana</a>.
+    </p>
+    {% endif %}
+    {% else %}
+    <div class="login-card full-width-card">
+        <h2 class="play-unavailable-title">Juego no disponible</h2>
+        <p class="play-meta-description">Este juego no tiene una version jugable en web.</p>
+        <a href="{% url 'web:game_download' game.pk %}" class="btn-login play-download-btn" 
+        {% if not user.is_authenticated %} data-login-required="true" {% endif %}> Descargar archivo</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        const stage = document.getElementById("play-stage");
+        const frame = stage ? stage.querySelector(".play-frame") : null;
+        const fullscreenBtn = document.getElementById("fullscreen-btn");
+        const pauseOverlay = document.getElementById("play-pause-overlay");
+        const resumeBtn = document.getElementById("play-resume-btn");
+        let gameStarted = false;
+        let wasFullscreen = false;
+        if (!stage || !fullscreenBtn) return;
+
+        function suppressModalDialogs(targetWindow) {
+            if (!targetWindow) return;
+            try {
+                targetWindow.alert = function () { };
+                targetWindow.confirm = function () { return false; };
+                targetWindow.prompt = function () { return null; };
+            } catch (err) {
+                // Ignorar por politicas de origen cruzado.
+            }
+        }
+
+        suppressModalDialogs(window);
+
+        if (frame) {
+            frame.addEventListener("load", () => {
+                try {
+                    suppressModalDialogs(frame.contentWindow);
+                } catch (err) {
+                    // Ignorar por politicas de origen cruzado.
+                }
+            });
+        }
+
+        function setPausedState(isPaused) {
+            if (pauseOverlay) {
+                pauseOverlay.classList.toggle("is-hidden", !isPaused);
+            }
+            if (frame) {
+                frame.style.pointerEvents = isPaused ? "none" : "auto";
+
+                // Intentar pausar ejecuciones en el iframe (audio, video, eventos)
+                try {
+                    const win = frame.contentWindow;
+                    if (win) {
+                        // Enviar señal de postMessage por si el juego tiene un receptor
+                        win.postMessage({ type: isPaused ? 'sudaplay_pause' : 'sudaplay_resume' }, "*");
+
+                        if (isPaused) {
+                            // Simular pérdida de foco para que motores como Phaser/Unity se pausen
+                            win.dispatchEvent(new Event('blur'));
+
+                            // Pausar elementos multimedia si es mismo origen
+                            const media = win.document.querySelectorAll("audio, video");
+                            media.forEach(m => m.pause());
+                        } else {
+                            // Simular ganancia de foco
+                            win.dispatchEvent(new Event('focus'));
+                            frame.focus();
+                        }
+                    }
+                } catch (e) {
+                    // Ignorar errores de origen cruzado
+                }
+            }
+        }
+
+        function startGame() {
+            if (!frame) return;
+            if (!gameStarted) {
+                const targetSrc = frame.dataset.src;
+                if (!targetSrc) return;
+                frame.src = targetSrc;
+                gameStarted = true;
+            }
+            setPausedState(false);
+            frame.focus();
+        }
+
+        if (resumeBtn) {
+            resumeBtn.addEventListener("click", startGame);
+        }
+
+        function isFullscreenActive() {
+            return document.fullscreenElement || document.webkitFullscreenElement;
+        }
+
+        function updateButtonLabel() {
+            fullscreenBtn.textContent = isFullscreenActive()
+                ? "Pantalla completa activada (ESC para salir)"
+                : "Pantalla completa";
+        }
+
+        async function openFullscreen() {
+            if (stage.requestFullscreen) {
+                await stage.requestFullscreen();
+                return;
+            }
+            if (stage.webkitRequestFullscreen) {
+                stage.webkitRequestFullscreen();
+            }
+        }
+
+        fullscreenBtn.addEventListener("click", async () => {
+            if (isFullscreenActive()) {
+                return;
+            }
+            try {
+                await openFullscreen();
+            } catch (err) {
+                console.error("No se pudo cambiar a pantalla completa:", err);
+            }
+            updateButtonLabel();
+            if (frame) {
+                frame.focus();
+            }
+        });
+        function handleFullscreenChange() {
+            const active = isFullscreenActive();
+            // Eliminamos la pausa automática al salir de pantalla completa (Escape)
+            // para evitar que aparezca el icono de "Jugar".
+            wasFullscreen = Boolean(active);
+            updateButtonLabel();
+            if (active && frame) {
+                frame.focus();
+            }
+        }
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
+        wasFullscreen = Boolean(isFullscreenActive());
+        updateButtonLabel();
+
+        // Evitar scroll cuando el juego está iniciado
+        const blockScroll = (e) => {
+            if (!gameStarted) return;
+
+            const isTyping = ["INPUT", "SELECT", "TEXTAREA"].includes(document.activeElement.tagName);
+            if (isTyping) return;
+
+            const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " ", "Spacebar"];
+            if (keys.includes(e.key)) {
+                e.preventDefault();
+            }
+        };
+
+        window.addEventListener("keydown", blockScroll, { passive: false });
+
+        // Intentar bloquear scroll incluso si el foco está dentro del iframe (mismo origen)
+        if (frame) {
+            frame.addEventListener("load", () => {
+                try {
+                    frame.contentWindow.addEventListener("keydown", blockScroll, { passive: false });
+                } catch (e) {
+                    // Ignorar si es de origen cruzado
+                }
+            });
+        }
+
+        // Si el usuario hace clic en el área de juego, forzar foco al iframe
+        if (stage) {
+            stage.addEventListener("mousedown", () => {
+                if (gameStarted && frame) {
+                    setTimeout(() => frame.focus(), 10);
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}

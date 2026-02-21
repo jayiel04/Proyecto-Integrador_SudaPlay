@@ -9,11 +9,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # App URLs
-    path('', include('web.urls')),
+    path('', include('apps.web.urls')),
     path('auth/', include('apps.login.urls')),
     path('accounts/', include('allauth.urls')), # Esto crea las rutas de login/social
 ]
