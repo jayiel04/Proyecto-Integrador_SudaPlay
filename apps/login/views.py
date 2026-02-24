@@ -39,6 +39,8 @@ class LoginView(FormView):
         """Autenticar usuario si el formulario es valido."""
         user = form.get_user()
         auth_login(self.request, user)
+        # Mostrar bienvenida una sola vez al entrar despues del login.
+        self.request.session["show_post_login_welcome"] = True
         return super().form_valid(form)
 
     def form_invalid(self, form):

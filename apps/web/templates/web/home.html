@@ -4,6 +4,41 @@
 {% block title %}SudaPlay - Tu Arena de Juegos{% endblock %}
 
 {% block content %}
+{% if show_post_login_welcome and user.is_authenticated %}
+<div id="post-login-welcome" class="post-login-welcome" role="status" aria-live="polite">
+    <div class="post-login-welcome-content">
+        <button type="button" id="post-login-welcome-close" class="post-login-welcome-close" aria-label="Cerrar bienvenida">x</button>
+        <img src="{% static 'img/SudaPlay.png' %}" alt="Logo SudaGames" class="post-login-welcome-logo">
+        <p class="post-login-welcome-pretitle">Bienvenidos al</p>
+        <h2 class="post-login-welcome-title"><span>SudaPlay</span></h2>
+        <p class="post-login-welcome-subtitle">Demuestra de que estas hecho</p>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const welcome = document.getElementById('post-login-welcome');
+        const closeBtn = document.getElementById('post-login-welcome-close');
+        if (!welcome) return;
+        const dismissWelcome = function () {
+            welcome.classList.add('is-hiding');
+            setTimeout(function () {
+                welcome.remove();
+            }, 650);
+        };
+        if (closeBtn) {
+            closeBtn.addEventListener('click', dismissWelcome);
+        }
+        setTimeout(dismissWelcome, 4200);
+    });
+</script>
+{% endif %}
+
+{% if user.is_authenticated %}
+<div class="user-greeting" aria-live="polite">
+    Hola, {{ user.username|capfirst }}
+</div>
+{% endif %}
+
 <div class="container page-stack-container">
     {% if messages %}
     <div class="inline-messages">
