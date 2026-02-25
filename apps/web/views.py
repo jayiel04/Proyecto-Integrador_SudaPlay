@@ -37,6 +37,7 @@ class HomeView(TemplateView):
         context['user'] = self.request.user
         context['username'] = self.request.user.username
         context["games"] = Game.objects.filter(is_approved=True)
+        context["show_post_login_welcome"] = self.request.session.pop("show_post_login_welcome", False)
         return context
 
 
@@ -218,4 +219,3 @@ class GameDownloadView(LoginRequiredMixin, View):
 
         Game.objects.filter(pk=game.pk).update(downloads=F("downloads") + 1)
         return FileResponse(file_handle, as_attachment=True, filename="archivo.zip")
-

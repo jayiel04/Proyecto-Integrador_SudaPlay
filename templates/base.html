@@ -31,11 +31,18 @@
         <i class="fa fa-crosshairs floating-icon"></i>
         <i class="fa fa-ghost floating-icon"></i>
         <i class="fa fa-rocket floating-icon"></i>
+        <i class="fa fa-headset floating-icon"></i>
+        <i class="fa fa-bolt floating-icon"></i>
+        <i class="fa fa-shield-halved floating-icon"></i>
+        <i class="fa fa-chess-knight floating-icon"></i>
     </div>
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
     <a href="{% url 'web:home' %}" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span class="body-left-brand-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
                 class="body-left-brand-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
+        {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
+        <span class="body-left-brand-tagline">La aventura te esta esperando</span>
+        {% endif %}
     </a>
     {% endif %}
 
@@ -51,14 +58,28 @@
 
             <div class="nav-links nav-links-centered">
                 {% if user.is_authenticated %}
-                <a href="{% url 'web:home' %}" class="nav-item">Inicio</a>
-                <a href="{% url 'web:my_games' %}" class="nav-item">Mis juegos</a>
+                <div class="nav-links-middle nav-links-middle-auth">
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
+                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir">Subir juego</a>
+                    <a href="{% url 'web:home' %}" class="nav-item-home" aria-label="Inicio" title="Inicio">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
+                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+                </div>
                 {% else %}
-                <a href="{% url 'web:home' %}" class="nav-item">Juegos</a>
-                <a href="{% url 'web:game_create' %}" class="nav-item" data-login-required="true">Subir juego</a>
+                <div class="nav-links-left">
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
+                </div>
+                <div class="nav-links-middle">
+                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir"
+                        data-login-required="true">Subir juego</a>
+                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
+                </div>
+                <div class="nav-links-right">
+                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+                </div>
                 {% endif %}
-                <a href="{% url 'web:normas' %}" class="nav-item">Normas</a>
-                <a href="{% url 'web:about' %}" class="nav-item">Acerca de</a>
             </div>
 
             <div
