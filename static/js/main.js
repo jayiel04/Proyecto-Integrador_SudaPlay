@@ -299,31 +299,15 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('hashchange', updateHeaderActiveLink);
     }
 
-    const gameCards = Array.from(document.querySelectorAll('.game-item[data-detail-url]'));
-    if (gameCards.length > 0) {
-        const goToCardDetail = (card) => {
-            const url = card.dataset.detailUrl;
-            if (url) {
-                window.location.href = url;
+    const backLinks = Array.from(document.querySelectorAll('[data-back-link="true"]'));
+    backLinks.forEach((link) => {
+        link.addEventListener('click', (event) => {
+            if (window.history.length > 1) {
+                event.preventDefault();
+                window.history.back();
             }
-        };
-
-        gameCards.forEach((card) => {
-            card.addEventListener('click', (event) => {
-                if (event.target.closest('a, button, input, textarea, select, label')) {
-                    return;
-                }
-                goToCardDetail(card);
-            });
-
-            card.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    goToCardDetail(card);
-                }
-            });
         });
-    }
+    });
 
     const loginRequiredLinks = Array.from(document.querySelectorAll('[data-login-required="true"]'));
     const loginRequiredPanel = document.getElementById('login-required-panel');

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container page-stack-container">
     <div class="profile-back-row">
-        <a href="{% url 'web:home' %}" class="profile-back-link" onclick="if (window.history.length > 1) { window.history.back(); return false; }" aria-label="Volver a la página anterior">
+        <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la página anterior">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
             <span>Volver</span>
         </a>
@@ -36,7 +36,7 @@
 
     <div class="game-grid">
         {% for game in games %}
-        <div class="game-item" data-detail-url="{% url 'web:game_detail' game.pk %}" role="link" tabindex="0" aria-label="Ver detalles de {{ game.title }}">
+        <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
             <div class="game-badge-wrap game-badge-wrap-multi">
                 {% if game.is_featured %}
                 <span class="badge badge-hot">Destacado</span>
@@ -60,9 +60,9 @@
                     <span><i class="fa fa-download"></i> {{ game.downloads }}</span>
                 </div>
 
-                <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link game-detail-link">Ver detalles</a>
+                <span class="navbar-link game-detail-link">Ver detalles</span>
             </div>
-        </div>
+        </a>
         {% empty %}
         <div class="login-card full-width-card">
             <h2 class="card-title-small">Aún no has subido juegos</h2>
@@ -72,4 +72,3 @@
     </div>
 </div>
 {% endblock %}
-

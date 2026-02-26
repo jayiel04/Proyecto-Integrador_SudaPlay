@@ -7,7 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SudaPlay{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link rel="stylesheet" href="{% static 'css/template_overrides.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles-navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles-sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+    {% if request.resolver_match.app_name == 'login' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}">
+    {% endif %}
+    {% if request.resolver_match.app_name == 'web' %}
+    <link rel="stylesheet" href="{% static 'web/css/template_overrides.css' %}">
+    {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
@@ -16,14 +25,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name=='login' or request.resolver_match.url_name=='register' or
-    request.resolver_match.url_name=='account_reset_password' or
-    request.resolver_match.url_name=='account_reset_password_from_key' or
-    request.resolver_match.url_name=='account_reset_password_done' or
-    request.resolver_match.url_name=='account_reset_password_from_key_done' or
-    request.resolver_match.url_name=='socialaccount_signup' %}
-    class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}" {% endif
-    %}>
+<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}"{% endif %}>
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon"></i>
@@ -37,8 +39,8 @@
         <i class="fa fa-chess-knight floating-icon"></i>
     </div>
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
-    <a href="{% url 'web:home' %}" class="body-left-brand" aria-label="Ir a la sección de juegos">
-        <span class="body-left-brand-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
+    <a href="{% url 'web:home' %}#catalogo-juegos" class="body-left-brand" aria-label="Ir a la sección de juegos">
+        <span class="body-left-brand-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
                 class="body-left-brand-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
         {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
         <span class="body-left-brand-tagline">La aventura te esta esperando</span>
@@ -50,8 +52,8 @@
         class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
         <div class="navbar-container">
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
-            <a href="{% url 'web:home' %}" class="navbar-brand">
-                <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
+            <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
+                <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
                         class="navbar-brand-letter-logo"></span>
                 <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
             </a>
@@ -62,7 +64,7 @@
                 <div class="nav-links-middle nav-links-middle-auth">
                     <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
                     <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir">Subir juego</a>
-                    <a href="{% url 'web:home' %}" class="nav-item-home" aria-label="Inicio" title="Inicio">
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item-home" aria-label="Inicio" title="Inicio">
                         <i class="fa-solid fa-house"></i>
                     </a>
                     <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
@@ -167,3 +169,4 @@
     </body>
 
 </html>
+

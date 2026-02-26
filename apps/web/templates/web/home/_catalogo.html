@@ -7,7 +7,7 @@
     {% if games %}
     <div class="game-grid">
         {% for game in games %}
-        <div class="game-item" data-detail-url="{% url 'web:game_detail' game.pk %}" role="link" tabindex="0" aria-label="Ver detalles de {{ game.title }}">
+        <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
             {% if game.is_featured %}
             <div class="game-badge-wrap">
                 <span class="badge badge-hot">Destacado</span>
@@ -26,9 +26,9 @@
                     <span><i class="fa fa-star star-gold"></i> {{ game.rating }}</span>
                 </div>
 
-                <a href="{% url 'web:game_detail' game.pk %}" class="navbar-link game-detail-link">Ver detalles</a>
+                <span class="navbar-link game-detail-link">Ver detalles</span>
             </div>
-        </div>
+        </a>
         {% endfor %}
     </div>
     {% else %}
