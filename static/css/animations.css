@@ -1,0 +1,448 @@
+/* Global Decorators */
+.floating-icons {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.floating-icon {
+    position: absolute;
+    color: rgba(143, 233, 230, 0.28);
+    font-size: 4rem;
+    -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.92);
+    text-shadow:
+        0 0 8px rgba(0, 0, 0, 0.9),
+        0 0 16px rgba(0, 0, 0, 0.65),
+        0 0 22px rgba(0, 255, 255, 0.34),
+        0 0 30px rgba(0, 128, 128, 0.28);
+    animation: floatAround 20s linear infinite, iconPulse 2.7s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* Applied overrides directly to the source module */
+.floating-icon:nth-child(1) {
+    top: 10%;
+    left: 10%;
+    animation-name: floatLoopA, iconPulse;
+    animation-duration: 10s, 2.2s;
+    animation-delay: 0s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+.floating-icon:nth-child(2) {
+    top: 20%;
+    left: 80%;
+    animation-name: floatLoopB, iconPulse;
+    animation-duration: 14s, 2.6s;
+    animation-delay: 2s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+.floating-icon:nth-child(3) {
+    top: 70%;
+    left: 15%;
+    animation-name: floatLoopC, iconPulse;
+    animation-duration: 10.5s, 2.3s;
+    animation-delay: 4s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+.floating-icon:nth-child(4) {
+    top: 80%;
+    left: 85%;
+    animation-duration: 26s, 3.4s;
+    animation-delay: 6s;
+}
+
+.floating-icon:nth-child(5) {
+    top: 40%;
+    left: 50%;
+    animation-name: floatLoopRocket, iconPulse;
+    animation-duration: 11s, 2.2s;
+    animation-delay: 8s;
+    animation-timing-function: linear, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+    animation-play-state: running, running;
+}
+
+.floating-icon:nth-child(6) {
+    top: 14%;
+    left: 52%;
+    animation-duration: 16s, 2.8s;
+    animation-delay: -6.2s, -1.3s;
+}
+
+.floating-icon:nth-child(7) {
+    top: 50%;
+    left: 86%;
+    animation-duration: 18s, 2.5s;
+    animation-delay: -9.4s, -1s;
+}
+
+.floating-icon:nth-child(8) {
+    top: 78%;
+    left: 30%;
+    animation-duration: 17s, 2.9s;
+    animation-delay: -7.3s, -1.4s;
+}
+
+.floating-icon:nth-child(9) {
+    top: 28%;
+    left: 30%;
+    animation-duration: 19s, 3s;
+    animation-delay: -10.1s, -1.6s;
+}
+
+/* Keyframes definitions */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.3;
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.2);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.3;
+    }
+}
+
+@keyframes moveGrid {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    100% {
+        transform: translate(50px, 50px);
+    }
+}
+
+@keyframes floatAround {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(100px, 100px) rotate(90deg);
+    }
+
+    50% {
+        transform: translate(0, 200px) rotate(180deg);
+    }
+
+    75% {
+        transform: translate(-100px, 100px) rotate(270deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}
+
+@keyframes iconPulse {
+
+    0%,
+    100% {
+        opacity: 0.72;
+        filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.85));
+    }
+
+    50% {
+        opacity: 0.95;
+        filter: drop-shadow(0 0 14px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 18px rgba(0, 255, 255, 0.35));
+    }
+}
+
+@keyframes floatLoopA {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate3d(70px, -36px, 0) rotate(90deg);
+    }
+
+    50% {
+        transform: translate3d(130px, 44px, 0) rotate(180deg);
+    }
+
+    75% {
+        transform: translate3d(52px, 110px, 0) rotate(270deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes floatLoopB {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate3d(-82px, 42px, 0) rotate(95deg);
+    }
+
+    50% {
+        transform: translate3d(-138px, -28px, 0) rotate(190deg);
+    }
+
+    75% {
+        transform: translate3d(-48px, -102px, 0) rotate(285deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes floatLoopC {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate3d(88px, 24px, 0) rotate(88deg);
+    }
+
+    50% {
+        transform: translate3d(22px, -86px, 0) rotate(176deg);
+    }
+
+    75% {
+        transform: translate3d(-84px, -32px, 0) rotate(264deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes floatLoopRocket {
+    0% {
+        transform: translate3d(0, 0, 0) rotate(0deg);
+    }
+
+    20% {
+        transform: translate3d(84px, -42px, 0) rotate(72deg);
+    }
+
+    40% {
+        transform: translate3d(142px, 36px, 0) rotate(144deg);
+    }
+
+    60% {
+        transform: translate3d(46px, 120px, 0) rotate(216deg);
+    }
+
+    80% {
+        transform: translate3d(-78px, 30px, 0) rotate(288deg);
+    }
+
+    100% {
+        transform: translate3d(0, 0, 0) rotate(360deg);
+    }
+}
+
+@keyframes brandMoveIntense {
+
+    0%,
+    100% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+    }
+
+    20% {
+        transform: translateY(-7px) translateX(2px) rotate(-0.8deg);
+    }
+
+    45% {
+        transform: translateY(2px) translateX(-2px) rotate(0.7deg);
+    }
+
+    70% {
+        transform: translateY(-5px) translateX(2px) rotate(-0.6deg);
+    }
+}
+
+@keyframes brandGlitch {
+
+    0%,
+    86%,
+    100% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(0);
+    }
+
+    88% {
+        opacity: 0.72;
+        transform: translateY(-50%) translateX(-2px);
+    }
+
+    90% {
+        opacity: 0.34;
+        transform: translateY(-50%) translateX(3px);
+    }
+
+    92% {
+        opacity: 0.58;
+        transform: translateY(-50%) translateX(-1px);
+    }
+}
+
+@keyframes brandLightning {
+
+    0%,
+    79%,
+    100% {
+        opacity: 0;
+        transform: translateY(-50%) translateX(0) scaleX(0.96);
+    }
+
+    82% {
+        opacity: 0.9;
+        transform: translateY(-50%) translateX(-2px) scaleX(1);
+    }
+
+    83% {
+        opacity: 0.25;
+        transform: translateY(-50%) translateX(2px) scaleX(0.98);
+    }
+
+    84% {
+        opacity: 1;
+        transform: translateY(-50%) translateX(-1px) scaleX(1.03);
+    }
+
+    85% {
+        opacity: 0.35;
+        transform: translateY(-50%) translateX(1px) scaleX(0.97);
+    }
+}
+
+@keyframes float {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes neonGlow {
+
+    0%,
+    100% {
+        text-shadow:
+            0 0 10px rgba(57, 231, 255, 0.9),
+            0 0 18px rgba(57, 231, 255, 0.7),
+            0 0 30px rgba(255, 62, 165, 0.45);
+    }
+
+    50% {
+        text-shadow:
+            0 0 14px rgba(57, 231, 255, 1),
+            0 0 26px rgba(57, 231, 255, 0.85),
+            0 0 40px rgba(255, 62, 165, 0.6);
+    }
+}
+
+@keyframes cyberFlicker {
+
+    0%,
+    19%,
+    22%,
+    62%,
+    64%,
+    100% {
+        opacity: 1;
+    }
+
+    20%,
+    63% {
+        opacity: 0.82;
+    }
+}
+
+@keyframes cyberPulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+        text-shadow:
+            0 0 12px rgba(57, 231, 255, 0.95),
+            0 0 22px rgba(57, 231, 255, 0.62),
+            0 0 30px rgba(255, 62, 165, 0.38);
+    }
+
+    50% {
+        transform: scale(1.03);
+        text-shadow:
+            0 0 16px rgba(57, 231, 255, 1),
+            0 0 30px rgba(57, 231, 255, 0.75),
+            0 0 38px rgba(255, 62, 165, 0.5);
+    }
+}
+
+@keyframes gamerBluePulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 14px rgba(0, 162, 255, 0.35), inset 0 0 16px rgba(170, 220, 255, 0.1);
+    }
+
+    50% {
+        box-shadow: 0 0 24px rgba(0, 162, 255, 0.6), 0 0 34px rgba(84, 194, 255, 0.45), inset 0 0 20px rgba(190, 232, 255, 0.18);
+    }
+}
+
+@keyframes gamerBlueSweep {
+    0% {
+        background-position: 0 0, 0 0, 0 0;
+    }
+
+    100% {
+        background-position: 0 0, 220% 0, 0 0;
+    }
+}
+
+@keyframes gamerBlueFrame {
+
+    0%,
+    100% {
+        opacity: 0.32;
+    }
+
+    50% {
+        opacity: 0.72;
+    }
+}

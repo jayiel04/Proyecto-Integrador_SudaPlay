@@ -1,0 +1,68 @@
+{% load static %}
+<nav
+    class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
+    <div class="navbar-container">
+        {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
+        <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
+            <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt=""
+                    class="navbar-brand-letter-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
+        </a>
+        {% endif %}
+
+        <div class="nav-links nav-links-centered">
+            {% if user.is_authenticated %}
+            <div class="nav-links-middle nav-links-middle-auth">
+                <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
+                <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir">Subir juego</a>
+                <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item-home" aria-label="Inicio" title="Inicio">
+                    <i class="fa-solid fa-house"></i>
+                </a>
+                <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
+                <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+            </div>
+            {% else %}
+            <div class="nav-links-left">
+                <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
+            </div>
+            <div class="nav-links-middle">
+                <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir"
+                    data-login-required="true">Subir juego</a>
+                <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
+            </div>
+            <div class="nav-links-right">
+                <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <div
+            class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %} navbar-menu-guest{% endif %}">
+            {% if user.is_authenticated %}
+            <div class="profile-dropdown">
+                <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
+                    {% if navbar_avatar_url %}
+                    <img src="{{ navbar_avatar_url }}" alt="Perfil" class="navbar-avatar">
+                    {% else %}
+                    <i class="fa fa-user-circle navbar-avatar-fallback"></i>
+                    {% endif %}
+                    <span>{{ user.username }}</span>
+                    <i class="fa fa-chevron-down"></i>
+                </button>
+                <div class="profile-dropdown-menu" role="menu">
+                    <a href="{% url 'web:game_create' %}" class="profile-dropdown-item" role="menuitem">Subir
+                        juego</a>
+                    <a href="{% url 'web:my_games' %}" class="profile-dropdown-item" role="menuitem">Mis juegos</a>
+                    <a href="{% url 'login:profile_edit' %}" class="profile-dropdown-item" role="menuitem">Editar
+                        perfil</a>
+                    <a href="{% url 'login:logout' %}" class="profile-dropdown-item logout-item"
+                        role="menuitem">Cerrar sesión</a>
+                </div>
+            </div>
+            {% else %}
+            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %}
+            <a href="{% url 'login:login' %}" class="navbar-link navbar-auth-link">Iniciar sesión</a>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</nav>

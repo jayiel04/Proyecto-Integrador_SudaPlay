@@ -1,0 +1,112 @@
+/* Buttons Core */
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta), var(--accent-violet));
+    color: #f4fffe;
+    border: none;
+    border-radius: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s;
+    box-shadow: 0 0 22px rgba(57, 231, 255, 0.32), 0 0 18px rgba(255, 62, 165, 0.24);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
+    animation: cyberFlicker 2.4s infinite;
+}
+
+.btn-login:hover {
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 0 30px rgba(57, 231, 255, 0.42), 0 0 26px rgba(255, 62, 165, 0.3);
+    filter: brightness(1.28);
+}
+
+.login-main-submit {
+    background: linear-gradient(135deg, #006b6b, var(--neon-cyan), #00a7a7);
+    border: 1px solid #00FFFF;
+    color: #e8ffff;
+    text-shadow: 0 0 10px rgba(0, 255, 255, 0.55);
+    box-shadow:
+        0 0 18px rgba(0, 128, 128, 0.62),
+        0 0 24px rgba(0, 255, 255, 0.42),
+        inset 0 0 10px rgba(0, 139, 139, 0.45),
+        inset 0 0 0 1px rgba(0, 128, 128, 0.95);
+    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+}
+
+.login-main-submit:hover {
+    background: linear-gradient(135deg, #007777, var(--neon-cyan), #00d0d0);
+    border-color: #33c9c9;
+    box-shadow:
+        0 0 24px rgba(0, 128, 128, 0.78),
+        0 0 30px rgba(0, 255, 255, 0.55),
+        inset 0 0 12px rgba(0, 139, 139, 0.55),
+        inset 0 0 0 1px rgba(0, 255, 255, 0.92);
+}
+
+.music-control-btn {
+    border: 1px solid rgba(186, 80, 255, 0.65);
+    background: rgba(163, 42, 255, 0.18);
+    color: #f3ddff;
+    border-radius: 6px;
+    min-width: 42px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 1.18rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 0 14px rgba(176, 74, 255, 0.4), inset 0 0 10px rgba(210, 145, 255, 0.25);
+}
+
+.music-control-btn:hover {
+    background: rgba(169, 48, 255, 0.34);
+    border-color: rgba(228, 178, 255, 0.95);
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(190, 98, 255, 0.62), inset 0 0 12px rgba(230, 182, 255, 0.42);
+}
+
+.music-control-btn.is-muted {
+    border-color: rgba(255, 99, 99, 0.5);
+    color: #ffd1d1;
+    background: rgba(255, 99, 99, 0.16);
+}
+
+.social-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.google-btn-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    cursor: pointer;
+    padding: 0;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.google-btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+    box-shadow: 0 0 20px rgba(70, 123, 121, 0.4);
+    transform: scale(1.1) rotate(5deg);
+}
+
+.google-btn-icon i {
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.2));
+}

@@ -1,0 +1,15 @@
+{% if not user.is_authenticated %}
+<div id="login-required-panel" class="login-required-panel" aria-hidden="true"
+    data-login-base="{% url 'login:login' %}">
+    <div class="login-required-card" role="dialog" aria-modal="true" aria-labelledby="login-required-title">
+        <h3 id="login-required-title">Se requiere iniciar sesión</h3>
+        <p>Debes iniciar sesión para utilizar esta funcionalidad.</p>
+        <div class="login-required-actions">
+            <button type="button" id="close-login-required-panel"
+                class="login-required-btn secondary">Cancelar</button>
+            <a href="{% url 'login:login' %}" id="continue-login-required-panel"
+                class="login-required-btn primary">Iniciar sesión</a>
+        </div>
+    </div>
+</div>
+{% endif %}
