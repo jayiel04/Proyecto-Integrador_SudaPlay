@@ -18,7 +18,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib import messages
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import JsonResponse
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 
 from .forms import RegisterForm, ProfileUpdateForm
@@ -35,6 +35,9 @@ class LoginView(FormView):
     form_class = AuthenticationForm
     success_url = reverse_lazy('web:home')
 
+    def get_success_url(self):
+        return f"{reverse('web:home')}#catalogo-juegos"
+
     def form_valid(self, form):
         """Autenticar usuario si el formulario es valido."""
         user = form.get_user()
@@ -50,7 +53,7 @@ class LoginView(FormView):
     def get(self, request, *args, **kwargs):
         """Redirigir a home si ya esta autenticado."""
         if request.user.is_authenticated:
-            return redirect('web:home')
+            return redirect(f"{reverse('web:home')}#catalogo-juegos")
         return super().get(request, *args, **kwargs)
 
 
@@ -76,7 +79,7 @@ class RegisterView(FormView):
     def get(self, request, *args, **kwargs):
         """Redirigir a home si ya esta autenticado."""
         if request.user.is_authenticated:
-            return redirect('web:home')
+            return redirect(f"{reverse('web:home')}#catalogo-juegos")
         return super().get(request, *args, **kwargs)
 
 
@@ -100,6 +103,9 @@ class ProfileUpdateView(FormView):
     template_name = 'login/profile_edit.html'
     form_class = ProfileUpdateForm
     success_url = reverse_lazy('web:home')
+
+    def get_success_url(self):
+        return f"{reverse('web:home')}#catalogo-juegos"
 
     @method_decorator(login_required(login_url='login:login'))
     def dispatch(self, request, *args, **kwargs):
