@@ -15,4 +15,3 @@ requests
 sqlparse
 tzdata
 urllib3
-supabase

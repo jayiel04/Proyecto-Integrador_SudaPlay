@@ -50,15 +50,4 @@
 
     {% include "web/home/_catalogo.html" %}
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.location.hash) return;
-        const catalogSection = document.getElementById('catalogo-juegos');
-        if (!catalogSection) return;
-
-        const baseUrl = `${window.location.pathname}${window.location.search}`;
-        history.replaceState(null, '', `${baseUrl}#catalogo-juegos`);
-        catalogSection.scrollIntoView({ block: 'start' });
-    });
-</script>
 {% endblock %}

@@ -15,7 +15,7 @@ from django.views.generic import TemplateView
 from django.views.generic import DetailView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse_lazy
 from django.db.models import F, Q
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -60,9 +60,6 @@ class GameCreateView(LoginRequiredMixin, CreateView):
     form_class = GameForm
     success_url = reverse_lazy("web:home")
     login_url = "login:login"
-
-    def get_success_url(self):
-        return f"{reverse('web:home')}#catalogo-juegos"
 
     def form_valid(self, form):
         form.instance.uploaded_by = self.request.user

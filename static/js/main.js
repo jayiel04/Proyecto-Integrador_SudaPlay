@@ -1,6 +1,5 @@
 // Funcionalidad para cerrar mensajes
 document.addEventListener('DOMContentLoaded', function () {
-    // ========= Audio de interfaz: click =========
     // Compatibilidad de AudioContext entre navegadores.
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     const audioContext = AudioContextClass ? new AudioContextClass() : null;
@@ -12,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const volumeDownBtn = document.getElementById('music-volume-down');
     const volumeUpBtn = document.getElementById('music-volume-up');
     const muteToggleBtn = document.getElementById('music-mute-toggle');
-    // Claves para persistir estado de mÃºsica entre pÃ¡ginas (ej: login -> juegos).
+    // Claves para persistir estado de música entre paginas (ej: login -> juegos).
     const MUSIC_STATE_KEYS = {
         shouldPlay: 'sudaplay_music_should_play',
         volume: 'sudaplay_music_volume',
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Evita intentar iniciar la pista de fondo en cada click.
     let backgroundMusicStarted = false;
 
-    // Guarda estado actual para restaurarlo tras navegaciÃ³n.
+    // Guarda estado actual para restaurarlo tras navegación.
     const persistMusicState = () => {
         if (!backgroundMusic) {
             return;
@@ -80,24 +79,24 @@ document.addEventListener('DOMContentLoaded', function () {
         const filterNode = audioContext.createBiquadFilter();
         const now = audioContext.currentTime;
 
-        oscillator.type = 'triangle';
-        oscillator.frequency.setValueAtTime(920, now);
-        oscillator.frequency.exponentialRampToValueAtTime(380, now + 0.06);
+        oscillator.type = 'sawtooth';
+        oscillator.frequency.setValueAtTime(1200, now);
+        oscillator.frequency.exponentialRampToValueAtTime(600, now + 0.05);
 
-        filterNode.type = 'bandpass';
-        filterNode.frequency.setValueAtTime(1100, now);
-        filterNode.Q.value = 1.8;
+        filterNode.type = 'highpass';
+        filterNode.frequency.setValueAtTime(800, now);
+        filterNode.Q.value = 2.2;
 
         gainNode.gain.setValueAtTime(0.0001, now);
-        gainNode.gain.exponentialRampToValueAtTime(0.045, now + 0.008);
-        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+        gainNode.gain.exponentialRampToValueAtTime(0.08, now + 0.004);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
 
         oscillator.connect(filterNode);
         filterNode.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
         oscillator.start(now);
-        oscillator.stop(now + 0.09);
+        oscillator.stop(now + 0.075);
     };
 
     // El navegador bloquea autoplay: se reanuda el audio al primer gesto
@@ -110,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
             playClickTone();
         }).catch(() => { });
 
-        // Inicia el MP3 de fondo en la primera interacciÃ³n del usuario.
+        // Inicia el MP3 de fondo .
         if (backgroundMusic && !backgroundMusicStarted) {
             if (!localStorage.getItem(MUSIC_STATE_KEYS.volume)) {
                 backgroundMusic.volume = 0.24;
@@ -124,14 +123,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.addEventListener('pointerdown', activateAudioFromGesture, { passive: true });
 
-    // Mantiene el texto/estado visual del botÃ³n de mute.
+    // Mantiene el texto/estado visual del botón de mute.
     const updateMuteButtonState = () => {
-        if (!backgroundMusic || !muteToggleBtn) {
+        if (!backgroundMusic) {
             return;
         }
         const isMuted = backgroundMusic.muted || backgroundMusic.volume === 0;
-        muteToggleBtn.textContent = isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
-        muteToggleBtn.classList.toggle('is-muted', isMuted);
+        
+        if (muteToggleBtn) {
+            muteToggleBtn.textContent = isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
+            muteToggleBtn.classList.toggle('is-muted', isMuted);
+        }
+
+        // Actualizar también el icono del sidebar si existe
+        const sidebarSoundIcon = document.querySelector('.secondary-nav-sound i');
+        if (sidebarSoundIcon) {
+            sidebarSoundIcon.className = isMuted ? 'fas fa-volume-mute' : 'fas fa-volume-up';
+        }
     };
 
     // Controles: bajar/subir volumen y mutear.
@@ -166,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
 
-        // Manejo del botÃ³n de toggle para expandir/contraer controles
+        // Manejo del botón de toggle para expandir/contraer controles
         const musicControls = document.querySelector('.music-controls');
         const toggleExpandBtn = document.getElementById('music-toggle-expand');
         
@@ -189,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Auto-cerrar mensajes despuÃ©s de 5 segundos
+    // Auto-cerrar mensajes despues de 5 segundos
     const alerts = document.querySelectorAll('.alert');
     alerts.forEach(alert => {
         setTimeout(() => {
@@ -257,6 +265,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const updateHeaderActiveLink = () => {
             const currentPath = normalizePath(window.location.pathname);
             const currentHash = (window.location.hash || '').toLowerCase();
+            const isCatalogSection = currentHash === '#catalogo-juegos';
+
+            document.body.classList.toggle('catalogo-focus', isCatalogSection);
 
             centeredNavLinks.forEach((link) => {
                 const linkUrl = new URL(link.href, window.location.origin);
@@ -367,5 +378,132 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-});
 
+    // SIDEBAR TOGGLE & SOPORTE, solo para usuarios logueados (detectado por la existencia del dropdown de perfil)
+    const navbarContainer = document.querySelector('.navbar-container');
+    const navbarBrand = document.querySelector('.navbar-brand');
+    
+    // Verificamos si el usuario esta logueado buscando el dropdown de perfil
+    const isUserLoggedIn = document.querySelector('.profile-dropdown');
+
+    if (isUserLoggedIn) {
+        let sidebar = document.querySelector('.secondary-nav');
+
+        if (!sidebar) {
+            sidebar = document.createElement('aside');
+            sidebar.className = 'secondary-nav';
+            sidebar.innerHTML = '<div class="secondary-nav-container"></div>';
+            // Insertar al principio del body para que el z-index funcione bien
+            document.body.insertBefore(sidebar, document.body.firstChild);
+        }
+        
+        // Marca el body para ajustar margenes CSS
+        document.body.classList.add('has-sidebar');
+
+        if (navbarContainer && navbarBrand && sidebar) {
+            if (!document.getElementById('sidebar-toggle')) {
+                const toggleBtn = document.createElement('button');
+                toggleBtn.id = 'sidebar-toggle';
+                toggleBtn.className = 'sidebar-toggle';
+                toggleBtn.innerHTML = '<i class="fas fa-bars"></i>'; // Icono hamburguesa
+                toggleBtn.setAttribute('aria-label', 'Abrir/Cerrar Menú');
+                navbarContainer.insertBefore(toggleBtn, navbarBrand);
+
+                // Lógica de click
+                toggleBtn.addEventListener('click', () => {
+                    const isNowOpen = document.body.classList.toggle('sidebar-open');
+                    localStorage.setItem('sudaplay_sidebar_state', isNowOpen ? 'open' : 'closed');
+                });
+
+                // Restaurar estado guardado
+                if (localStorage.getItem('sudaplay_sidebar_state') === 'open') {
+                    document.body.classList.add('sidebar-open');
+                }
+            }
+
+            //   Icono de Sonido y Soporte al Sidebar
+            const sidebarContainer = sidebar.querySelector('.secondary-nav-container');
+            
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-sound')) {
+                const soundLink = document.createElement('a');
+                soundLink.href = '#';
+                soundLink.className = 'secondary-nav-item secondary-nav-sound mt-auto'; // Empuja al fondo
+                const isMuted = backgroundMusic ? backgroundMusic.muted : false;
+                soundLink.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i><span>Sonido</span>' : '<i class="fas fa-volume-up"></i><span>Sonido</span>';
+                
+                soundLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (backgroundMusic) {
+                        backgroundMusic.muted = !backgroundMusic.muted;
+                        updateMuteButtonState();
+                        persistMusicState();
+                    }
+                });
+                sidebarContainer.appendChild(soundLink);
+            }
+
+            //  Botón Bajar Volumen
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-vol-down')) {
+                const volDownLink = document.createElement('a');
+                volDownLink.href = '#';
+                volDownLink.className = 'secondary-nav-item secondary-nav-vol-down';
+                volDownLink.innerHTML = '<i class="fas fa-minus"></i>';
+                
+                volDownLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (backgroundMusic) {
+                        const nextVolume = Math.min(1, Math.max(0, backgroundMusic.volume - 0.1));
+                        backgroundMusic.volume = Number(nextVolume.toFixed(2));
+                        if (backgroundMusic.volume > 0 && backgroundMusic.muted) {
+                            backgroundMusic.muted = false;
+                        }
+                        updateMuteButtonState();
+                        persistMusicState();
+                    }
+                });
+                sidebarContainer.appendChild(volDownLink);
+            }
+
+            // Botón Subir Volumen
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-vol-up')) {
+                const volUpLink = document.createElement('a');
+                volUpLink.href = '#';
+                volUpLink.className = 'secondary-nav-item secondary-nav-vol-up';
+                volUpLink.innerHTML = '<i class="fas fa-plus"></i>';
+                
+                volUpLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    if (backgroundMusic) {
+                        const nextVolume = Math.min(1, Math.max(0, backgroundMusic.volume + 0.1));
+                        backgroundMusic.volume = Number(nextVolume.toFixed(2));
+                        if (backgroundMusic.volume > 0 && backgroundMusic.muted) {
+                            backgroundMusic.muted = false;
+                        }
+                        updateMuteButtonState();
+                        persistMusicState();
+                    }
+                });
+                sidebarContainer.appendChild(volUpLink);
+            }
+
+            // Botón de Soporte
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-support')) {
+                const supportLink = document.createElement('a');
+                supportLink.href = '#'; // Puedes cambiar esto por la URL real de soporte
+                supportLink.className = 'secondary-nav-item secondary-nav-support'; // Se apila debajo del sonido
+                supportLink.innerHTML = '<i class="fas fa-headset"></i><span>Soporte</span>';
+                sidebarContainer.appendChild(supportLink);
+            }
+
+            //  Botón Cerrar Sesión
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-logout')) {
+                const logoutLink = document.createElement('a');
+                logoutLink.href = '/auth/logout/';
+                logoutLink.className = 'secondary-nav-item secondary-nav-logout';
+                logoutLink.innerHTML = '<i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>';
+                sidebarContainer.appendChild(logoutLink);
+            }
+        }
+    }
+
+});
