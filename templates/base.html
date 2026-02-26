@@ -25,7 +25,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' %} body-register-page{% endif %}"{% endif %}>
+<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %} body-register-page{% endif %}"{% endif %}>
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon"></i>

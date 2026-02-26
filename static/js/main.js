@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         const isMuted = backgroundMusic.muted || backgroundMusic.volume === 0;
-        
+
         if (muteToggleBtn) {
             muteToggleBtn.textContent = isMuted ? '\uD83D\uDD07' : '\uD83D\uDD0A';
             muteToggleBtn.classList.toggle('is-muted', isMuted);
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Manejo del botón de toggle para expandir/contraer controles
         const musicControls = document.querySelector('.music-controls');
         const toggleExpandBtn = document.getElementById('music-toggle-expand');
-        
+
         if (toggleExpandBtn && musicControls) {
             toggleExpandBtn.addEventListener('click', () => {
                 musicControls.classList.toggle('expanded');
@@ -363,14 +363,16 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // SIDEBAR TOGGLE & SOPORTE, solo para usuarios logueados (detectado por la existencia del dropdown de perfil)
-    const navbarContainer = document.querySelector('.navbar-container');
-    const navbarBrand = document.querySelector('.navbar-brand');
-    
-    // Verificamos si el usuario esta logueado buscando el dropdown de perfil
-    const isUserLoggedIn = document.querySelector('.profile-dropdown');
+    // SIDEBAR TOGGLE & SOPORTE
+    const isAuthPage = document.body.classList.contains('body-auth-page');
 
-    if (isUserLoggedIn) {
+    if (!isAuthPage) {
+        const navbarContainer = document.querySelector('.navbar-container');
+        const navbarBrand = document.querySelector('.navbar-brand');
+
+        // Verificamos si el usuario esta logueado buscando el dropdown de perfil
+        const isUserLoggedIn = document.querySelector('.profile-dropdown');
+
         let sidebar = document.querySelector('.secondary-nav');
 
         if (!sidebar) {
@@ -380,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Insertar al principio del body para que el z-index funcione bien
             document.body.insertBefore(sidebar, document.body.firstChild);
         }
-        
+
         // Marca el body para ajustar margenes CSS
         document.body.classList.add('has-sidebar');
 
@@ -407,14 +409,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //   Icono de Sonido y Soporte al Sidebar
             const sidebarContainer = sidebar.querySelector('.secondary-nav-container');
-            
+
             if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-sound')) {
                 const soundLink = document.createElement('a');
                 soundLink.href = '#';
                 soundLink.className = 'secondary-nav-item secondary-nav-sound mt-auto'; // Empuja al fondo
                 const isMuted = backgroundMusic ? backgroundMusic.muted : false;
                 soundLink.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i><span>Sonido</span>' : '<i class="fas fa-volume-up"></i><span>Sonido</span>';
-                
+
                 soundLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
@@ -432,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 volDownLink.href = '#';
                 volDownLink.className = 'secondary-nav-item secondary-nav-vol-down';
                 volDownLink.innerHTML = '<i class="fas fa-minus"></i>';
-                
+
                 volDownLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
@@ -454,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 volUpLink.href = '#';
                 volUpLink.className = 'secondary-nav-item secondary-nav-vol-up';
                 volUpLink.innerHTML = '<i class="fas fa-plus"></i>';
-                
+
                 volUpLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
@@ -480,7 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             //  Botón Cerrar Sesión
-            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-logout')) {
+            if (isUserLoggedIn && sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-logout')) {
                 const logoutLink = document.createElement('a');
                 logoutLink.href = '/auth/logout/';
                 logoutLink.className = 'secondary-nav-item secondary-nav-logout';
@@ -489,5 +491,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
-
 });

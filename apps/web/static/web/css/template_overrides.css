@@ -114,6 +114,7 @@
 }
 
 @keyframes subtitlePulse {
+
     0%,
     100% {
         opacity: 0.9;
@@ -155,12 +156,12 @@
     padding: 6px 10px;
 }
 
-.full-width-card {
+.login-card.full-width-card {
     max-width: 900px;
     width: 95%;
     max-height: 75vh;
     overflow-y: auto;
-    padding: 40px !important;
+    padding: 40px;
     margin: 0 auto;
     scrollbar-width: thin;
     scrollbar-color: var(--neon-green) transparent;
@@ -426,8 +427,7 @@
     color: #111;
 }
 
-.play-rating-btn,
-.play-fullscreen-btn {
+.play-rating-btn {
     width: auto;
     margin: 0;
     padding: 8px 14px;

@@ -8,7 +8,8 @@
     color: var(--neon-cyan);
     font-size: 1.6rem;
     cursor: pointer;
-    padding: 4px 12px 4px 0; /* Espacio extra a la derecha para separar del logo */
+    padding: 4px 12px 4px 0;
+    /* Espacio extra a la derecha para separar del logo */
     margin-right: 5px;
     transition: all 0.3s ease;
 }
@@ -27,8 +28,10 @@
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border-right: 1px solid rgba(210, 220, 230, 0.65); /* Gris brillante cyberpunk */
-    box-shadow: 4px 0 24px rgb(164, 165, 165); /* Resplandor plateado */
+    border-right: 1px solid rgba(210, 220, 230, 0.65);
+    /* Gris brillante cyberpunk */
+    box-shadow: 4px 0 24px rgb(164, 165, 165);
+    /* Resplandor plateado */
     z-index: 99;
     transition: width 0.3s ease;
     overflow: hidden;
@@ -45,35 +48,42 @@ body.sidebar-open .secondary-nav {
 /* Comportamiento Responsive tipo CrazyGames */
 @media (max-width: 768px) {
     .secondary-nav {
-        width: 0; /* Oculto completamente en móviles por defecto */
+        width: 0;
+        /* Oculto completamente en móviles por defecto */
         border-right: none;
     }
-    
+
     .secondary-nav:hover {
-        width: 0; /* Desactivar hover en táctil */
+        width: 0;
+        /* Desactivar hover en táctil */
     }
 
     body.sidebar-open .secondary-nav {
         width: var(--sidebar-width-expanded);
         border-right: 1px solid rgba(210, 220, 230, 0.65);
-        box-shadow: 10px 0 30px rgba(0,0,0,0.5); /* Sombra para resaltar sobre el contenido */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+        /* Sombra para resaltar sobre el contenido */
     }
-    
+
     .main-content {
-        margin-left: 0; /* Contenido ocupa todo el ancho */
+        margin-left: 0;
+        /* Contenido ocupa todo el ancho */
     }
-    
+
     body.sidebar-open .main-content {
-        margin-left: 0; /* El menú flota sobre el contenido en móvil */
+        margin-left: 0;
+        /* El menú flota sobre el contenido en móvil */
     }
 }
 
 .secondary-nav::after {
-    display: none; /* used only when horizontal nav */
+    display: none;
+    /* used only when horizontal nav */
 }
 
 .navbar {
-    position: relative; /* allow child absolute */
+    position: relative;
+    /* allow child absolute */
 }
 
 .secondary-nav-container {
@@ -134,7 +144,8 @@ body.sidebar-open .secondary-nav-container {
     font-weight: 600;
     white-space: nowrap;
     transition: background 0.3s ease, width 0.3s ease;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4); /* Brillo base en iconos */
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    /* Brillo base en iconos */
 }
 
 .secondary-nav-item span {
@@ -168,7 +179,8 @@ body.sidebar-open .secondary-nav-item span {
 .secondary-nav-item:hover {
     background: transparent;
     color: #fff;
-    text-shadow: 0 0 12px var(--accent-cyan), 0 0 20px #fff; /* Efecto neón intenso en texto */
+    text-shadow: 0 0 12px var(--accent-cyan), 0 0 20px #fff;
+    /* Efecto neón intenso en texto */
     transform: translateY(-2px);
 }
 
@@ -176,17 +188,23 @@ body.sidebar-open .secondary-nav-item span {
 .secondary-nav-vol-down,
 .secondary-nav-vol-up {
     border-radius: 50%;
-    width: 32px !important; /* Mantiene el circulo perfecto sin expandirse */
-    padding: 8px !important;
     justify-content: center;
-    border: 1px solid rgba(0, 255, 255, 0.4); /* Anillo de energía */
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    /* Anillo de energía */
     background: rgba(0, 20, 20, 0.4);
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
 }
 
+.secondary-nav:hover .secondary-nav-vol-down,
+body.sidebar-open .secondary-nav-vol-down,
+.secondary-nav:hover .secondary-nav-vol-up,
+body.sidebar-open .secondary-nav-vol-up {
+    width: 32px;
+    padding: 8px;
+}
+
 .secondary-nav-vol-down:hover,
 .secondary-nav-vol-up:hover {
-    width: 32px !important;
     border-color: var(--accent-cyan);
     background: rgba(0, 255, 255, 0.15);
     box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
@@ -210,9 +228,12 @@ body.sidebar-open .secondary-nav-item span {
 
 
 @keyframes spinGear {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: rotate(0deg);
     }
+
     50% {
         transform: rotate(180deg);
     }
@@ -226,7 +247,8 @@ body.sidebar-open .secondary-nav-item span {
 .secondary-nav-logout:hover {
     color: var(--danger-color);
     background: transparent;
-    text-shadow: 0 0 15px var(--danger-color), 0 0 25px #ff0000; /* Alerta roja brillante */
+    text-shadow: 0 0 15px var(--danger-color), 0 0 25px #ff0000;
+    /* Alerta roja brillante */
     transform: scale(1.1);
 }
 
@@ -340,24 +362,6 @@ body.sidebar-open .secondary-nav-item span {
     letter-spacing: 0.02em;
 }
 
-/* Solo al estar en #catalogo-juegos, normaliza posiciones del navbar. */
-body.catalogo-focus .nav-links-middle:not(.nav-links-middle-auth) {
-    transform: none;
-}
-
-body.catalogo-focus .nav-links-middle:not(.nav-links-middle-auth) .nav-item-subir,
-body.catalogo-focus .nav-links-middle:not(.nav-links-middle-auth) .nav-item-normas {
-    margin-left: 0;
-}
-
-body.catalogo-focus .nav-links-right .nav-item-acerca {
-    margin-left: 0;
-}
-
-body.catalogo-focus .nav-links-middle.nav-links-middle-auth {
-    transform: none;
-    gap: 28px;
-}
 
 /* Control global del brillo del navbar y sus botones.
    Ajusta solo esta variable: --navbar-glow-level (0.25 sobrio, 0.85 intenso). */
@@ -457,4 +461,3 @@ body.catalogo-focus .nav-links-middle.nav-links-middle-auth {
     display: flex;
     justify-content: center;
 }
-
