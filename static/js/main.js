@@ -257,9 +257,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const updateHeaderActiveLink = () => {
             const currentPath = normalizePath(window.location.pathname);
             const currentHash = (window.location.hash || '').toLowerCase();
-            const isCatalogSection = currentHash === '#catalogo-juegos';
-
-            document.body.classList.toggle('catalogo-focus', isCatalogSection);
 
             centeredNavLinks.forEach((link) => {
                 const linkUrl = new URL(link.href, window.location.origin);

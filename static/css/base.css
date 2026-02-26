@@ -1,0 +1,234 @@
+/* Resets and Core Layout Constraints */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    min-height: 101vh;
+    overflow-x: hidden;
+    padding-bottom: 50px;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(0, 128, 128, 0.2), transparent 34%),
+        radial-gradient(circle at 90% 85%, rgba(0, 255, 255, 0.11), transparent 36%),
+        linear-gradient(140deg, #031212, #052525, #0a3030);
+}
+
+html.auth-root,
+html.auth-root body {
+    height: 100%;
+    overflow: hidden !important;
+}
+
+body.body-auth-page,
+body.body-register-page {
+    min-height: 100dvh;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    width: 100%;
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden !important;
+    overscroll-behavior: none;
+    padding-bottom: 0;
+}
+
+/* Global Background Effects */
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    filter: saturate(1.1);
+    background:
+        linear-gradient(rgba(2, 10, 16, 0.58), rgba(2, 10, 16, 0.62)),
+        url('/static/img/panda.png') center center / 38% auto no-repeat,
+        linear-gradient(120deg, #021414, #053030, #064545, #021414);
+}
+
+.background::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background:
+        radial-gradient(circle at 35% 30%, rgba(0, 128, 128, 0.24) 0%, transparent 62%),
+        radial-gradient(circle at 70% 70%, rgba(0, 255, 255, 0.14) 0%, transparent 60%);
+    animation: pulse 5s infinite alternate;
+    mix-blend-mode: screen;
+}
+
+.background::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: repeating-linear-gradient(45deg,
+            rgba(57, 231, 255, 0.07),
+            rgba(57, 231, 255, 0.07) 2px,
+            transparent 2px,
+            transparent 10px);
+    background-size: auto, 100% 6px;
+    animation: moveGrid 10s linear infinite;
+    opacity: 0.8;
+}
+
+/* Base Typographical Elements */
+label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Structural Components */
+.main-content {
+    min-height: calc(100vh - 160px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Helpers */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #444;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #333;
+}
+
+.divider span {
+    padding: 0 15px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+/* Error/Success Messages Constraints */
+.validation-msg {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.validation-msg.visible {
+    height: auto;
+    opacity: 1;
+    margin-bottom: 5px;
+}
+
+.msg-error {
+    color: var(--danger-color);
+    border-left: 2px solid var(--danger-color);
+    padding-left: 8px;
+}
+
+.msg-success {
+    color: var(--neon-green);
+    border-left: 2px solid var(--neon-green);
+    padding-left: 8px;
+}
+
+/* Music Controls */
+.music-controls {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 12px;
+    z-index: 1000;
+}
+
+.music-control-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(8, 20, 30, 0.95), rgba(10, 10, 22, 0.9));
+    border: 2px solid var(--neon-green);
+    color: var(--neon-green);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 0 12px rgba(0, 255, 170, 0.25), inset 0 0 8px rgba(0, 255, 170, 0.1);
+}
+
+.music-control-btn:hover {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 170, 0.6), inset 0 0 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.1) translateY(-2px);
+}
+
+.music-control-btn:active {
+    transform: scale(0.95);
+}
+
+.music-controls-expanded {
+    display: flex;
+    gap: 12px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(40px) scale(0.9);
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.music-controls.expanded .music-controls-expanded {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0) scale(1);
+}
+
+.music-toggle-btn {
+    z-index: 2;
+    background: linear-gradient(135deg, rgba(20, 40, 50, 0.95), rgba(10, 10, 22, 0.9));
+}
+
+.music-control-btn.is-muted {
+    border-color: #ff4d4d;
+    color: #ff4d4d;
+    box-shadow: 0 0 12px rgba(255, 77, 77, 0.25);
+}
+
+.music-control-btn.is-muted:hover {
+    background: #ff4d4d;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.6);
+}
