@@ -81,11 +81,6 @@ body.sidebar-open .secondary-nav {
     /* used only when horizontal nav */
 }
 
-.navbar {
-    position: relative;
-    /* allow child absolute */
-}
-
 .secondary-nav-container {
     display: flex;
     flex-direction: column;
@@ -184,6 +179,47 @@ body.sidebar-open .secondary-nav-item span {
     transform: translateY(-2px);
 }
 
+/* indicador de activo en el sidebar */
+.secondary-nav-item.is-active {
+    background: rgba(0, 255, 255, 0.2);
+    box-shadow: 0 0 14px rgba(0, 255, 255, 0.6);
+}
+/* dropdown para controles de sonido dentro del sidebar */
+.secondary-nav-sound-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+}
+.secondary-nav-sound-container .secondary-nav-item {
+    align-self: center;
+}
+
+.secondary-nav:hover .secondary-nav-sound-container,
+body.sidebar-open .secondary-nav-sound-container {
+    align-items: flex-start;
+    width: 100%;
+}
+
+.secondary-nav:hover .secondary-nav-sound-container .secondary-nav-item,
+body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
+    align-self: flex-start;
+}
+.secondary-nav-sound-options {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 4px;
+    gap: 4px;
+}
+.secondary-nav-sound-container.open .secondary-nav-sound-options {
+    display: flex;
+}
+
+/* estilo específico para el enlace de mute dentro del dropdown */
+.secondary-nav-mute {
+    font-size: 1.2rem;
+}
 /* Estilos específicos para botones de volumen */
 .secondary-nav-vol-down,
 .secondary-nav-vol-up {
@@ -209,6 +245,19 @@ body.sidebar-open .secondary-nav-vol-up {
     background: rgba(0, 255, 255, 0.15);
     box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
     color: #fff;
+}
+
+.secondary-nav-sound-advanced {
+    width: 32px;
+    padding: 8px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    background: rgba(0, 20, 20, 0.36);
+}
+
+.secondary-nav-sound-advanced:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 255, 255, 0.14);
 }
 
 /* Utilidad para empujar items al fondo (como el de soporte) */
@@ -288,45 +337,7 @@ body.sidebar-open .secondary-nav-vol-up {
     margin-left: 0;
 }
 
-.nav-item-home {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #c43bff;
-    font-size: 1.5rem;
-    line-height: 1;
-    text-decoration: none;
-    padding: 0;
-    margin: 0;
-    border: 0;
-    outline: 0;
-    background: transparent;
-    box-shadow: none;
-    -webkit-text-stroke: 0.8px rgba(0, 0, 0, 0.95);
-    text-shadow: 0 0 6px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.65);
-}
 
-.nav-item-home::after {
-    content: none;
-}
-
-.nav-item-home::before {
-    content: none;
-}
-
-.nav-item-home:hover,
-.nav-item-home:focus,
-.nav-item-home:focus-visible,
-.nav-item-home:active,
-.nav-item-home.is-active {
-    border: 0;
-    outline: 0;
-    background: transparent;
-    box-shadow: none;
-    transform: none;
-    color: #e08cff;
-    text-decoration: none;
-}
 
 .nav-item:hover {
     color: #fff;

@@ -297,6 +297,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
         updateHeaderActiveLink();
         window.addEventListener('hashchange', updateHeaderActiveLink);
+
+        // también marcamos el icono correspondiente en el sidebar
+        const updateSidebarActive = () => {
+            const currentPath = normalizePath(window.location.pathname);
+            const currentHash = (window.location.hash || '').toLowerCase();
+            if (!sidebar) return;
+            const container = sidebar.querySelector('.secondary-nav-container');
+            if (!container) return;
+            const mappings = [
+                {selector: '.secondary-nav-games', path: normalizePath('/') , hash: '#catalogo-juegos'},
+                {selector: '.secondary-nav-upload', path: normalizePath('/juegos/subir/')},
+                {selector: '.secondary-nav-normas', path: normalizePath('/juegos/normas/')},
+                {selector: '.secondary-nav-about', path: normalizePath('/juegos/acerca-de/')},
+            ];
+            mappings.forEach(item => {
+                const el = container.querySelector(item.selector);
+                if (!el) return;
+                let active = false;
+                if (item.hash) {
+                    active = currentPath === item.path && currentHash === item.hash;
+                } else {
+                    active = currentPath === item.path;
+                }
+                el.classList.toggle('is-active', active);
+            });
+        };
+        window.addEventListener('hashchange', updateSidebarActive);
+        updateSidebarActive();
     }
 
     const backLinks = Array.from(document.querySelectorAll('[data-back-link="true"]'));
@@ -410,31 +438,111 @@ document.addEventListener('DOMContentLoaded', function () {
             //   Icono de Sonido y Soporte al Sidebar
             const sidebarContainer = sidebar.querySelector('.secondary-nav-container');
 
+            // Enlaces principales que ahora viven en el sidebar
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-games')) {
+                const gamesLink = document.createElement('a');
+                gamesLink.href = '/#catalogo-juegos';
+                gamesLink.className = 'secondary-nav-item secondary-nav-games';
+                gamesLink.innerHTML = '<i class="fas fa-gamepad"></i><span>Juegos</span>';
+                sidebarContainer.appendChild(gamesLink);
+            }
+
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-upload')) {
+                const uploadLink = document.createElement('a');
+                uploadLink.href = '/juegos/subir/';
+                uploadLink.className = 'secondary-nav-item secondary-nav-upload';
+                if (!isUserLoggedIn) {
+                    uploadLink.setAttribute('data-login-required', 'true');
+                    uploadLink.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        openLoginRequiredPanel(uploadLink.href);
+                    });
+                }
+                uploadLink.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>Subir</span>';
+                sidebarContainer.appendChild(uploadLink);
+            }
+
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-normas')) {
+                const normasLink = document.createElement('a');
+                normasLink.href = '/juegos/normas/';
+                normasLink.className = 'secondary-nav-item secondary-nav-normas';
+                normasLink.innerHTML = '<i class="fas fa-book"></i><span>Normas</span>';
+                sidebarContainer.appendChild(normasLink);
+            }
+
+            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-about')) {
+                const aboutLink = document.createElement('a');
+                aboutLink.href = '/juegos/acerca-de/';
+                aboutLink.className = 'secondary-nav-item secondary-nav-about';
+                aboutLink.innerHTML = '<i class="fas fa-info-circle"></i><span>Acerca</span>';
+                sidebarContainer.appendChild(aboutLink);
+            }
+
+            //   Icono de Sonido con opciones desplegables
             if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-sound')) {
+                // contenedor principal del dropdown
+                const soundContainer = document.createElement('div');
+                soundContainer.className = 'secondary-nav-sound-container mt-auto';
+
                 const soundLink = document.createElement('a');
                 soundLink.href = '#';
-                soundLink.className = 'secondary-nav-item secondary-nav-sound mt-auto'; // Empuja al fondo
+                soundLink.className = 'secondary-nav-item secondary-nav-sound';
                 const isMuted = backgroundMusic ? backgroundMusic.muted : false;
                 soundLink.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i><span>Sonido</span>' : '<i class="fas fa-volume-up"></i><span>Sonido</span>';
+                soundContainer.appendChild(soundLink);
 
+                // opciones desplegables
+                const options = document.createElement('div');
+                options.className = 'secondary-nav-sound-options';
+                options.style.display = 'none';
+
+                // mute/unmute toggle
+                const muteLink = document.createElement('a');
+                muteLink.href = '#';
+                muteLink.className = 'secondary-nav-item secondary-nav-mute';
+                muteLink.innerHTML = isMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+                options.appendChild(muteLink);
+
+                const volDownLink = document.createElement('a');
+                volDownLink.href = '#';
+                volDownLink.className = 'secondary-nav-item secondary-nav-vol-down';
+                volDownLink.innerHTML = '<i class="fas fa-minus"></i>';
+                options.appendChild(volDownLink);
+                
+
+                const volUpLink = document.createElement('a');
+                volUpLink.href = '#';
+                volUpLink.className = 'secondary-nav-item secondary-nav-vol-up';
+                volUpLink.innerHTML = '<i class="fas fa-plus"></i>';
+                options.appendChild(volUpLink);
+
+                const advancedSettingsLink = document.createElement('a');
+                advancedSettingsLink.href = '/juegos/sonido/configuraciones-avanzadas/';
+                advancedSettingsLink.className = 'secondary-nav-item secondary-nav-sound-advanced';
+                advancedSettingsLink.title = 'Configuraciones avanzadas';
+                advancedSettingsLink.innerHTML = '<i class="fas fa-sliders-h"></i>';
+                options.appendChild(advancedSettingsLink);
+
+                // manejo del clic sobre el icono de sonido
                 soundLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const isHidden = options.style.display === 'none';
+                    options.style.display = isHidden ? 'flex' : 'none';
+                    soundContainer.classList.toggle('open', isHidden);
+                });
+
+                // eventos de mute y volumen
+                muteLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
                         backgroundMusic.muted = !backgroundMusic.muted;
                         updateMuteButtonState();
                         persistMusicState();
+                        // actualizar iconos
+                        muteLink.innerHTML = backgroundMusic.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+                        soundLink.innerHTML = backgroundMusic.muted ? '<i class="fas fa-volume-mute"></i><span>Sonido</span>' : '<i class="fas fa-volume-up"></i><span>Sonido</span>';
                     }
                 });
-                sidebarContainer.appendChild(soundLink);
-            }
-
-            //  Botón Bajar Volumen
-            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-vol-down')) {
-                const volDownLink = document.createElement('a');
-                volDownLink.href = '#';
-                volDownLink.className = 'secondary-nav-item secondary-nav-vol-down';
-                volDownLink.innerHTML = '<i class="fas fa-minus"></i>';
-
                 volDownLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
@@ -447,16 +555,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         persistMusicState();
                     }
                 });
-                sidebarContainer.appendChild(volDownLink);
-            }
-
-            // Botón Subir Volumen
-            if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-vol-up')) {
-                const volUpLink = document.createElement('a');
-                volUpLink.href = '#';
-                volUpLink.className = 'secondary-nav-item secondary-nav-vol-up';
-                volUpLink.innerHTML = '<i class="fas fa-plus"></i>';
-
                 volUpLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     if (backgroundMusic) {
@@ -469,7 +567,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         persistMusicState();
                     }
                 });
-                sidebarContainer.appendChild(volUpLink);
+
+                soundContainer.appendChild(options);
+                sidebarContainer.appendChild(soundContainer);
+
+                // Cerrar dropdown si se hace click fuera
+                document.addEventListener('click', (ev) => {
+                    if (!soundContainer.contains(ev.target)) {
+                        options.style.display = 'none';
+                        soundContainer.classList.remove('open');
+                    }
+                });
             }
 
             // Botón de Soporte
@@ -489,6 +597,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 logoutLink.innerHTML = '<i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>';
                 sidebarContainer.appendChild(logoutLink);
             }
+
+            const profileDropdown = document.querySelector('.profile-dropdown');
+            const profileToggle = document.querySelector('.profile-dropdown-toggle');
+            const profilePanelClose = document.querySelector('.profile-panel-close');
+
+            if (profileDropdown && profileToggle) {
+                const closeMenu = () => {
+                    profileDropdown.classList.remove('open');
+                    profileToggle.setAttribute('aria-expanded', 'false');
+                };
+
+                profileToggle.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const isOpen = profileDropdown.classList.toggle('open');
+                    profileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+
+                if (profilePanelClose) {
+                    profilePanelClose.addEventListener('click', (event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        closeMenu();
+        });
+    }
+}
         }
     }
 });

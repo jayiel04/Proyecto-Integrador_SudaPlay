@@ -11,6 +11,7 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('juegos/acerca-de/', views.AboutView.as_view(), name='about'),
     path('juegos/normas/', views.NormasView.as_view(), name='normas'),
+    path('juegos/sonido/configuraciones-avanzadas/', views.AdvancedAudioSettingsView.as_view(), name='advanced_audio_settings'),
     # CRUD y acciones sobre juegos.
     path('juegos/subir/', views.GameCreateView.as_view(), name='game_create'),
     path('juegos/mis-juegos/', views.MyGamesView.as_view(), name='my_games'),

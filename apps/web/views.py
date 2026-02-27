@@ -55,6 +55,13 @@ class NormasView(TemplateView):
     template_name = "web/normas.html"
 
 
+class AdvancedAudioSettingsView(TemplateView):
+    """
+    Vista para configuraciones avanzadas de sonido.
+    """
+    template_name = "web/advanced_audio_settings.html"
+
+
 class GameCreateView(LoginRequiredMixin, CreateView):
     template_name = "web/game_form.html"
     form_class = GameForm

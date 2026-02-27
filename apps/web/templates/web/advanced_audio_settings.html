@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Configuraciones avanzadas de sonido - SudaPlay{% endblock %}
+
+{% block content %}
+<div class="container page-stack-container">
+    <section class="login-card full-width-card audio-settings-card">
+        <h2 class="card-title-small">Configuraciones avanzadas de sonido</h2>
+        <p class="card-muted-text">Ajusta como se comporta el audio de fondo en toda la plataforma.</p>
+
+        <div class="audio-settings-grid">
+            <div class="audio-setting-item">
+                <label for="advanced-audio-volume">Volumen general</label>
+                <input type="range" id="advanced-audio-volume" min="0" max="1" step="0.01" value="0.24">
+                <p id="advanced-audio-volume-value" class="card-muted-text">24%</p>
+            </div>
+
+            <div class="audio-setting-item">
+                <label for="advanced-audio-muted">Silenciar audio</label>
+                <input type="checkbox" id="advanced-audio-muted">
+            </div>
+
+            <div class="audio-setting-item">
+                <label for="advanced-audio-autoplay">Reproducir automaticamente al entrar</label>
+                <input type="checkbox" id="advanced-audio-autoplay">
+            </div>
+        </div>
+
+        <div class="audio-settings-actions">
+            <button type="button" id="advanced-audio-save" class="btn-login">Guardar cambios</button>
+            <button type="button" id="advanced-audio-reset" class="btn-login audio-settings-reset-btn">Restaurar por defecto</button>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const MUSIC_STATE_KEYS = {
+        shouldPlay: 'sudaplay_music_should_play',
+        volume: 'sudaplay_music_volume',
+        muted: 'sudaplay_music_muted',
+    };
+
+    const backgroundMusic = document.getElementById('background-music');
+    const volumeInput = document.getElementById('advanced-audio-volume');
+    const volumeValue = document.getElementById('advanced-audio-volume-value');
+    const mutedInput = document.getElementById('advanced-audio-muted');
+    const autoplayInput = document.getElementById('advanced-audio-autoplay');
+    const saveBtn = document.getElementById('advanced-audio-save');
+    const resetBtn = document.getElementById('advanced-audio-reset');
+
+    if (!volumeInput || !volumeValue || !mutedInput || !autoplayInput || !saveBtn || !resetBtn) {
+        return;
+    }
+
+    const formatPercent = (volume) => `${Math.round(Number(volume) * 100)}%`;
+
+    const loadValues = () => {
+        const storedVolume = parseFloat(localStorage.getItem(MUSIC_STATE_KEYS.volume) || '');
+        const storedMuted = localStorage.getItem(MUSIC_STATE_KEYS.muted);
+        const storedAutoplay = localStorage.getItem(MUSIC_STATE_KEYS.shouldPlay);
+
+        const safeVolume = Number.isNaN(storedVolume) ? 0.24 : Math.min(1, Math.max(0, storedVolume));
+        const safeMuted = storedMuted === '1';
+        const safeAutoplay = storedAutoplay === null ? true : storedAutoplay === '1';
+
+        volumeInput.value = String(safeVolume);
+        volumeValue.textContent = formatPercent(safeVolume);
+        mutedInput.checked = safeMuted;
+        autoplayInput.checked = safeAutoplay;
+    };
+
+    const applyValues = () => {
+        const volume = Math.min(1, Math.max(0, parseFloat(volumeInput.value || '0.24')));
+        const muted = mutedInput.checked;
+        const shouldPlay = autoplayInput.checked;
+
+        localStorage.setItem(MUSIC_STATE_KEYS.volume, String(volume));
+        localStorage.setItem(MUSIC_STATE_KEYS.muted, muted ? '1' : '0');
+        localStorage.setItem(MUSIC_STATE_KEYS.shouldPlay, shouldPlay ? '1' : '0');
+
+        volumeValue.textContent = formatPercent(volume);
+
+        if (backgroundMusic) {
+            backgroundMusic.volume = volume;
+            backgroundMusic.muted = muted;
+
+            if (!shouldPlay) {
+                backgroundMusic.pause();
+            }
+        }
+    };
+
+    volumeInput.addEventListener('input', () => {
+        volumeValue.textContent = formatPercent(volumeInput.value);
+    });
+
+    saveBtn.addEventListener('click', applyValues);
+
+    resetBtn.addEventListener('click', () => {
+        volumeInput.value = '0.24';
+        mutedInput.checked = false;
+        autoplayInput.checked = true;
+        applyValues();
+    });
+
+    loadValues();
+});
+</script>
+{% endblock %}

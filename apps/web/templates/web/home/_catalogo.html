@@ -5,7 +5,7 @@
     </div>
 
     {% if games %}
-    <div class="game-grid">
+    <div id="catalog-game-grid" class="game-grid">
         {% for game in games %}
         <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
             {% if game.is_featured %}
@@ -31,6 +31,10 @@
         </a>
         {% endfor %}
     </div>
+    <div id="catalog-no-results" class="login-card full-width-card catalog-no-results" hidden>
+        <h2 class="card-title-small">No se encontraron juegos</h2>
+        <p class="card-muted-text">Prueba con otro termino de busqueda.</p>
+    </div>
     {% else %}
     <div class="login-card full-width-card">
         <h2 class="card-title-small">Aun no hay juegos publicados</h2>
@@ -38,3 +42,38 @@
     </div>
     {% endif %}
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('catalog-search-input');
+        const grid = document.getElementById('catalog-game-grid');
+        const noResults = document.getElementById('catalog-no-results');
+
+        if (!searchInput || !grid) {
+            return;
+        }
+
+        const cards = Array.from(grid.querySelectorAll('.game-item'));
+        const normalize = (value) => (value || '').toLowerCase().trim();
+
+        searchInput.addEventListener('input', function () {
+            const query = normalize(searchInput.value);
+            let visibleCount = 0;
+
+            cards.forEach((card) => {
+                const title = normalize(card.querySelector('.game-title')?.textContent);
+                const description = normalize(card.querySelector('.game-short-description')?.textContent);
+                const matches = !query || title.includes(query) || description.includes(query);
+
+                card.hidden = !matches;
+                if (matches) {
+                    visibleCount += 1;
+                }
+            });
+
+            if (noResults) {
+                noResults.hidden = visibleCount !== 0;
+            }
+        });
+    });
+</script>

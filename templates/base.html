@@ -38,19 +38,20 @@
         <i class="fa fa-shield-halved floating-icon"></i>
         <i class="fa fa-chess-knight floating-icon"></i>
     </div>
-    {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
+    {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <a href="{% url 'web:home' %}#catalogo-juegos" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span class="body-left-brand-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
                 class="body-left-brand-logo"></span><span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
-        {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' %}
+        {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
         <span class="body-left-brand-tagline">La aventura te esta esperando</span>
         {% endif %}
     </a>
     {% endif %}
 
-    <nav
-        class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
-        <div class="navbar-container">
+    <header class="site-header">
+        <nav
+            class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
+            <div class="navbar-container">
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
                 <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
@@ -65,8 +66,7 @@
                     <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
                 </div>
                 <div class="nav-links-middle">
-                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir"
-                        data-login-required="true">Subir juego</a>
+                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir" data-login-required="true">Subir juego</a>
                     <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
                 </div>
                 <div class="nav-links-right">
@@ -74,16 +74,25 @@
                 </div>
                 {% else %}
                 <div class="nav-links-middle nav-links-middle-auth">
-                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
-                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir"{% if not user.is_authenticated %} data-login-required="true"{% endif %}>Subir juego</a>
-                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item-home" aria-label="Inicio" title="Inicio">
-                        <i class="fa-solid fa-house"></i>
-                    </a>
-                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
-                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+                    <!-- El icono de casa se eliminó del header, la navegación principal se encuentra en el sidebar -->
                 </div>
                 {% endif %}
             </div>
+
+            {% if request.resolver_match.app_name == 'web' and request.resolver_match.url_name == 'home' %}
+            <div class="navbar-catalog-search">
+                <div class="catalog-search-input-wrap">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                    <input
+                        id="catalog-search-input"
+                        type="search"
+                        class="catalog-search-input"
+                        aria-label="Buscar juegos en el catalogo"
+                        placeholder="Busca por titulo o descripcion"
+                        autocomplete="off">
+                </div>
+            </div>
+            {% endif %}
 
             <div
                 class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %} navbar-menu-guest{% endif %}">
@@ -115,8 +124,9 @@
                 {% endif %}
             </div>
 
-        </div>
-    </nav>
+            </div>
+        </nav>
+    </header>
 
     <main class="main-content">
 
@@ -169,4 +179,3 @@
     </body>
 
 </html>
-
