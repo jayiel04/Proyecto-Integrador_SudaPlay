@@ -896,3 +896,20 @@
         opacity: 0.72;
     }
 }
+
+@media (max-width: 980px) {
+
+    .body-left-brand,
+    .body-left-brand-tagline {
+        display: none !important;
+    }
+
+    .site-header {
+        height: auto !important;
+    }
+
+    .navbar {
+        height: auto !important;
+        padding-bottom: 12px;
+    }
+}

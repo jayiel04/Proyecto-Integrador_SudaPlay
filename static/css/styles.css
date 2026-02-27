@@ -62,8 +62,8 @@ body.sidebar-open .main-content {
 
 body.body-auth-page {
     min-height: 100dvh;
-    height: auto;
-    overflow-x: clip;
+    height: 100dvh;
+    overflow: hidden;
     padding-bottom: 0;
 }
 

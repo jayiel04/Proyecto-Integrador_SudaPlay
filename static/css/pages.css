@@ -779,20 +779,22 @@ input:focus {
         flex-wrap: wrap;
     }
 
-    .nav-links {
+    .nav-links,
+    .navbar-auth .nav-links-centered {
         margin: 10px 0 0;
-        flex-direction: column;
-        align-items: stretch;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 9px;
+        width: 100%;
     }
 
     .nav-links-left,
     .nav-links-middle,
-    .nav-links-right {
-        width: 100%;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 9px;
-        margin: 0;
+    .nav-links-right,
+    .navbar-auth .nav-links-left,
+    .navbar-auth .nav-links-middle,
+    .navbar-auth .nav-links-right {
+        display: contents !important;
     }
 
     .nav-item {
