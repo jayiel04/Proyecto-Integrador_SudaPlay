@@ -138,10 +138,10 @@
 }
 
 .login-card-logo {
-    width: 110px;
-    height: 110px;
+    width: 80px;
+    height: 80px;
     padding: 0;
-    margin: -5px auto 8px;
+    margin: 0 auto 10px;
     display: block;
     filter: drop-shadow(0 0 12px rgba(70, 123, 121, 0.42));
 }

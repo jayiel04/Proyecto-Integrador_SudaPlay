@@ -60,17 +60,7 @@
             {% endif %}
 
             <div class="nav-links nav-links-centered">
-                {% if user.is_authenticated %}
-                <div class="nav-links-middle nav-links-middle-auth">
-                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
-                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir">Subir juego</a>
-                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item-home" aria-label="Inicio" title="Inicio">
-                        <i class="fa-solid fa-house"></i>
-                    </a>
-                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
-                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
-                </div>
-                {% else %}
+                {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
                 <div class="nav-links-left">
                     <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
                 </div>
@@ -80,6 +70,16 @@
                     <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
                 </div>
                 <div class="nav-links-right">
+                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
+                </div>
+                {% else %}
+                <div class="nav-links-middle nav-links-middle-auth">
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
+                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir"{% if not user.is_authenticated %} data-login-required="true"{% endif %}>Subir juego</a>
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item-home" aria-label="Inicio" title="Inicio">
+                        <i class="fa-solid fa-house"></i>
+                    </a>
+                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
                     <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
                 </div>
                 {% endif %}

@@ -160,7 +160,43 @@
 
 /* Socialaccount signup */
 .finalizar-registro-card {
-    max-width: 500px;
+    /* Ajuste Dinámico Profesional (Responsivo a computadoras variadas) */
+    width: clamp(280px, 90vw, 500px);
+    max-width: 100%;
+
+    /* Alto de la tarjeta dinámico con Scroll interno anti-recortes */
+    height: auto;
+    max-height: clamp(400px, 90vh, 850px);
+    overflow-y: auto;
+
+    /* Scroll minimalista */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(127, 191, 255, 0.4) transparent;
+
+    /* Flow interno */
+    display: flex;
+    flex-direction: column;
+    padding: clamp(20px, 3.5vh, 40px) clamp(20px, 4vw, 36px);
+}
+
+.finalizar-registro-card::-webkit-scrollbar {
+    width: 6px;
+}
+
+.finalizar-registro-card::-webkit-scrollbar-thumb {
+    background: rgba(127, 191, 255, 0.4);
+    border-radius: 4px;
+}
+
+.finalizar-registro-card form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(10px, 2vh, 20px);
+}
+
+/* Redefinir los contenedores internos para no usar margins fijos */
+.finalizar-registro-page .form-group {
+    margin-bottom: 0;
 }
 
 .finalizar-registro-submit {
@@ -237,6 +273,7 @@
 }
 
 @media (max-height: 860px) {
+
     .body-auth-page .register-card .login-header h1,
     .finalizar-registro-page .finalizar-registro-title {
         font-size: 2rem;
@@ -431,4 +468,3 @@
     color: #f4fffe;
     font-weight: 700;
 }
-
