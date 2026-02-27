@@ -339,8 +339,8 @@
 
 
 .navbar-avatar {
-    width: 42px;
-    height: 42px;
+    width: 32px;
+    height: 32px;
     border-radius: 999px;
     object-fit: cover;
     border: 2px solid #b8bcc7;
@@ -422,19 +422,21 @@
     color: #fff;
     background: rgba(255, 94, 94, 0.22);
 }
+
 .profile-dropdown-toggle {
     border-radius: 999px;
-    width: 52px;
-    height: 52px;
-    padding: 0;
-    justify-content: center;
+    padding: 0.3rem 0.75rem 0.3rem 0.3rem;
     background: rgba(18, 21, 47, 0.95);
     border: 2px solid #9ea3b1;
     box-shadow: none;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .profile-dropdown-toggle .fa-chevron-down {
-    display: none;
+    font-size: 0.65rem;
+    margin-left: 0.15rem;
+    opacity: 0.7;
 }
 
 .nav-links {
@@ -894,6 +896,3 @@
         opacity: 0.72;
     }
 }
-
-
-

@@ -598,30 +598,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebarContainer.appendChild(logoutLink);
             }
 
-            const profileDropdown = document.querySelector('.profile-dropdown');
-            const profileToggle = document.querySelector('.profile-dropdown-toggle');
-            const profilePanelClose = document.querySelector('.profile-panel-close');
-
-            if (profileDropdown && profileToggle) {
-                const closeMenu = () => {
-                    profileDropdown.classList.remove('open');
-                    profileToggle.setAttribute('aria-expanded', 'false');
-                };
-
-                profileToggle.addEventListener('click', (event) => {
-                    event.stopPropagation();
-                    const isOpen = profileDropdown.classList.toggle('open');
-                    profileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-                });
-
-                if (profilePanelClose) {
-                    profilePanelClose.addEventListener('click', (event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        closeMenu();
-        });
-    }
 }
         }
     }
-});
+);
