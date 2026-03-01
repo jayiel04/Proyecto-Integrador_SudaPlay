@@ -236,11 +236,20 @@ document.addEventListener('DOMContentLoaded', function () {
             profileToggle.setAttribute('aria-expanded', 'false');
         };
 
+        const profileCloseBtn = document.querySelector('.profile-dropdown-close');
+
         profileToggle.addEventListener('click', (event) => {
             event.stopPropagation();
             const isOpen = profileDropdown.classList.toggle('open');
             profileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
+
+        if (profileCloseBtn) {
+            profileCloseBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                closeMenu();
+            });
+        }
 
         document.addEventListener('click', (event) => {
             if (!profileDropdown.contains(event.target)) {
@@ -251,6 +260,183 @@ document.addEventListener('DOMContentLoaded', function () {
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape') {
                 closeMenu();
+            }
+        });
+
+    }
+
+    const profileChatToggle = document.querySelector('.profile-chat-toggle');
+    const profileChatPanel = document.querySelector('.profile-chat-panel');
+
+    if (profileChatToggle && profileChatPanel) {
+        const chatMessagesContainer = profileChatPanel.querySelector('.profile-chat-messages');
+        const chatStatusLabel = profileChatPanel.querySelector('.profile-chat-status');
+        const chatForm = profileChatPanel.querySelector('.profile-chat-input-form');
+        const chatInputField = chatForm ? chatForm.querySelector('.profile-chat-input') : null;
+        const chatCloseBtn = profileChatPanel.querySelector('.profile-chat-close');
+        const endpoint = profileChatToggle.dataset.messagesEndpoint;
+        const avatarScript = document.getElementById('navbar-avatar-variants-data');
+        const avatarVariants = avatarScript ? JSON.parse(avatarScript.textContent || '[]') : [];
+        const chatbotAvatarImg = profileChatPanel.querySelector('.profile-chatbot-avatar-img');
+        const botAvatarDefault = profileChatPanel.dataset.botAvatar || '';
+        let avatarIndex = 0;
+        const rotationAvatars = avatarVariants.length ? avatarVariants : (botAvatarDefault ? [botAvatarDefault] : []);
+
+        if (chatbotAvatarImg && rotationAvatars.length) {
+            chatbotAvatarImg.src = rotationAvatars[0];
+            if (rotationAvatars.length > 1) {
+                setInterval(() => {
+                    avatarIndex = (avatarIndex + 1) % rotationAvatars.length;
+                    chatbotAvatarImg.src = rotationAvatars[avatarIndex];
+                }, 4200);
+            }
+        }
+
+        const fallbackResponses = [
+            { text: 'Estoy aquí para ayudarte, ¿qué necesitas?' },
+            { text: 'Si quieres subir un juego, puedo explicarte los pasos.' },
+            { text: 'Completa tu perfil para atraer más jugadores.' },
+        ];
+        let autoResponses = [...fallbackResponses];
+        let autoResponseIndex = 0;
+        let greetingShown = false;
+
+        const formatTime = () => {
+            const now = new Date();
+            return now.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+        };
+
+        const appendMessage = (text, sender = 'bot', meta = '', avatarUrl = '') => {
+            if (!chatMessagesContainer) {
+                return;
+            }
+            const row = document.createElement('div');
+            row.className = `profile-chat-message-row ${sender}`;
+            const card = document.createElement('article');
+            card.className = `profile-chat-message ${sender}`;
+            const content = document.createElement('span');
+            content.textContent = text;
+            card.appendChild(content);
+            if (meta) {
+                const metaEl = document.createElement('small');
+                metaEl.className = 'meta';
+                metaEl.textContent = meta;
+                card.appendChild(metaEl);
+            }
+            if (avatarUrl) {
+                const avatarEl = document.createElement('img');
+                avatarEl.className = 'profile-chat-message-avatar';
+                avatarEl.src = avatarUrl;
+                avatarEl.alt = sender === 'user' ? 'Tu avatar' : 'Avatar del bot';
+                row.appendChild(avatarEl);
+            }
+            row.appendChild(card);
+            chatMessagesContainer.appendChild(row);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        };
+
+        const ensureGreeting = () => {
+            if (greetingShown) {
+                return;
+            }
+            appendMessage('Hola, ¿en qué te puedo ayudar?', 'bot');
+            greetingShown = true;
+        };
+
+        const botAvatarUrl = () => chatbotAvatarImg ? chatbotAvatarImg.src : '';
+
+        const handleAutoReply = () => {
+            if (!autoResponses.length) {
+                return;
+            }
+            const response = autoResponses[autoResponseIndex % autoResponses.length];
+            autoResponseIndex += 1;
+            const botText = (response && response.text) || '¿En qué más puedo ayudarte?';
+            const botMeta = `${(response && response.author) || 'Chat SudaPlay'} · ${formatTime()}`;
+            setTimeout(() => appendMessage(botText, 'bot', botMeta, botAvatarUrl()), 600);
+        };
+
+        const fetchMessages = async () => {
+            if (!endpoint) {
+                chatStatusLabel.textContent = 'Chat sin configurar.';
+                return;
+            }
+
+            chatStatusLabel.textContent = 'Actualizando...';
+
+            try {
+                const response = await fetch(endpoint, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                if (!response.ok) {
+                    throw new Error('No se pudieron cargar los mensajes');
+                }
+                const payload = await response.json();
+                const records = Array.isArray(payload.messages) ? payload.messages : [];
+                if (records.length) {
+                    autoResponses = records;
+                    autoResponseIndex = 0;
+                } else {
+                    autoResponses = [...fallbackResponses];
+                }
+                chatStatusLabel.textContent = records.length ? '' : 'Sin nuevos mensajes';
+            } catch (error) {
+                chatStatusLabel.textContent = 'Error al cargar los mensajes';
+                autoResponses = [...fallbackResponses];
+            }
+        };
+
+        const closeChat = () => {
+            profileChatPanel.classList.remove('visible');
+            profileChatPanel.setAttribute('aria-hidden', 'true');
+            profileChatToggle.setAttribute('aria-expanded', 'false');
+        };
+
+        const openChat = () => {
+            profileChatPanel.classList.add('visible');
+            profileChatPanel.setAttribute('aria-hidden', 'false');
+            profileChatToggle.setAttribute('aria-expanded', 'true');
+            ensureGreeting();
+            fetchMessages();
+        };
+
+        profileChatToggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+            if (profileChatPanel.classList.contains('visible')) {
+                closeChat();
+                return;
+            }
+            openChat();
+        });
+
+        if (chatCloseBtn) {
+            chatCloseBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                closeChat();
+            });
+        }
+
+        if (chatForm && chatInputField) {
+            chatForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const userText = chatInputField.value.trim();
+                if (!userText) {
+                    return;
+                }
+                appendMessage(userText, 'user', formatTime(), profileChatPanel.dataset.userAvatar || '');
+                chatInputField.value = '';
+                chatInputField.focus();
+                handleAutoReply();
+            });
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!profileChatPanel.contains(event.target) && !profileChatToggle.contains(event.target)) {
+                closeChat();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeChat();
             }
         });
     }
@@ -306,10 +492,10 @@ document.addEventListener('DOMContentLoaded', function () {
             const container = sidebar.querySelector('.secondary-nav-container');
             if (!container) return;
             const mappings = [
-                {selector: '.secondary-nav-games', path: normalizePath('/') , hash: '#catalogo-juegos'},
-                {selector: '.secondary-nav-upload', path: normalizePath('/juegos/subir/')},
-                {selector: '.secondary-nav-normas', path: normalizePath('/juegos/normas/')},
-                {selector: '.secondary-nav-about', path: normalizePath('/juegos/acerca-de/')},
+                { selector: '.secondary-nav-games', path: normalizePath('/'), hash: '#catalogo-juegos' },
+                { selector: '.secondary-nav-upload', path: normalizePath('/juegos/subir/') },
+                { selector: '.secondary-nav-normas', path: normalizePath('/juegos/normas/') },
+                { selector: '.secondary-nav-about', path: normalizePath('/juegos/acerca-de/') },
             ];
             mappings.forEach(item => {
                 const el = container.querySelector(item.selector);
@@ -342,7 +528,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const closeLoginRequiredPanelBtn = document.getElementById('close-login-required-panel');
     const continueLoginRequiredPanelBtn = document.getElementById('continue-login-required-panel');
 
-    if (loginRequiredLinks.length > 0 && loginRequiredPanel) {
+    let openLoginRequiredPanel = () => { };
+    if (loginRequiredPanel) {
         const buildLoginUrlWithNext = (targetUrl) => {
             const loginBase = loginRequiredPanel.dataset.loginBase || '/auth/login/';
             const loginUrl = new URL(loginBase, window.location.origin);
@@ -357,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function () {
             loginRequiredPanel.setAttribute('aria-hidden', 'true');
         };
 
-        const openLoginRequiredPanel = (targetUrl) => {
+        openLoginRequiredPanel = (targetUrl) => {
             if (continueLoginRequiredPanelBtn && targetUrl) {
                 continueLoginRequiredPanelBtn.href = buildLoginUrlWithNext(targetUrl);
             }
@@ -478,6 +665,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebarContainer.appendChild(aboutLink);
             }
 
+            // Enlace a Buscar Jugadores (solo autenticados)
+            if (isUserLoggedIn && sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-search-players')) {
+                const searchPlayersLink = document.createElement('a');
+                searchPlayersLink.href = '/auth/jugadores/buscar/';
+                searchPlayersLink.className = 'secondary-nav-item secondary-nav-search-players';
+                searchPlayersLink.innerHTML = '<i class="fas fa-users"></i><span>Jugadores</span>';
+                sidebarContainer.appendChild(searchPlayersLink);
+            }
+
             //   Icono de Sonido con opciones desplegables
             if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-sound')) {
                 // contenedor principal del dropdown
@@ -508,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 volDownLink.className = 'secondary-nav-item secondary-nav-vol-down';
                 volDownLink.innerHTML = '<i class="fas fa-minus"></i>';
                 options.appendChild(volDownLink);
-                
+
 
                 const volUpLink = document.createElement('a');
                 volUpLink.href = '#';
@@ -598,7 +794,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 sidebarContainer.appendChild(logoutLink);
             }
 
-}
         }
     }
+}
 );

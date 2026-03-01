@@ -286,16 +286,17 @@
 }
 
 .navbar-auth-link {
-    background: linear-gradient(135deg, rgba(150, 150, 150, 1), rgba(255, 255, 255, 0.95));
-    border: 1px solid rgba(255, 255, 255, 0.95);
+    background: #000;
+    border: 1px solid rgba(0, 128, 128, 0.72);
     font-size: 1rem;
     font-weight: 800;
     letter-spacing: 0.02em;
-    color: #ffffff;
+    color: var(--neon-green);
     padding: 0.64rem 1.15rem;
     box-shadow:
-        0 0 21px rgba(214, 214, 214, 0.63),
-        inset 0 0 15px rgba(255, 255, 255, 0.45);
+        inset 0 0 12px rgba(0, 255, 255, 0.22),
+        0 0 12px rgba(0, 128, 128, 0.22);
+    transition: 0.3s;
 }
 
 .navbar-link:hover {
@@ -309,71 +310,411 @@
 
 .navbar-auth-link:hover {
     color: #fff;
-    border-color: rgba(255, 255, 255, 0.95);
-    background: linear-gradient(135deg, rgba(130, 130, 130, 0.98), rgba(245, 245, 245, 0.9));
+    border-color: #33c9c9;
+    background: #111;
     box-shadow:
-        0 0 30px rgba(235, 235, 235, 0.93),
-        inset 0 0 18px rgba(255, 255, 255, 0.63);
+        0 0 18px rgba(0, 255, 255, 0.44),
+        0 0 18px rgba(0, 139, 139, 0.36);
 }
 
 .profile-dropdown {
     position: relative;
 }
 
-.profile-dropdown-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: #f4f4f4;
-    background: linear-gradient(145deg, rgba(92, 92, 92, 0.82), rgba(180, 180, 180, 0.56));
-    border: 1px solid rgba(255, 255, 255, 0.72);
-    border-radius: 7px;
-    padding: 0.45rem 0.8rem;
-    cursor: pointer;
-    font: inherit;
-    transition: 0.3s;
-    box-shadow:
-        inset 0 0 12px rgba(255, 255, 255, 0.3),
-        0 0 14px rgba(220, 220, 220, 0.36);
-}
-
-
-.navbar-avatar {
+.profile-dropdown-close {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
     width: 32px;
     height: 32px;
-    border-radius: 999px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.profile-dropdown-close:hover,
+.profile-dropdown-close:focus-visible {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.navbar-profile-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    position: relative;
+}
+
+.profile-chat-widget {
+    position: relative;
+    order: -1;
+}
+
+.profile-chat-toggle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(160deg, #4b0b8f, #9a3ef5);
+    color: #fff;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow:
+        0 12px 25px rgba(75, 11, 143, 0.45),
+        inset 0 0 14px rgba(255, 255, 255, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-chat-toggle:hover,
+.profile-chat-toggle:focus-visible {
+    transform: translateY(-2px);
+    box-shadow:
+        0 18px 30px rgba(0, 180, 216, 0.7),
+        inset 0 0 16px rgba(255, 255, 255, 0.45);
+}
+
+.profile-chat-toggle:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.profile-chat-symbol {
+    pointer-events: none;
+}
+
+.profile-chat-panel {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    width: min(420px, 92vw);
+    min-height: 320px;
+    background: linear-gradient(180deg, rgba(0, 24, 54, 0.85), rgba(1, 15, 40, 0.65));
+    border-radius: 28px;
+    border: 1px solid rgba(0, 255, 255, 0.2);
+    overflow: hidden;
+    box-shadow:
+        0 30px 60px rgba(4, 8, 18, 0.8),
+        0 0 35px rgba(0, 180, 216, 0.35);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 35;
+}
+
+.profile-chat-panel.visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.profile-chat-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+    background: linear-gradient(160deg, #022f40, #007b8a);
+    color: #fff;
+}
+
+.profile-chatbot-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    color: #5f2be8;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-chatbot-avatar-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border: 2px solid #b8bcc7;
-    margin-right: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.profile-chatbot-meta {
+    flex: 1;
+}
+
+.profile-chatbot-meta p {
+    margin: 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.profile-chatbot-meta small {
+    display: block;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.08em;
+}
+
+.profile-chat-panel-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+}
+
+.profile-chat-status {
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.profile-chat-close {
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    font-size: 1.2rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.25);
+}
+
+.profile-chat-close:hover {
+    background: rgba(255, 255, 255, 0.35);
+}
+
+.profile-chat-body {
+    padding: 0.9rem 1rem 1rem;
+    min-height: 240px;
+}
+
+.profile-chat-messages {
+    min-height: 200px;
+}
+
+.profile-chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+}
+
+.profile-chat-message-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    width: 100%;
+}
+
+.profile-chat-message-row.bot {
+    justify-content: flex-start;
+}
+
+.profile-chat-message-row.bot .profile-chat-message {
+    order: 2;
+}
+
+.profile-chat-message-row.bot .profile-chat-message-avatar {
+    order: 1;
+}
+
+.profile-chat-message-row.user {
+    justify-content: flex-end;
+}
+
+.profile-chat-message-row.user .profile-chat-message {
+    order: 1;
+}
+
+.profile-chat-message-row.user .profile-chat-message-avatar {
+    order: 2;
+}
+
+.profile-chat-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    color: #111;
+    font-size: 0.9rem;
+    box-shadow:
+        0 0 15px rgba(0, 0, 0, 0.12);
+    max-width: 220px;
+}
+
+.profile-chat-message-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.profile-chat-message.user {
+    background: linear-gradient(135deg, #1f2bff, #0d08f7);
+    color: #f3f5ff;
+    box-shadow:
+        0 12px 20px rgba(13, 8, 247, 0.5);
+}
+
+.profile-chat-message-row.user .profile-chat-message {
+    align-self: flex-end;
+}
+
+.profile-chat-message.user {
+    background: linear-gradient(135deg, #1f2bff, #0d08f7);
+    color: #f3f5ff;
+    align-self: flex-end;
+    box-shadow:
+        0 12px 20px rgba(13, 8, 247, 0.5);
+}
+
+.profile-chat-message.bot::before,
+.profile-chat-message.user::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    top: 12px;
+    transform: translateY(-2px);
+}
+
+.profile-chat-message.bot::before {
+    left: -4px;
+    background: rgba(0, 255, 255, 0.5);
+}
+
+.profile-chat-message.user::before {
+    right: -4px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.profile-chat-message .meta {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: rgba(22, 28, 43, 0.6);
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.profile-chat-message.user .meta {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.profile-chat-input-form {
+    margin-top: 0.9rem;
+    display: flex;
+    gap: 0.45rem;
+}
+
+.profile-chat-input {
+    flex: 1;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 180, 216, 0.5);
+    background: rgba(0, 0, 0, 0.35);
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+    outline: none;
+    color: #f2f2ff;
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-chat-input:focus {
+    border-color: rgba(140, 255, 255, 0.8);
+    box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.3);
+}
+
+.profile-chat-send {
+    border: none;
+    border-radius: 999px;
+    padding: 0 1rem;
+    background: linear-gradient(145deg, #9a3ef5, #4b0b8f);
+    color: #fff;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow:
+        0 8px 16px rgba(75, 11, 143, 0.6),
+        inset 0 0 8px rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+}
+
+.profile-chat-send:hover,
+.profile-chat-send:focus-visible {
+    transform: translateY(-1px);
+    box-shadow:
+        0 12px 22px rgba(89, 49, 255, 0.6),
+        inset 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.profile-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.3), rgba(3, 8, 24, 0.98));
+    border: 3px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, 0.25),
+        0 6px 20px rgba(0, 0, 0, 0.65),
+        0 0 24px rgba(143, 195, 255, 0.35);
+    padding: 0;
+}
+
+.navbar-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    border: 0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), inset 0 0 12px rgba(0, 0, 0, 0.4);
+    display: block;
 }
 
 .navbar-avatar-fallback {
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     color: #d0d3dc;
 }
 
 .profile-dropdown-toggle:hover,
 .profile-dropdown.open .profile-dropdown-toggle {
-    color: #fff;
-    border-color: #ffffff;
-    background: linear-gradient(145deg, rgba(128, 128, 128, 0.88), rgba(245, 245, 245, 0.68));
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.4);
     box-shadow:
-        0 0 18px rgba(255, 255, 255, 0.52),
-        0 0 20px rgba(214, 214, 214, 0.44);
-}
-
-.profile-dropdown-toggle span {
-    color: #000000;
-    text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.7);
-}
-
-.profile-dropdown-toggle .fa-chevron-down {
-    font-size: 0.75rem;
-    transition: transform 0.2s ease;
-}
-
-.profile-dropdown.open .fa-chevron-down {
-    transform: rotate(180deg);
+        inset 0 0 18px rgba(255, 255, 255, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.45),
+        0 0 18px rgba(83, 166, 255, 0.35);
 }
 
 .profile-dropdown-menu {
@@ -400,6 +741,219 @@
     transform: translateY(0);
 }
 
+.profile-dropdown-menu.profile-dropdown-card {
+    min-width: 340px;
+    padding: 20px;
+}
+
+.profile-dropdown-card {
+    background: rgba(4, 9, 30, 0.85);
+    border-radius: 28px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        inset 0 0 40px rgba(71, 170, 255, 0.16);
+    backdrop-filter: blur(12px);
+}
+
+.profile-dropdown-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+    padding-top: 10px;
+}
+
+.profile-hero-meta {
+    text-align: center;
+}
+
+.profile-avatar-ring {
+    width: 96px;
+    height: 96px;
+    border-radius: 999px;
+    padding: 3px;
+    background: linear-gradient(140deg, #a878ff, #f95bff, #5ba7ff);
+    box-shadow: 0 0 15px rgba(153, 126, 255, 0.6);
+}
+
+.profile-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(10, 10, 28, 0.95);
+}
+
+.profile-username {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #f0f4ff;
+    margin: 0;
+}
+
+.profile-email {
+    font-size: 0.85rem;
+    color: #94a7cf;
+    margin: 8px 0 0;
+    text-transform: lowercase;
+    letter-spacing: 0.18em;
+}
+
+.profile-email[data-lowercase] {
+    text-transform: lowercase;
+}
+
+.profile-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    margin: 4px 0;
+}
+
+.profile-action-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profile-primary-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #7b45ff, #c084ff);
+    color: #fff;
+    border-radius: 999px;
+    border: 1px solid rgba(18, 237, 214, 0.6);
+    padding: 11px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+    box-shadow: 0 14px 20px rgba(18, 237, 214, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    text-decoration: none;
+}
+
+.profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #dfe6ff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.profile-menu-mygames {
+    background: linear-gradient(135deg, rgba(98, 255, 203, 0.2), rgba(15, 135, 255, 0.25));
+    border: 1px solid #000;
+    box-shadow: 0 0 12px rgba(18, 237, 214, 0.35);
+}
+
+.profile-menu-edit {
+    background: linear-gradient(135deg, rgba(255, 132, 213, 0.25), rgba(187, 80, 255, 0.25));
+    border: 1px solid #000;
+    box-shadow: 0 0 12px rgba(255, 132, 213, 0.35);
+}
+
+.profile-primary-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #7b45ff, #ff54c3);
+    color: #fff;
+    border-radius: 999px;
+    border: none;
+    padding: 11px 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+    box-shadow: 0 10px 26px rgba(123, 69, 255, 0.65);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    text-decoration: none;
+}
+
+.profile-primary-btn:hover,
+.profile-primary-btn:focus-visible {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 30px rgba(123, 69, 255, 0.7);
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.profile-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #dfe6ff;
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.profile-menu-mygames,
+.profile-menu-edit {
+    background: linear-gradient(135deg, rgba(98, 255, 203, 0.2), rgba(15, 135, 255, 0.25));
+    border: 1px solid rgba(18, 237, 214, 0.4);
+    box-shadow: 0 0 12px rgba(18, 237, 214, 0.35);
+}
+
+.profile-menu-item:hover,
+.profile-menu-item:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateX(2px);
+}
+
+.profile-menu-mygames:hover,
+.profile-menu-mygames:focus-visible {
+    background: linear-gradient(135deg, rgba(98, 255, 203, 0.4), rgba(15, 135, 255, 0.45));
+}
+
+.profile-menu-edit:hover,
+.profile-menu-edit:focus-visible {
+    background: linear-gradient(135deg, rgba(255, 132, 213, 0.45), rgba(187, 80, 255, 0.45));
+}
+
+.profile-menu-item i {
+    width: 20px;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .profile-dropdown-card {
+        min-width: 260px;
+    }
+
+    .profile-primary-btn {
+        font-size: 0.9rem;
+    }
+}
+
 .profile-dropdown-item {
     display: block;
     color: #d5fff8;
@@ -415,7 +969,12 @@
 }
 
 .profile-dropdown-item.logout-item {
-    color: #ff5e5e;
+    color: var(--neon-green);
+    background: linear-gradient(145deg, rgba(0, 88, 88, 0.74), rgba(0, 128, 128, 0.7));
+    border: 1px solid rgba(0, 128, 128, 0.72);
+    box-shadow:
+        inset 0 0 12px rgba(0, 255, 255, 0.22),
+        0 0 12px rgba(0, 128, 128, 0.22);
 }
 
 .profile-dropdown-item.logout-item:hover {
@@ -424,12 +983,13 @@
 }
 
 .profile-dropdown-toggle {
-    border-radius: 999px;
-    padding: 0.3rem 0.75rem 0.3rem 0.3rem;
+    border-radius: 50%;
+    padding: 0;
     background: rgba(18, 21, 47, 0.95);
     border: 2px solid #9ea3b1;
     box-shadow: none;
-    white-space: nowrap;
+    width: 56px;
+    height: 56px;
     overflow: hidden;
 }
 

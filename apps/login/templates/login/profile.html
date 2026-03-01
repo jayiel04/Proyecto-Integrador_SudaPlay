@@ -1,0 +1,564 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Perfil de {{ request.user.username }} — SudaPlay{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Profile Page ──────────────────────────────────────────────── */
+    .profile-page {
+        max-width: 860px;
+        margin: 2.5rem auto;
+        padding: 0 1.25rem 4rem;
+    }
+
+    /* Back row */
+    .profile-page-back-row {
+        margin-bottom: 1.5rem;
+    }
+    .profile-page-back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        color: var(--color-text-muted, #a0aec0);
+        text-decoration: none;
+        font-size: .9rem;
+        transition: color .2s;
+    }
+    .profile-page-back-link:hover { color: var(--color-accent, #7f5af0); }
+
+    /* Hero card */
+    .profile-hero-card {
+        background: var(--color-card-bg, rgba(255,255,255,.05));
+        border: 1px solid var(--color-border, rgba(255,255,255,.1));
+        border-radius: 1.25rem;
+        padding: 2.25rem 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        backdrop-filter: blur(10px);
+        margin-bottom: 1.75rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .profile-hero-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, rgba(127,90,240,.12) 0%, transparent 60%);
+        pointer-events: none;
+    }
+
+    /* Avatar */
+    .profile-page-avatar-wrap {
+        position: relative;
+        flex-shrink: 0;
+    }
+    .profile-page-avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid var(--color-accent, #7f5af0);
+        box-shadow: 0 0 20px rgba(127,90,240,.35);
+    }
+    .profile-page-avatar-fallback {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-accent, #7f5af0);
+        color: #fff;
+        font-size: 3rem;
+        border: 3px solid var(--color-accent, #7f5af0);
+    }
+
+    /* User info */
+    .profile-page-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .profile-page-username {
+        font-size: 1.7rem;
+        font-weight: 700;
+        margin: 0 0 .25rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .profile-page-email {
+        color: var(--color-text-muted, #a0aec0);
+        font-size: .9rem;
+        margin: 0 0 .75rem;
+    }
+
+    /* Meta badges (bio, phone, dob) */
+    .profile-page-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin-bottom: .85rem;
+    }
+    .profile-meta-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: .4rem;
+        background: rgba(255,255,255,.07);
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 50px;
+        padding: .25rem .75rem;
+        font-size: .8rem;
+        color: var(--color-text-muted, #a0aec0);
+    }
+    .profile-meta-badge i { color: var(--color-accent, #7f5af0); }
+
+    /* Action buttons */
+    .profile-page-actions {
+        display: flex;
+        gap: .75rem;
+        flex-wrap: wrap;
+        margin-top: .5rem;
+    }
+    .profile-action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        padding: .5rem 1.1rem;
+        border-radius: .6rem;
+        font-size: .85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: transform .15s, box-shadow .15s, background .15s;
+        cursor: pointer;
+        border: none;
+    }
+    .profile-action-btn:hover { transform: translateY(-2px); }
+    .profile-action-btn.primary {
+        background: linear-gradient(135deg, #7f5af0, #6246ea);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(127,90,240,.3);
+    }
+    .profile-action-btn.primary:hover { box-shadow: 0 6px 18px rgba(127,90,240,.5); }
+    .profile-action-btn.secondary {
+        background: rgba(255,255,255,.07);
+        color: var(--color-text, #e2e8f0);
+        border: 1px solid rgba(255,255,255,.15);
+    }
+    .profile-action-btn.secondary:hover { background: rgba(255,255,255,.12); }
+
+    /* Stats row */
+    .profile-stats-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+    .profile-stat-card {
+        flex: 1;
+        min-width: 110px;
+        background: var(--color-card-bg, rgba(255,255,255,.05));
+        border: 1px solid var(--color-border, rgba(255,255,255,.1));
+        border-radius: 1rem;
+        padding: 1.1rem 1.25rem;
+        text-align: center;
+        backdrop-filter: blur(6px);
+    }
+    .profile-stat-number {
+        font-size: 1.75rem;
+        font-weight: 800;
+        color: var(--color-accent, #7f5af0);
+        display: block;
+        line-height: 1;
+        margin-bottom: .3rem;
+    }
+    .profile-stat-label {
+        font-size: .75rem;
+        color: var(--color-text-muted, #a0aec0);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+    }
+
+    /* Games section */
+    .profile-section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: .6rem;
+    }
+    .profile-section-title i { color: var(--color-accent, #7f5af0); }
+
+    /* Game cards grid */
+    .profile-games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.1rem;
+    }
+    .profile-game-card {
+        background: var(--color-card-bg, rgba(255,255,255,.05));
+        border: 1px solid var(--color-border, rgba(255,255,255,.1));
+        border-radius: .9rem;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        transition: transform .2s, box-shadow .2s, border-color .2s;
+        display: flex;
+        flex-direction: column;
+    }
+    .profile-game-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(0,0,0,.35);
+        border-color: rgba(127,90,240,.45);
+    }
+    .profile-game-cover {
+        width: 100%;
+        aspect-ratio: 16/9;
+        object-fit: cover;
+        display: block;
+    }
+    .profile-game-cover-placeholder {
+        width: 100%;
+        aspect-ratio: 16/9;
+        background: linear-gradient(135deg, rgba(127,90,240,.25), rgba(98,70,234,.1));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: rgba(127,90,240,.5);
+    }
+    .profile-game-body {
+        padding: .75rem 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: .3rem;
+    }
+    .profile-game-title {
+        font-size: .9rem;
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .profile-game-meta {
+        font-size: .75rem;
+        color: var(--color-text-muted, #a0aec0);
+        display: flex;
+        align-items: center;
+        gap: .35rem;
+    }
+    .profile-game-badge {
+        display: inline-block;
+        padding: .15rem .5rem;
+        border-radius: 50px;
+        font-size: .7rem;
+        font-weight: 600;
+        margin-top: auto;
+        align-self: flex-start;
+    }
+    .profile-game-badge.approved {
+        background: rgba(72, 187, 120, .15);
+        color: #48bb78;
+        border: 1px solid rgba(72,187,120,.3);
+    }
+    .profile-game-badge.pending {
+        background: rgba(237, 179, 72, .15);
+        color: #edb348;
+        border: 1px solid rgba(237,179,72,.3);
+    }
+
+    /* Empty state */
+    .profile-empty-games {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: var(--color-text-muted, #a0aec0);
+        background: rgba(255,255,255,.03);
+        border: 1px dashed rgba(255,255,255,.12);
+        border-radius: 1rem;
+    }
+    .profile-empty-games > i {
+        font-size: 2.5rem;
+        color: rgba(127,90,240,.4);
+        display: block;
+        margin-bottom: .75rem;
+    }
+    .profile-empty-games p { margin: 0 0 1rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+    <!-- Back -->
+    <div class="profile-page-back-row">
+        <a href="javascript:history.back()" class="profile-page-back-link" aria-label="Volver">
+            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+            <span>Volver</span>
+        </a>
+    </div>
+
+    <!-- Hero card -->
+    <div class="profile-hero-card">
+        <div class="profile-page-avatar-wrap">
+            <img src="{{ avatar_url }}" alt="Avatar de {{ request.user.username }}" class="profile-page-avatar">
+        </div>
+
+        <div class="profile-page-info">
+            <h1 class="profile-page-username">{{ request.user.username }}</h1>
+            <p class="profile-page-email">{{ request.user.email }}</p>
+
+            <div class="profile-page-meta">
+                {% if profile.bio %}
+                <span class="profile-meta-badge">
+                    <i class="fa fa-pen-nib"></i>
+                    {{ profile.bio|truncatechars:60 }}
+                </span>
+                {% endif %}
+                {% if profile.phone %}
+                <span class="profile-meta-badge">
+                    <i class="fa fa-phone"></i>
+                    {{ profile.phone }}
+                </span>
+                {% endif %}
+                {% if profile.date_of_birth %}
+                <span class="profile-meta-badge">
+                    <i class="fa fa-birthday-cake"></i>
+                    {{ profile.date_of_birth|date:"d M Y" }}
+                </span>
+                {% endif %}
+                <span class="profile-meta-badge">
+                    <i class="fa fa-calendar-alt"></i>
+                    Miembro desde {{ request.user.date_joined|date:"M Y" }}
+                </span>
+            </div>
+
+            <div class="profile-page-actions">
+                <a href="{% url 'login:profile_edit' %}" class="profile-action-btn primary">
+                    <i class="fa fa-pencil-alt"></i>
+                    Editar perfil
+                </a>
+                <a href="{% url 'web:my_games' %}" class="profile-action-btn secondary">
+                    <i class="fa fa-gamepad"></i>
+                    Mis juegos
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="profile-stats-row">
+        <div class="profile-stat-card">
+            <span class="profile-stat-number">{{ user_games_count }}</span>
+            <span class="profile-stat-label">Juegos subidos</span>
+        </div>
+        <div class="profile-stat-card">
+            <span class="profile-stat-number">{{ user_games_approved }}</span>
+            <span class="profile-stat-label">Publicados</span>
+        </div>
+        <div class="profile-stat-card">
+            <span class="profile-stat-number">{{ friends.count }}</span>
+            <span class="profile-stat-label">Amigos</span>
+        </div>
+    </div>
+
+    <!-- Friend Requests Section -->
+    {% if friend_requests %}
+    <div style="margin-bottom: 2rem;">
+        <h2 class="profile-section-title">
+            <i class="fas fa-bell"></i>
+            Solicitudes Pendientes
+        </h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+            {% for req in friend_requests %}
+            <div class="profile-hero-card" style="padding: 1rem; margin-bottom: 0; min-height: 80px;" id="request-{{ req.id }}">
+                <div style="display: flex; align-items: center; gap: 1rem; width: 100%;">
+                    {% if req.from_user.profile.avatar %}
+                        <img src="{{ req.from_user.profile.avatar.url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div style="flex: 1;">
+                        <a href="{% url 'login:player_profile' req.from_user.username %}" style="text-decoration: none; color: #fff; font-weight: 600; font-size: 1.1rem;">
+                            {{ req.from_user.username }}
+                        </a>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="profile-primary-btn btn-accept-request" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" data-id="{{ req.id }}" data-url="{% url 'login:accept_friend_request' %}">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="profile-secondary-btn btn-reject-request" style="padding: 0.4rem 0.8rem; font-size: 0.85rem; border-color: rgba(255,0,0,0.5); color: #ff4444;" data-id="{{ req.id }}" data-url="{% url 'login:reject_friend_request' %}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Friends List Section -->
+    <div style="margin-bottom: 2rem;">
+        <h2 class="profile-section-title">
+            <i class="fas fa-user-friends"></i>
+            Mis Amigos
+        </h2>
+        
+        {% if friends %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">
+            {% for friend in friends %}
+            <div class="profile-hero-card" style="padding: 1rem; margin: 0; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s;">
+                <a href="{% url 'login:player_profile' friend.user.username %}" style="display: flex; align-items: center; gap: 1rem; flex: 1; text-decoration: none; overflow: hidden;">
+                    {% if friend.avatar %}
+                        <img src="{{ friend.avatar.url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                    {% else %}
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div style="min-width: 0;">
+                        <span style="display: block; font-weight: 600; color: #fff; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ friend.user.username }}</span>
+                        {% if friend.bio %}
+                            <span style="font-size: 0.8rem; color: #aaa; display: block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ friend.bio }}</span>
+                        {% endif %}
+                    </div>
+                </a>
+                <a href="{% url 'chat:chat' friend.user.username %}" class="profile-primary-btn" style="width: 40px; height: 40px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;" title="Chatear">
+                    <i class="fas fa-comment-dots"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="profile-empty-games">
+            <i class="fas fa-users-slash" aria-hidden="true"></i>
+            <p>Aún no tienes amigos agregados.</p>
+            <a href="{% url 'login:search_players' %}" class="profile-action-btn primary">
+                <i class="fas fa-search"></i>
+                Encontrar jugadores
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Games grid -->
+    <div>
+        <h2 class="profile-section-title">
+            <i class="fa fa-gamepad"></i>
+            Juegos de {{ request.user.username }}
+        </h2>
+
+        {% if user_games %}
+        <div class="profile-games-grid">
+            {% for game in user_games %}
+            <a href="{% url 'web:game_detail' game.pk %}" class="profile-game-card" title="{{ game.title }}">
+                {% if game.cover_image %}
+                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="profile-game-cover" loading="lazy">
+                {% else %}
+                    <div class="profile-game-cover-placeholder" aria-hidden="true">
+                        <i class="fa fa-gamepad"></i>
+                    </div>
+                {% endif %}
+                <div class="profile-game-body">
+                    <span class="profile-game-title">{{ game.title }}</span>
+                    <span class="profile-game-meta">
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        {{ game.get_genre_display }}
+                    </span>
+                    {% if game.is_approved %}
+                    <span class="profile-game-badge approved">
+                        <i class="fa fa-check-circle"></i> Publicado
+                    </span>
+                    {% else %}
+                    <span class="profile-game-badge pending">
+                        <i class="fa fa-clock"></i> Pendiente
+                    </span>
+                    {% endif %}
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="profile-empty-games">
+            <i class="fa fa-gamepad" aria-hidden="true"></i>
+            <p>Aún no has subido ningún juego.</p>
+            <a href="{% url 'web:game_create' %}" class="profile-action-btn primary">
+                <i class="fa fa-upload"></i>
+                Subir mi primer juego
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+{% csrf_token %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    
+    // Accept Requests
+    document.querySelectorAll('.btn-accept-request').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const reqId = btn.dataset.id;
+            const url = btn.dataset.url;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ request_id: reqId })
+                });
+                const data = await response.json();
+                if(data.success) {
+                    location.reload();
+                } else {
+                    alert(data.error || 'Error al aceptar solicitud.');
+                }
+            } catch (err) {
+                alert('Error de red.');
+            }
+        });
+    });
+
+    // Reject Requests
+    document.querySelectorAll('.btn-reject-request').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const reqId = btn.dataset.id;
+            const url = btn.dataset.url;
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({ request_id: reqId })
+                });
+                const data = await response.json();
+                if(data.success) {
+                    const card = document.getElementById(`request-${reqId}`);
+                    if(card) card.remove();
+                } else {
+                    alert(data.error || 'Error al rechazar solicitud.');
+                }
+            } catch (err) {
+                alert('Error de red.');
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

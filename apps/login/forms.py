@@ -6,6 +6,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
+from django.conf import settings
+from pathlib import Path
 from allauth.socialaccount.forms import SignupForm
 from .models import UserProfile
 
@@ -97,6 +100,10 @@ class ProfileUpdateForm(forms.ModelForm):
         required=False,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'})
     )
+    avatar_choice = forms.CharField(
+        required=False,
+        widget=forms.HiddenInput()
+    )
 
     class Meta:
         model = User
@@ -111,8 +118,10 @@ class ProfileUpdateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.available_avatars = kwargs.pop('available_avatars', [])
         super().__init__(*args, **kwargs)
-        self.order_fields(['username', 'email', 'avatar'])
+        self.order_fields(['username', 'email', 'avatar', 'avatar_choice'])
+        self.fields['avatar_choice'].initial = ''
 
     def clean_username(self):
         username = self.cleaned_data.get('username', '').strip()
@@ -132,7 +141,14 @@ class ProfileUpdateForm(forms.ModelForm):
             user.save()
             profile, _ = UserProfile.objects.get_or_create(user=user)
             avatar = self.cleaned_data.get('avatar')
+            avatar_choice = self.cleaned_data.get('avatar_choice')
+            if avatar_choice and avatar_choice in self.available_avatars:
+                avatars_root = Path(settings.BASE_DIR) / 'static' / 'avatars'
+                avatar_path = avatars_root / avatar_choice
+                if avatar_path.exists():
+                    with avatar_path.open('rb') as avatar_file:
+                        profile.avatar.save(avatar_choice, ContentFile(avatar_file.read()), save=False)
             if avatar:
                 profile.avatar = avatar
-                profile.save()
+            profile.save()
         return user

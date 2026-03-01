@@ -25,6 +25,7 @@ class UserProfile(models.Model):
     is_verified = models.BooleanField(default=False, help_text="¿Email verificado?")
     phone = models.CharField(max_length=20, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
+    friends = models.ManyToManyField('self', blank=True, symmetrical=True, help_text="Amigos del usuario")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -40,3 +41,19 @@ class UserProfile(models.Model):
         """Verificar si el usuario es administrador."""
         return self.role == 'admin'
 
+
+class FriendRequest(models.Model):
+    """
+    Modelo para gestionar las solicitudes de amistad entre usuarios.
+    """
+    from_user = models.ForeignKey(User, related_name='sent_friend_requests', on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name='received_friend_requests', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Solicitud de Amistad"
+        verbose_name_plural = "Solicitudes de Amistad"
+        unique_together = ('from_user', 'to_user')
+
+    def __str__(self):
+        return f"{self.from_user.username} -> {self.to_user.username}"

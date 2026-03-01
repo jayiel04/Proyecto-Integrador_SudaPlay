@@ -401,6 +401,93 @@
     cursor: pointer;
 }
 
+.avatar-preview-stack {
+    position: relative;
+    width: 96px;
+    height: 96px;
+}
+
+.avatar-camera-btn {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background: linear-gradient(145deg, rgba(107, 50, 255, 0.9), rgba(255, 96, 183, 0.9));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease;
+}
+
+.avatar-camera-btn:hover,
+.avatar-camera-btn:focus-visible {
+    transform: translateY(-2px);
+}
+
+.avatar-choice-section {
+    margin-bottom: 16px;
+    text-align: center;
+    display: none;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-choice-section.is-open {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.avatar-choice-label {
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #cfd8ff;
+}
+
+.avatar-choice-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+    gap: 8px;
+    justify-items: center;
+}
+
+.avatar-choice-item {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: transparent;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-choice-item img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.avatar-choice-item.is-selected {
+    border-color: #6b32ff;
+    transform: translateY(-2px);
+}
+
+.avatar-choice-item.is-selected img {
+    border-color: #86a6ff;
+}
+
 .avatar-cropper-modal {
     position: fixed;
     inset: 0;
@@ -468,3 +555,5 @@
     color: #f4fffe;
     font-weight: 700;
 }
+
+

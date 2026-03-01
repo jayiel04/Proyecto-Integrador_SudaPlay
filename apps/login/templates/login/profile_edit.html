@@ -23,19 +23,38 @@
         </div>
 
         <div class="avatar-preview-wrap">
-            {% if current_avatar_url %}
-            <img src="{{ current_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
-            {% else %}
-            <img src="{% static 'img/SudaPlay.png' %}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
-            {% endif %}
+            <div class="avatar-preview-stack">
+                {% if current_avatar_url %}
+                <img src="{{ current_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
+                {% else %}
+                <img src="{% static 'img/SudaPlay.png' %}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img" title="Haz click para ajustar la imagen">
+                {% endif %}
+                <button type="button" id="avatar-camera-toggle" class="avatar-camera-btn" aria-label="Mostrar avatares disponibles">
+                    <i class="fa fa-camera"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="avatar-choice-section" data-visible="false">
+            <p class="avatar-choice-label">Selecciona uno de nuestros avatares</p>
+            <div class="avatar-choice-grid">
+                {% for avatar in available_avatars %}
+                <button type="button" class="avatar-choice-item" data-avatar-name="{{ avatar }}">
+                    <img src="{% static 'avatars/' %}{{ avatar }}" alt="Avatar {{ avatar }}">
+                </button>
+                {% endfor %}
+            </div>
         </div>
 
         <form method="POST" enctype="multipart/form-data" class="login-form">
             {% csrf_token %}
 
             {% for field in form %}
+            {% if field.name != 'avatar_choice' %}
             {% include "includes/_field.html" with field=field %}
+            {% endif %}
             {% endfor %}
+            {{ form.avatar_choice }}
 
             <button type="submit" class="btn-login login-main-submit">Guardar cambios</button>
         </form>
@@ -66,6 +85,11 @@
         const cancelBtn = document.getElementById('cancel-avatar-crop');
         const applyBtn = document.getElementById('apply-avatar-crop');
         const previewImg = document.getElementById('current-avatar-preview');
+        const avatarChoiceGrid = document.querySelector('.avatar-choice-grid');
+        const avatarChoiceInput = document.getElementById('id_avatar_choice');
+        const avatarChoiceSection = document.querySelector('.avatar-choice-section');
+        const cameraToggle = document.getElementById('avatar-camera-toggle');
+        const avatarsBaseUrl = "{% static 'avatars/' %}";
 
         if (!avatarInput || !modal || !cropImage || !cancelBtn || !applyBtn || !previewImg) {
             return;
@@ -171,6 +195,32 @@
                 closeCropperModal();
             }, 'image/png');
         });
+
+        if (avatarChoiceGrid && avatarChoiceInput) {
+            const buttons = avatarChoiceGrid.querySelectorAll('.avatar-choice-item');
+            const navbarAvatar = document.querySelector('.navbar-avatar');
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    buttons.forEach((btn) => btn.classList.remove('is-selected'));
+                    button.classList.add('is-selected');
+                    const avatarName = button.dataset.avatarName;
+                    avatarChoiceInput.value = avatarName;
+                    const newSrc = `${avatarsBaseUrl}${avatarName}`;
+                    if (previewImg) {
+                        previewImg.src = newSrc;
+                    }
+                    if (navbarAvatar) {
+                        navbarAvatar.src = newSrc;
+                    }
+                });
+            });
+        }
+
+        if (cameraToggle && avatarChoiceSection) {
+            cameraToggle.addEventListener('click', () => {
+                avatarChoiceSection.classList.toggle('is-open');
+            });
+        }
     });
 </script>
 {% endblock %}

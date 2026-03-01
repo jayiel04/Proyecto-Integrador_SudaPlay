@@ -259,26 +259,38 @@ input:focus {
 
 /* Boton principal del login con tema cyberpunk teal */
 .login-main-submit {
-    background: linear-gradient(135deg, #006b6b, #008080, #00a7a7);
-    border: 1px solid #00FFFF;
-    color: #e8ffff;
-    text-shadow: 0 0 10px rgba(0, 255, 255, 0.55);
+    background: linear-gradient(150deg, #008080, #005f5f);
+    border: 2px solid #006c6c;
+    color: #f6fbff;
+    text-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
     box-shadow:
-        0 0 18px rgba(0, 128, 128, 0.62),
-        0 0 24px rgba(0, 255, 255, 0.42),
-        inset 0 0 10px rgba(0, 139, 139, 0.45),
-        inset 0 0 0 1px rgba(0, 128, 128, 0.95);
-    clip-path: polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px);
+        0 0 32px rgba(0, 128, 128, 0.8),
+        0 0 18px rgba(0, 0, 0, 0.45),
+        inset 0 0 16px rgba(0, 128, 128, 0.6);
+    padding: 14px 0;
+    border-radius: 16px;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: box-shadow 0.2s ease, filter 0.2s ease;
 }
 
 .login-main-submit:hover {
-    background: linear-gradient(135deg, #007777, #008080, #00d0d0);
-    border-color: #33c9c9;
+    filter: brightness(1.08);
     box-shadow:
-        0 0 24px rgba(0, 128, 128, 0.78),
-        0 0 30px rgba(0, 255, 255, 0.55),
-        inset 0 0 12px rgba(0, 139, 139, 0.55),
-        inset 0 0 0 1px rgba(0, 255, 255, 0.92);
+        0 0 44px rgba(0, 128, 128, 0.9),
+        inset 0 0 18px rgba(0, 128, 128, 0.8);
+}
+
+@keyframes pulseElectric {
+    0%, 100% {
+        filter: brightness(1);
+        transform: translateY(0);
+    }
+    50% {
+        filter: brightness(1.2);
+        transform: translateY(-1px) scale(1.01);
+    }
 }
 
 .remember-forgot {

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'mi_proyecto', 
     'apps.login.apps.LoginConfig',
     'apps.web.apps.WebConfig',
+    'apps.chat.apps.ChatConfig',
 ]
 
 # Esto debe estar fuera de la lista, al final del archivo
@@ -198,6 +199,11 @@ SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_FORMS = {
     'signup': 'apps.login.forms.CustomSocialSignupForm',
 }
+
+# Supabase (chat automático)
+SUPABASE_URL = config('SUPABASE_URL', default='')
+SUPABASE_ANON_KEY = config('SUPABASE_ANON_KEY', default='')
+SUPABASE_CHAT_TABLE = config('SUPABASE_CHAT_TABLE', default='auto_messages')
 
 
 # Default primary key field type

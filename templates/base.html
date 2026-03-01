@@ -97,25 +97,49 @@
             <div
                 class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %} navbar-menu-guest{% endif %}">
                 {% if user.is_authenticated %}
-                <div class="profile-dropdown">
-                    <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true">
-                        {% if navbar_avatar_url %}
-                        <img src="{{ navbar_avatar_url }}" alt="Perfil" class="navbar-avatar">
-                        {% else %}
-                        <i class="fa fa-user-circle navbar-avatar-fallback"></i>
-                        {% endif %}
-                        <span>{{ user.username }}</span>
-                        <i class="fa fa-chevron-down"></i>
-                    </button>
-                    <div class="profile-dropdown-menu" role="menu">
-                        <a href="{% url 'web:game_create' %}" class="profile-dropdown-item" role="menuitem">Subir
-                            juego</a>
-                        <a href="{% url 'web:my_games' %}" class="profile-dropdown-item" role="menuitem">Mis juegos</a>
-                        <a href="{% url 'login:profile_edit' %}" class="profile-dropdown-item" role="menuitem">Editar
-                            perfil</a>
-                        <a href="{% url 'login:logout' %}" class="profile-dropdown-item logout-item"
-                            role="menuitem">Cerrar sesión</a>
+                <div class="navbar-profile-actions">
+
+                    <div class="profile-dropdown">
+                        <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de perfil">
+                            {% if navbar_avatar_url %}
+                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar">
+                            {% else %}
+                            <i class="fa fa-user-circle navbar-avatar-fallback"></i>
+                            {% endif %}
+                        </button>
+                        <div class="profile-dropdown-menu profile-dropdown-card" role="menu">
+                            <button class="profile-dropdown-close" type="button" aria-label="Cerrar perfil">&times;</button>
+                            <div class="profile-dropdown-hero">
+                                <div class="profile-avatar-ring" aria-hidden="true">
+                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
+                                </div>
+                                <div class="profile-hero-meta">
+                                    <p class="profile-username">{{ user.username }}</p>
+                                    <p class="profile-email">{{ user.email }}</p>
+                                </div>
+                            </div>
+                            <div class="profile-divider"></div>
+                            <div class="profile-action-row">
+                                <a href="{% url 'chat:inbox' %}" class="profile-primary-btn" role="menuitem" style="background: linear-gradient(135deg, #00ffff, #00bfff); color: #000; margin-bottom: 0.5rem;">
+                                    <i class="fas fa-comment-dots"></i>
+                                    Mensajes
+                                </a>
+                                <a href="{% url 'login:profile' %}" class="profile-primary-btn" role="menuitem">
+                                    <i class="fa fa-user"></i>
+                                    Perfil
+                                </a>
+                                <a href="{% url 'web:my_games' %}" class="profile-menu-item profile-menu-mygames" role="menuitem">
+                                    <i class="fa fa-gamepad"></i>
+                                    <span>Mis juegos</span>
+                                </a>
+                                <a href="{% url 'login:profile_edit' %}" class="profile-menu-item profile-menu-edit" role="menuitem">
+                                    <i class="fa fa-pencil-alt"></i>
+                                    <span>Editar perfil</span>
+                                </a>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
                 {% else %}
                 {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %}
@@ -144,7 +168,7 @@
         data-login-base="{% url 'login:login' %}">
         <div class="login-required-card" role="dialog" aria-modal="true" aria-labelledby="login-required-title">
             <h3 id="login-required-title">Se requiere iniciar sesión</h3>
-            <p>Debes iniciar sesión para utilizar esta funcionalidad.</p>
+            <p>Para acceder a esta funcionalidad debes iniciar sesión.</p>
             <div class="login-required-actions">
                 <button type="button" id="close-login-required-panel"
                     class="login-required-btn secondary">Cancelar</button>
@@ -175,6 +199,9 @@
 
     {% endif %}
     <script src="{% static 'js/main.js' %}"></script>
+    {% if user.is_authenticated %}
+    {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
+    {% endif %}
     {% block extra_js %}{% endblock %}
     </body>
 
