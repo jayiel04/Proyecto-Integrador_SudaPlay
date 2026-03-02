@@ -385,6 +385,49 @@
     border-color: rgba(188, 134, 255, 0.92);
 }
 
+.profile-edit-card textarea {
+    font-family: "Orbitron", "Space Mono", monospace;
+}
+
+.profile-edit-card #id_bio {
+    width: 100%;
+    min-height: 110px;
+    border-radius: 12px;
+    background: rgba(4, 10, 24, 0.9);
+    color: #c4f3ff;
+    border: 1px solid rgba(64, 180, 255, 0.9);
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    text-transform: none;
+    box-shadow:
+        0 0 12px rgba(99, 173, 255, 0.65),
+        inset 0 0 18px rgba(255, 255, 255, 0.05);
+    letter-spacing: 0.04em;
+    line-height: 1.55;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    resize: vertical;
+}
+
+.profile-edit-card #id_bio::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    font-size: 0.75rem;
+}
+
+.profile-edit-card #id_bio:focus {
+    border-color: rgba(175, 109, 255, 0.95);
+    box-shadow:
+        0 0 20px rgba(112, 87, 255, 0.8),
+        inset 0 0 25px rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.profile-edit-card label[for="id_avatar"] {
+    display: none;
+}
+
 .avatar-preview-wrap {
     display: flex;
     justify-content: center;

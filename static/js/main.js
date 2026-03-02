@@ -441,6 +441,88 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    const notificationWidget = document.querySelector('.profile-notification-widget');
+    const notificationToggle = notificationWidget ? notificationWidget.querySelector('.notification-toggle') : null;
+    const notificationPanel = notificationWidget ? notificationWidget.querySelector('.notification-panel') : null;
+    const notificationList = notificationPanel ? notificationPanel.querySelector('.notification-list') : null;
+    const notificationBadge = notificationToggle ? notificationToggle.querySelector('.notification-badge') : null;
+
+    const renderNotifications = (items) => {
+        if (!notificationList) return;
+        notificationList.innerHTML = '';
+        items.forEach((notif) => {
+            if (notif.type === 'empty') {
+                const li = document.createElement('li');
+                li.className = 'notification-empty';
+                li.textContent = notif.text;
+                notificationList.appendChild(li);
+                return;
+            }
+            const li = document.createElement('li');
+            li.className = 'notification-item';
+            li.setAttribute('role', 'listitem');
+            const dot = notif.type === 'friend_request' ? '<span class="notification-dot"></span>' : '';
+            li.innerHTML = `
+                <strong>${notif.text}</strong>
+                <span class="notification-timestamp">${notif.created_at ? new Date(notif.created_at).toLocaleString() : 'Ahora'}</span>
+                ${dot}
+            `;
+            if (notif.url) {
+                li.addEventListener('click', () => {
+                    window.location.href = notif.url;
+                });
+            }
+            notificationList.appendChild(li);
+        });
+    };
+
+    const loadNotifications = () => {
+        if (!notificationToggle) return;
+        const endpoint = notificationToggle.dataset.notificationsEndpoint;
+        if (!endpoint) return;
+        fetch(endpoint, { credentials: 'include' })
+            .then((response) => response.ok ? response.json() : null)
+            .then((data) => {
+                if (!data) {
+                    renderNotifications([{ type: 'empty', text: 'Sin notificaciones' }]);
+                    return;
+                }
+                const count = data.unread_count || 0;
+                if (notificationBadge) {
+                    notificationBadge.style.display = count > 0 ? 'block' : 'none';
+                }
+                renderNotifications(data.notifications || []);
+            })
+            .catch(() => {
+                renderNotifications([{ type: 'empty', text: 'No se pudieron cargar las notificaciones' }]);
+            });
+    };
+
+    if (notificationToggle && notificationPanel && notificationWidget) {
+        const closeNotifications = () => {
+            notificationWidget.classList.remove('open');
+            notificationToggle.setAttribute('aria-expanded', 'false');
+            notificationPanel.setAttribute('aria-hidden', 'true');
+        };
+
+        notificationToggle.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isOpen = notificationWidget.classList.toggle('open');
+            notificationToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            notificationPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+            if (isOpen) {
+                renderNotifications([{ type: 'empty', text: 'Cargando notificaciones...' }]);
+                loadNotifications();
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!notificationWidget.contains(event.target)) {
+                closeNotifications();
+            }
+        });
+    }
+
     const centeredNavLinks = Array.from(document.querySelectorAll('.nav-links-centered .nav-item'));
     if (centeredNavLinks.length > 0) {
         const normalizePath = (value) => {

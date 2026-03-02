@@ -120,7 +120,7 @@
                             </div>
                             <div class="profile-divider"></div>
                             <div class="profile-action-row">
-                                <a href="{% url 'chat:inbox' %}" class="profile-primary-btn" role="menuitem" style="background: linear-gradient(135deg, #00ffff, #00bfff); color: #000; margin-bottom: 0.5rem;">
+                                <a href="{% url 'chat:inbox' %}" class="profile-primary-btn profile-chat-messages-btn" role="menuitem">
                                     <i class="fas fa-comment-dots"></i>
                                     Mensajes
                                 </a>
@@ -136,6 +136,72 @@
                                     <i class="fa fa-pencil-alt"></i>
                                     <span>Editar perfil</span>
                                 </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-chat-widget">
+                        <button
+                            type="button"
+                            class="profile-chat-toggle"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            aria-label="Abrir chat de soporte"
+                            data-messages-endpoint="{% url 'login:auto_messages_api' %}">
+                            <i class="fas fa-robot profile-chat-symbol" aria-hidden="true"></i>
+                        </button>
+                        <div
+                            class="profile-chat-panel"
+                            aria-hidden="true"
+                            data-bot-avatar="{% static 'avatars/sonriente.png' %}"
+                            data-user-avatar="{{ navbar_avatar_url }}">
+                            <div class="profile-chat-panel-header">
+                                <div class="profile-chatbot-avatar">
+                                    <img class="profile-chatbot-avatar-img" src="" alt="Avatar del asistente">
+                                </div>
+                                <div class="profile-chatbot-meta">
+                                    <p>Chat SudaPlay</p>
+                                    <small>Asistente virtual</small>
+                                </div>
+                                <div class="profile-chat-panel-actions">
+                                    <span class="profile-chat-status"></span>
+                                    <button type="button" class="profile-chat-close" aria-label="Cerrar chat">&times;</button>
+                                </div>
+                            </div>
+                            <div class="profile-chat-body">
+                                <div class="profile-chat-messages"></div>
+                                <form class="profile-chat-input-form" autocomplete="off">
+                                    <input
+                                        type="text"
+                                        class="profile-chat-input"
+                                        placeholder="Escribe un mensaje..."
+                                        maxlength="300"
+                                        aria-label="Mensaje de chat">
+                                    <button type="submit" class="profile-chat-send" aria-label="Enviar">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-notification-widget">
+                        <button
+                            type="button"
+                            class="notification-toggle"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            aria-label="Mostrar notificaciones"
+                            data-notifications-endpoint="{% url 'login:notifications_api' %}">
+                            <i class="fas fa-bell" aria-hidden="true"></i>
+                            <span class="notification-badge" aria-hidden="true"></span>
+                        </button>
+                        <div class="notification-panel" aria-hidden="true">
+                            <div class="notification-panel-header">
+                                <span>Notificaciones</span>
+                            </div>
+                            <ul class="notification-list" role="list"></ul>
+                            <div class="notification-panel-footer">
+                                <a href="{% url 'login:player_profile' user.username %}?tab=activity" class="notification-view-all">Ver todas</a>
                             </div>
                         </div>
                     </div>

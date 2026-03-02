@@ -16,10 +16,7 @@ def _avatar_variants():
 
 
 def _resolve_avatar(profile):
-    """Devuelve la URL del avatar del usuario.
-    Si tiene uno subido y existe en disco, lo usa.
-    Si no, devuelve el avatar por defecto del sistema.
-    """
+    """Devuelve la URL del avatar del usuario o cadena vacía si no tiene uno propio."""
     if profile and profile.avatar and hasattr(profile.avatar, 'path'):
         try:
             avatar_path = Path(profile.avatar.path)
@@ -27,7 +24,7 @@ def _resolve_avatar(profile):
                 return profile.avatar.url
         except (ValueError, NotImplementedError):
             pass
-    return static('avatars/sonriente.png')
+    return ''
 
 
 def _calculate_completion(user, profile):
@@ -46,7 +43,7 @@ def _calculate_completion(user, profile):
 
 
 def navbar_profile(request):
-    avatar_url = static('avatars/sonriente.png')
+    avatar_url = ''
     completion = 0
     profile_bio = ''
 

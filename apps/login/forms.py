@@ -94,11 +94,21 @@ class CustomSocialSignupForm(SignupForm):
 
 
 class ProfileUpdateForm(forms.ModelForm):
-    """Formulario para editar apodo/correo e imagen de perfil."""
+    """Formulario para editar apodo/correo, avatar y descripción."""
     avatar = forms.ImageField(
         label='Imagen de perfil',
         required=False,
         widget=forms.ClearableFileInput(attrs={'class': 'form-control', 'accept': 'image/*'})
+    )
+    bio = forms.CharField(
+        label='Descripción',
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control',
+            'placeholder': 'Cuéntanos algo sobre ti',
+            'rows': 3,
+            'style': 'resize: vertical;'
+        })
     )
     avatar_choice = forms.CharField(
         required=False,
@@ -120,7 +130,14 @@ class ProfileUpdateForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         self.available_avatars = kwargs.pop('available_avatars', [])
         super().__init__(*args, **kwargs)
-        self.order_fields(['username', 'email', 'avatar', 'avatar_choice'])
+        self.order_fields(['username', 'email', 'bio', 'avatar', 'avatar_choice'])
+        profile = None
+        if self.instance:
+            profile = getattr(self.instance, 'profile', None)
+            if not profile and self.instance.pk:
+                profile, _ = UserProfile.objects.get_or_create(user=self.instance)
+        if profile:
+            self.fields['bio'].initial = profile.bio
         self.fields['avatar_choice'].initial = ''
 
     def clean_username(self):
@@ -150,5 +167,6 @@ class ProfileUpdateForm(forms.ModelForm):
                         profile.avatar.save(avatar_choice, ContentFile(avatar_file.read()), save=False)
             if avatar:
                 profile.avatar = avatar
+            profile.bio = self.cleaned_data.get('bio', '').strip()
             profile.save()
         return user

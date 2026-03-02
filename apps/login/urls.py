@@ -15,6 +15,7 @@ urlpatterns = [
     path('api/check_availability/', views.CheckUserAPIView.as_view(), name='check_availability'),
     path('api/validate_password/', views.ValidatePasswordAPIView.as_view(), name='validate_password'),
     path('api/auto_messages/', views.AutoMessagesAPIView.as_view(), name='auto_messages_api'),
+    path('api/notifications/', views.NotificationsAPIView.as_view(), name='notifications_api'),
     
     # Friend System & Player Search
     path('jugadores/buscar/', views.SearchPlayersView.as_view(), name='search_players'),

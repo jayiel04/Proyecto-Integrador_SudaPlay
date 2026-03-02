@@ -29,6 +29,7 @@ from django.db.models import Q
 
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest
+from apps.chat.models import ChatMessage
 
 
 class LoginView(FormView):
@@ -302,6 +303,58 @@ class AutoMessagesAPIView(View):
             ]
         return JsonResponse({'messages': messages})
 
+
+class NotificationsAPIView(View):
+    """
+    API que devuelve notificaciones cortas para el dropdown del navbar.
+    """
+
+    @method_decorator(login_required(login_url='login:login'))
+    def get(self, request, *args, **kwargs):
+        notifications = []
+        pending_requests = FriendRequest.objects.filter(
+            to_user=request.user
+        ).select_related('from_user').order_by('-created_at')[:4]
+
+        unread_requests = pending_requests.count()
+        for req in pending_requests:
+            notifications.append({
+                'id': f"fr-{req.id}",
+                'type': 'friend_request',
+                'text': f"{req.from_user.username} te envió una solicitud",
+                'created_at': req.created_at.isoformat(),
+                'url': reverse_lazy('login:player_profile', args=[req.from_user.username])
+            })
+
+        unread_messages = ChatMessage.objects.filter(
+            receiver=request.user,
+            is_read=False
+        ).exclude(sender=request.user).order_by('-timestamp')[:4]
+
+        for msg in unread_messages:
+            notifications.append({
+                'id': f"msg-{msg.id}",
+                'type': 'chat_message',
+                'text': f"Nuevo mensaje de {msg.sender.username}",
+                'created_at': msg.timestamp.isoformat(),
+                'url': reverse_lazy('chat:chat', args=[msg.sender.username])
+            })
+
+        unread_count = unread_requests + unread_messages.count()
+
+        if not notifications:
+            notifications.append({
+                'id': 'none',
+                'type': 'empty',
+                'text': 'No hay notificaciones nuevas',
+                'created_at': '',
+                'url': ''
+            })
+
+        return JsonResponse({
+            'notifications': notifications,
+            'unread_count': unread_count
+        })
 
 class SearchPlayersView(View):
     """
