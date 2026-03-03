@@ -78,7 +78,7 @@ def navbar_profile(request):
         'navbar_avatar_variants': _avatar_variants(),
         'sudaplay_logo_url': static('img/SudaPlay.png'),
     }
-    # Cachear por 60 segundos para evitar queries repetidas en cada request
-    cache.set(cache_key, result, timeout=60)
+    # Cachear por 30 segundos para evitar queries repetidas en cada request
+    cache.set(cache_key, result, timeout=30)
     return result
 

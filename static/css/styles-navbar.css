@@ -1183,7 +1183,7 @@
     gap: 16px;
 }
 
-/* ocultar contenedores vacíos para evitar espacios en blanco en el navbar */
+/* ocultar contenedores vac�os para evitar espacios en blanco en el navbar */
 .nav-links-left:empty,
 .nav-links-middle:not(.nav-links-middle-auth):empty,
 .nav-links-right:empty {
@@ -1353,6 +1353,7 @@
     white-space: nowrap;
 }
 
+
 .body-left-brand-tagline {
     position: relative;
     display: block;
@@ -1362,29 +1363,11 @@
     padding: 0;
     border: none;
     border-radius: 0;
-    font-size: clamp(0.78rem, 1.2vw, 1.08rem);
-    letter-spacing: 2.4px;
-    text-transform: uppercase;
-    color: #ffe45c;
-    -webkit-text-stroke: 0.8px #000;
-    font-weight: 800;
-    background: transparent;
-    text-shadow:
-        0 0 1px rgba(0, 0, 0, 0.95),
-        0 0 2px rgba(0, 0, 0, 0.85),
-        0 0 10px rgba(255, 228, 92, 0.98),
-        0 0 20px rgba(255, 228, 92, 0.78),
-        0 0 32px rgba(255, 179, 0, 0.58);
-    animation: cyberFlicker 2.3s infinite, taglineDrift 2.5s ease-in-out infinite;
-}
+    font-size: clamp(1.58rem, 1.2vw, 2.08rem );
 
+}
 .body-left-brand span {
-    animation: brandMoveIntense 1.55s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
-    animation-delay: calc(0.1s * var(--i, 0));
-}
-
-.body-left-brand-logo-wrap {
-    vertical-align: middle;
+    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
 }
 
 .body-left-brand-logo {
@@ -1392,7 +1375,7 @@
     height: 3.4em;
     display: block;
     transform: translateY(-18px);
-    filter: drop-shadow(0 0 8px rgba(70, 123, 121, 0.5));
+    filter: drop-shadow(0 0 8px rgb(216, 247, 246));
 }
 
 @keyframes brandGlitch {
@@ -1492,7 +1475,7 @@
 
 .nav-item {
     --nav-accent: var(--neon-green);
-    color: #d7f3ef;
+    color: #aed318;
     text-decoration: none;
     font-size: 1rem;
     font-weight: 800;
