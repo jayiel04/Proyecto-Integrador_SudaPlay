@@ -14,9 +14,8 @@
     right: 0;
     z-index: 1000;
     background:
-        linear-gradient(90deg, rgba(0, 128, 128, 0.94), rgba(0, 128, 128, 0.92), rgba(0, 139, 139, 0.9)),
-        rgba(0, 82, 82, 0.88);
-    backdrop-filter: blur(10px);
+        linear-gradient(90deg, rgba(0, 128, 128, 0.98), rgba(0, 128, 128, 0.98), rgba(0, 139, 139, 0.98));
+    /* backdrop-filter: blur(10px); REMOVED FOR PERFORMANCE */
     border-bottom: 1px solid rgba(0, 255, 255, 0.55);
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 26px rgba(0, 255, 255, 0.24), 0 0 20px rgba(0, 139, 139, 0.22);
     overflow: visible;
@@ -401,28 +400,28 @@
     display: none;
 }
 
- .notification-panel {
-     position: absolute;
-     top: calc(100% + 6px);
-     right: 0;
-     width: min(80vw, 360px);
-     min-height: 220px;
-     padding-bottom: 0.6rem;
-     background: rgba(5, 9, 18, 0.55);
-     backdrop-filter: blur(20px);
-     border-radius: 24px;
-     border: 1px solid rgba(68, 132, 255, 0.35);
-     padding: 0.5rem;
-     box-shadow:
-         0 20px 30px rgba(0, 0, 0, 0.55),
-         0 0 28px rgba(68, 132, 255, 0.25);
-     transform-origin: top right;
-     transform: scale(0.95);
-     opacity: 0;
-     visibility: hidden;
-     transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
-     z-index: 45;
- }
+.notification-panel {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: min(80vw, 360px);
+    min-height: 220px;
+    padding-bottom: 0.6rem;
+    background: rgba(5, 9, 18, 0.95);
+    /* backdrop-filter: blur(20px); REMOVED FOR PERFORMANCE  */
+    border-radius: 24px;
+    border: 1px solid rgba(68, 132, 255, 0.35);
+    padding: 0.5rem;
+    box-shadow:
+        0 20px 30px rgba(0, 0, 0, 0.55),
+        0 0 28px rgba(68, 132, 255, 0.25);
+    transform-origin: top right;
+    transform: scale(0.95);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 45;
+}
 
 .profile-notification-widget.open .notification-panel {
     opacity: 1;
@@ -507,6 +506,7 @@
     color: #9cf2ff;
     text-decoration: none;
 }
+
 .profile-chat-toggle {
     width: 52px;
     height: 52px;

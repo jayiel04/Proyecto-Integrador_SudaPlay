@@ -25,9 +25,10 @@
     left: 0;
     width: var(--sidebar-width);
     height: calc(100vh - var(--navbar-height));
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    background: rgba(4, 15, 25, 0.95);
+    /* Opaque color to avoid backdrop-filter costs */
+    /* backdrop-filter: blur(15px); REMOVED FOR PERFORMANCE */
+    /* -webkit-backdrop-filter: blur(15px); */
     border-right: 1px solid rgba(210, 220, 230, 0.65);
     /* Gris brillante cyberpunk */
     box-shadow: 4px 0 24px rgb(164, 165, 165);
@@ -219,8 +220,8 @@ body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
     margin-left: 10px;
     padding: 8px;
     gap: 8px;
-    background: rgba(4, 15, 25, 0.95);
-    backdrop-filter: blur(12px);
+    background: rgba(4, 15, 25, 0.98);
+    /* Opaque color */
     border-radius: 8px;
     border: 1px solid rgba(0, 255, 255, 0.25);
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);

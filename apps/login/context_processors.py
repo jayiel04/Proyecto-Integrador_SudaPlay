@@ -5,14 +5,21 @@ from django.templatetags.static import static
 
 from .models import UserProfile
 
+_AVATAR_CACHE = None
 
 def _avatar_variants():
+    global _AVATAR_CACHE
+    if _AVATAR_CACHE is not None:
+        return _AVATAR_CACHE
+
     avatars_dir = Path(settings.BASE_DIR) / 'static' / 'avatars'
     if not avatars_dir.exists():
         return []
-    return [
+
+    _AVATAR_CACHE = [
         static(f'avatars/{avatar.name}') for avatar in sorted(avatars_dir.iterdir()) if avatar.is_file()
     ]
+    return _AVATAR_CACHE
 
 
 def _resolve_avatar(profile):
