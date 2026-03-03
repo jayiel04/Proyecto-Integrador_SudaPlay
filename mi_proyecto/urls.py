@@ -16,6 +16,7 @@ urlpatterns = [
     path('', include('apps.web.urls')),
     path('auth/', include('apps.login.urls')),
     path('chat/', include('apps.chat.urls')),
+    path('soporte/', include('apps.support.urls', namespace='support')),
     path('accounts/', include('allauth.urls')), # Esto crea las rutas de login/social
 ]
 

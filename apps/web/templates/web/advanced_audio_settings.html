@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Configuraciones avanzadas de sonido - SudaPlay{% endblock %}
 
@@ -24,6 +25,14 @@
                 <label for="advanced-audio-autoplay">Reproducir automaticamente al entrar</label>
                 <input type="checkbox" id="advanced-audio-autoplay">
             </div>
+
+            <div class="audio-setting-item">
+                <label for="advanced-audio-track">Canción de fondo</label>
+                <select id="advanced-audio-track" style="margin-top: 5px; padding: 5px; border-radius: 4px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); width: 100%;">
+                    <option value="{% static 'audio/bouncyrunner-arcade-all-night-396133.mp3' %}">Bouncyrunner Arcade All Night (Por defecto)</option>
+                    <option value="{% static 'audio/Neon Pulse.m4a' %}">Neon Pulse</option>
+                </select>
+            </div>
         </div>
 
         <div class="audio-settings-actions">
@@ -41,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
         shouldPlay: 'sudaplay_music_should_play',
         volume: 'sudaplay_music_volume',
         muted: 'sudaplay_music_muted',
+        track: 'sudaplay_music_track',
     };
 
     const backgroundMusic = document.getElementById('background-music');
@@ -48,10 +58,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const volumeValue = document.getElementById('advanced-audio-volume-value');
     const mutedInput = document.getElementById('advanced-audio-muted');
     const autoplayInput = document.getElementById('advanced-audio-autoplay');
+    const trackInput = document.getElementById('advanced-audio-track');
     const saveBtn = document.getElementById('advanced-audio-save');
     const resetBtn = document.getElementById('advanced-audio-reset');
 
-    if (!volumeInput || !volumeValue || !mutedInput || !autoplayInput || !saveBtn || !resetBtn) {
+    if (!volumeInput || !volumeValue || !mutedInput || !autoplayInput || !trackInput || !saveBtn || !resetBtn) {
         return;
     }
 
@@ -61,6 +72,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const storedVolume = parseFloat(localStorage.getItem(MUSIC_STATE_KEYS.volume) || '');
         const storedMuted = localStorage.getItem(MUSIC_STATE_KEYS.muted);
         const storedAutoplay = localStorage.getItem(MUSIC_STATE_KEYS.shouldPlay);
+        const storedTrack = localStorage.getItem(MUSIC_STATE_KEYS.track);
 
         const safeVolume = Number.isNaN(storedVolume) ? 0.24 : Math.min(1, Math.max(0, storedVolume));
         const safeMuted = storedMuted === '1';
@@ -70,16 +82,24 @@ document.addEventListener('DOMContentLoaded', function () {
         volumeValue.textContent = formatPercent(safeVolume);
         mutedInput.checked = safeMuted;
         autoplayInput.checked = safeAutoplay;
+
+        if (storedTrack) {
+            trackInput.value = storedTrack;
+        } else if (backgroundMusic) {
+            trackInput.value = backgroundMusic.getAttribute('src');
+        }
     };
 
     const applyValues = () => {
         const volume = Math.min(1, Math.max(0, parseFloat(volumeInput.value || '0.24')));
         const muted = mutedInput.checked;
         const shouldPlay = autoplayInput.checked;
+        const track = trackInput.value;
 
         localStorage.setItem(MUSIC_STATE_KEYS.volume, String(volume));
         localStorage.setItem(MUSIC_STATE_KEYS.muted, muted ? '1' : '0');
         localStorage.setItem(MUSIC_STATE_KEYS.shouldPlay, shouldPlay ? '1' : '0');
+        localStorage.setItem(MUSIC_STATE_KEYS.track, track);
 
         volumeValue.textContent = formatPercent(volume);
 
@@ -87,8 +107,18 @@ document.addEventListener('DOMContentLoaded', function () {
             backgroundMusic.volume = volume;
             backgroundMusic.muted = muted;
 
+            if (backgroundMusic.getAttribute('src') !== track) {
+                backgroundMusic.setAttribute('src', track);
+                backgroundMusic.load();
+                if (shouldPlay) {
+                    backgroundMusic.play().catch(() => {});
+                }
+            }
+
             if (!shouldPlay) {
                 backgroundMusic.pause();
+            } else if (backgroundMusic.paused && shouldPlay) {
+                backgroundMusic.play().catch(() => {});
             }
         }
     };
@@ -103,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
         volumeInput.value = '0.24';
         mutedInput.checked = false;
         autoplayInput.checked = true;
+        trackInput.selectedIndex = 0;
         applyValues();
     });
 

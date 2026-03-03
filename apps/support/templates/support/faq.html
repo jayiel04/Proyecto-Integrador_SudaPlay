@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Preguntas Frecuentes - SudaPlay Soporte{% endblock %}
+
+{% block extra_css %}
+<style>
+    .faq-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: rgba(30,30,40,0.8);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+    }
+    .faq-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .faq-header h1 {
+        font-family: 'Orbitron', sans-serif;
+        color: #ff3366;
+        text-shadow: 0 0 10px rgba(255,51,102,0.5);
+        font-size: 2.5rem;
+    }
+    .faq-item {
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+        background: rgba(0,0,0,0.3);
+    }
+    .faq-question {
+        width: 100%;
+        text-align: left;
+        padding: 1rem 1.5rem;
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.3s;
+    }
+    .faq-question:hover {
+        background: rgba(255,255,255,0.05);
+    }
+    .faq-icon {
+        transition: transform 0.3s ease;
+    }
+    .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+    }
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding: 0 1.5rem;
+    }
+    .faq-item.active .faq-answer {
+        max-height: 500px;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .faq-answer p {
+        color: #ccc;
+        line-height: 1.6;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="faq-container">
+    <div class="faq-header">
+        <h1>Centro de Ayuda</h1>
+        <p>Preguntas frecuentes y soporte técnico de SudaPlay.</p>
+    </div>
+
+    <div class="faq-list">
+        {% for faq in faqs %}
+        <div class="faq-item">
+            <button class="faq-question">
+                {{ faq.question }}
+                <i class="fas fa-chevron-down faq-icon"></i>
+            </button>
+            <div class="faq-answer">
+                <p>{{ faq.answer|linebreaksbr }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: #888;">No hay preguntas frecuentes disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const questions = document.querySelectorAll('.faq-question');
+    questions.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.closest('.faq-item');
+            
+            // Cerrar el resto
+            document.querySelectorAll('.faq-item').forEach(otherItem => {
+                if (otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+
+            // Togglear el actual
+            item.classList.toggle('active');
+        });
+    });
+});
+</script>
+{% endblock %}

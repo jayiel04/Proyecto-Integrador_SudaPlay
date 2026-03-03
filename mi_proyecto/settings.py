@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.login.apps.LoginConfig',
     'apps.web.apps.WebConfig',
     'apps.chat.apps.ChatConfig',
+    'apps.support.apps.SupportConfig',
 ]
 
 # Esto debe estar fuera de la lista, al final del archivo

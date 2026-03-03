@@ -34,7 +34,7 @@
     /* Resplandor plateado */
     z-index: 99;
     transition: width 0.3s ease;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .secondary-nav:hover {
@@ -87,8 +87,7 @@ body.sidebar-open .secondary-nav {
     align-items: center;
     gap: 16px;
     padding: 16px 4px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: visible;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     height: 100%;
@@ -184,13 +183,16 @@ body.sidebar-open .secondary-nav-item span {
     background: rgba(0, 255, 255, 0.2);
     box-shadow: 0 0 14px rgba(0, 255, 255, 0.6);
 }
+
 /* dropdown para controles de sonido dentro del sidebar */
 .secondary-nav-sound-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: auto;
+    position: relative;
 }
+
 .secondary-nav-sound-container .secondary-nav-item {
     align-self: center;
 }
@@ -205,38 +207,69 @@ body.sidebar-open .secondary-nav-sound-container {
 body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
     align-self: flex-start;
 }
+
 .secondary-nav-sound-options {
     display: none;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-top: 4px;
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 10px;
+    padding: 8px;
+    gap: 8px;
+    background: rgba(4, 15, 25, 0.95);
+    backdrop-filter: blur(12px);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 255, 255, 0.25);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
+    z-index: 1000;
 }
+
 .secondary-nav-sound-container.open .secondary-nav-sound-options {
     display: flex;
 }
 
 /* estilo específico para el enlace de mute dentro del dropdown */
 .secondary-nav-mute {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
     font-size: 1.2rem;
+    border: 1px solid rgba(0, 255, 255, 0.4);
+    background: rgba(0, 20, 20, 0.4);
+    box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
+    color: var(--accent-cyan);
 }
+
+.secondary-nav-mute:hover {
+    border-color: var(--accent-cyan);
+    background: rgba(0, 255, 255, 0.15);
+    box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
+    color: #fff;
+}
+
 /* Estilos específicos para botones de volumen */
 .secondary-nav-vol-down,
 .secondary-nav-vol-up {
-    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border-radius: 50%;
     border: 1px solid rgba(0, 255, 255, 0.4);
     /* Anillo de energía */
     background: rgba(0, 20, 20, 0.4);
     box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
-}
-
-.secondary-nav:hover .secondary-nav-vol-down,
-body.sidebar-open .secondary-nav-vol-down,
-.secondary-nav:hover .secondary-nav-vol-up,
-body.sidebar-open .secondary-nav-vol-up {
-    width: 32px;
-    padding: 8px;
+    font-size: 1.2rem;
+    color: var(--accent-cyan);
 }
 
 .secondary-nav-vol-down:hover,
@@ -248,16 +281,24 @@ body.sidebar-open .secondary-nav-vol-up {
 }
 
 .secondary-nav-sound-advanced {
-    width: 32px;
-    padding: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
     border-radius: 50%;
     border: 1px solid rgba(0, 255, 255, 0.25);
     background: rgba(0, 20, 20, 0.36);
+    font-size: 1.2rem;
+    color: var(--accent-cyan);
 }
 
 .secondary-nav-sound-advanced:hover {
     border-color: var(--accent-cyan);
-    background: rgba(0, 255, 255, 0.14);
+    background: rgba(0, 255, 255, 0.15);
+    box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
+    color: #fff;
 }
 
 /* Utilidad para empujar items al fondo (como el de soporte) */

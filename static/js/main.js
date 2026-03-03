@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
         volume: 'sudaplay_music_volume',
         muted: 'sudaplay_music_muted',
         time: 'sudaplay_music_time',
+        track: 'sudaplay_music_track',
     };
     // Evita intentar iniciar la pista de fondo en cada click.
     let backgroundMusicStarted = false;
@@ -42,6 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
         const savedMuted = localStorage.getItem(MUSIC_STATE_KEYS.muted);
         const savedTime = parseFloat(sessionStorage.getItem(MUSIC_STATE_KEYS.time) || '');
         const shouldPlay = localStorage.getItem(MUSIC_STATE_KEYS.shouldPlay) === '1';
+        const savedTrack = localStorage.getItem(MUSIC_STATE_KEYS.track);
+
+        if (savedTrack && backgroundMusic.getAttribute('src') !== savedTrack) {
+            backgroundMusic.setAttribute('src', savedTrack);
+            backgroundMusic.load();
+        }
 
         if (!Number.isNaN(savedVolume)) {
             backgroundMusic.volume = Math.min(1, Math.max(0, savedVolume));
@@ -114,6 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!localStorage.getItem(MUSIC_STATE_KEYS.volume)) {
                 backgroundMusic.volume = 0.24;
             }
+
+            const savedTrack = localStorage.getItem(MUSIC_STATE_KEYS.track);
+            if (savedTrack && backgroundMusic.getAttribute('src') !== savedTrack) {
+                backgroundMusic.setAttribute('src', savedTrack);
+                backgroundMusic.load();
+            }
+
             backgroundMusic.play().then(() => {
                 backgroundMusicStarted = true;
                 persistMusicState();
@@ -861,7 +875,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Botón de Soporte
             if (sidebarContainer && !sidebarContainer.querySelector('.secondary-nav-support')) {
                 const supportLink = document.createElement('a');
-                supportLink.href = '#'; // Puedes cambiar esto por la URL real de soporte
+                supportLink.href = '/soporte/faq/'; // Puedes cambiar esto por la URL real de soporte
                 supportLink.className = 'secondary-nav-item secondary-nav-support'; // Se apila debajo del sonido
                 supportLink.innerHTML = '<i class="fas fa-headset"></i><span>Soporte</span>';
                 sidebarContainer.appendChild(supportLink);
