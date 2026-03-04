@@ -220,3 +220,7 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
+
+#Avatars conección a Supabase
+SUPABASE_URL = "https://uqontjetlobocgmfoojd.supabase.co"
+SUPABASE_KEY = "sb_publishable_vYzudElwCqUfSyIX-LtrtA_HfoItyIc"

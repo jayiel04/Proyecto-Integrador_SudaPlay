@@ -82,13 +82,15 @@
             {% if request.resolver_match.app_name == 'web' and request.resolver_match.url_name == 'home' %}
             <div class="navbar-catalog-search">
                 <div class="catalog-search-input-wrap">
+                    <span class="search-light search-light-top"></span>
+                    <span class="search-light search-light-bottom"></span>
                     <i class="fa fa-search" aria-hidden="true"></i>
                     <input
                         id="catalog-search-input"
                         type="search"
                         class="catalog-search-input"
                         aria-label="Buscar juegos en el catalogo"
-                        placeholder="Busca por titulo o descripcion"
+                        placeholder="Busca por título o descripción"
                         autocomplete="off">
                 </div>
             </div>

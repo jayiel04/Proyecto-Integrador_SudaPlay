@@ -47,3 +47,8 @@ class GameForm(forms.ModelForm):
                 game_file.seek(0)
 
         return cleaned_data
+    
+from django import forms
+
+class PerfilForm(forms.Form):
+    avatar = forms.ImageField(required=True)  # Subida de imagen

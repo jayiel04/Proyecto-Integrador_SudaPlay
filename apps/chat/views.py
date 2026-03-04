@@ -1,4 +1,6 @@
 import json
+import base64
+import mimetypes
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.utils.decorators import method_decorator
@@ -11,6 +13,29 @@ from .models import ChatMessage
 from django.db import models
 
 
+def get_image_data_uri(image_field):
+    """Convierte el avatar en una cadena lista para incrustar en el HTML."""
+    if not image_field:
+        return None
+
+    try:
+        with image_field.open('rb') as avatar_file:
+            image_bytes = avatar_file.read()
+    except Exception:
+        return None
+
+    mime_type, _ = mimetypes.guess_type(image_field.name)
+    if not mime_type:
+        mime_type = 'image/png'
+
+    try:
+        encoded = base64.b64encode(image_bytes).decode('ascii')
+    except Exception:
+        return None
+
+    return f"data:{mime_type};base64,{encoded}"
+
+
 class ChatInboxView(View):
     """Renderiza la página del Inbox principal o un chat en específico usando el modelo WhatsApp."""
     @method_decorator(login_required(login_url='login:login'))
@@ -21,6 +46,9 @@ class ChatInboxView(View):
             my_profile = UserProfile.objects.create(user=request.user)
             
         friends = my_profile.friends.all().select_related('user')
+        for friend in friends:
+            # Guardamos el avatar como Base64 para que el template lo renderice sin más peticiones.
+            friend.avatar_base64 = get_image_data_uri(friend.avatar)
         
         target_user = None
         if username:
@@ -31,7 +59,10 @@ class ChatInboxView(View):
             except User.profile.RelatedObjectDoesNotExist:
                 target_profile = UserProfile.objects.create(user=target_user)
 
-            # Check if they are friends
+            target_profile.avatar_base64 = get_image_data_uri(target_profile.avatar)
+            target_user.profile = target_profile
+
+            # Verifica si son amigos para chatear, si no, redirige al inbox general con un mensaje de advertencia.
             if not my_profile.friends.filter(id=target_profile.id).exists():
                 messages.warning(request, "Solo puedes chatear con tus amigos.")
                 return redirect('chat:inbox')
