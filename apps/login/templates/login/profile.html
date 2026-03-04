@@ -304,7 +304,13 @@
     <!-- Hero card -->
     <div class="profile-hero-card">
         <div class="profile-page-avatar-wrap">
+            {% if avatar_url %}
             <img src="{{ avatar_url }}" alt="Avatar de {{ request.user.username }}" class="profile-page-avatar">
+            {% else %}
+            <div class="profile-page-avatar-fallback">
+                <i class="fa fa-user"></i>
+            </div>
+            {% endif %}
         </div>
 
         <div class="profile-page-info">

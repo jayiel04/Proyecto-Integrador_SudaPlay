@@ -55,7 +55,7 @@ class GetMessagesAPIView(View):
         messages_qs = ChatMessage.objects.filter(
             models.Q(sender=request.user, receiver=target_user) |
             models.Q(sender=target_user, receiver=request.user)
-        ).order_by('timestamp')[:100] # Limitar a 100 por ahora
+        ).select_related('sender', 'receiver').order_by('timestamp')[:100]
 
         data = []
         for msg in messages_qs:

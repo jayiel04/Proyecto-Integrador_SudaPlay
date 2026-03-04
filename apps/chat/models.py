@@ -16,6 +16,10 @@ class ChatMessage(models.Model):
         verbose_name = "Mensaje de Chat"
         verbose_name_plural = "Mensajes de Chat"
         ordering = ['timestamp']
+        indexes = [
+            models.Index(fields=['receiver', 'is_read'], name='idx_receiver_unread'),
+            models.Index(fields=['sender', 'receiver'], name='idx_chat_conversation'),
+        ]
 
     def __str__(self):
         return f"De {self.sender.username} para {self.receiver.username} ({self.timestamp})"

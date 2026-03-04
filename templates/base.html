@@ -19,9 +19,14 @@
     {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuentes: carga no bloqueante para no retrasar el primer render -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></noscript>
+    <!-- FontAwesome: carga no bloqueante -->
+    <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     {% block extra_css %}{% endblock %}
 </head>
 
@@ -48,10 +53,40 @@
     </a>
     {% endif %}
 
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
+    <aside class="secondary-nav">
+        <div class="secondary-nav-container">
+            <a href="/#catalogo-juegos" class="secondary-nav-item secondary-nav-games"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
+            <a href="/juegos/subir/" class="secondary-nav-item secondary-nav-upload"{% if not user.is_authenticated %} data-login-required="true"{% endif %}><i class="fas fa-cloud-upload-alt"></i><span>Subir</span></a>
+            <a href="/juegos/normas/" class="secondary-nav-item secondary-nav-normas"><i class="fas fa-book"></i><span>Normas</span></a>
+            <a href="/juegos/acerca-de/" class="secondary-nav-item secondary-nav-about"><i class="fas fa-info-circle"></i><span>Acerca</span></a>
+            {% if user.is_authenticated %}
+            <a href="/auth/jugadores/buscar/" class="secondary-nav-item secondary-nav-search-players"><i class="fas fa-users"></i><span>Jugadores</span></a>
+            {% endif %}
+            <div class="secondary-nav-sound-container mt-auto">
+                <a href="#" class="secondary-nav-item secondary-nav-sound"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
+                <div class="secondary-nav-sound-options" style="display:none">
+                    <a href="#" class="secondary-nav-item secondary-nav-mute"><i class="fas fa-volume-up"></i></a>
+                    <a href="#" class="secondary-nav-item secondary-nav-vol-down"><i class="fas fa-minus"></i></a>
+                    <a href="#" class="secondary-nav-item secondary-nav-vol-up"><i class="fas fa-plus"></i></a>
+                    <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound-advanced" title="Configuraciones avanzadas"><i class="fas fa-sliders-h"></i></a>
+                </div>
+            </div>
+            <a href="/soporte/faq/" class="secondary-nav-item secondary-nav-support"><i class="fas fa-headset"></i><span>Soporte</span></a>
+            {% if user.is_authenticated %}
+            <a href="/auth/logout/" class="secondary-nav-item secondary-nav-logout"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
+            {% endif %}
+        </div>
+    </aside>
+    {% endif %}
+
     <header class="site-header">
         <nav
             class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
             <div class="navbar-container">
+            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
+            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
+            {% endif %}
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
                 <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
@@ -102,7 +137,9 @@
                     <div class="profile-dropdown">
                         <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de perfil">
                             {% if navbar_avatar_url %}
-                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar">
+                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                            <i class="fa fa-user-circle navbar-avatar-fallback" style="display:none;"></i>
                             {% else %}
                             <i class="fa fa-user-circle navbar-avatar-fallback"></i>
                             {% endif %}
@@ -111,7 +148,13 @@
                             <button class="profile-dropdown-close" type="button" aria-label="Cerrar perfil">&times;</button>
                             <div class="profile-dropdown-hero">
                                 <div class="profile-avatar-ring" aria-hidden="true">
-                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar">
+                                    {% if navbar_avatar_url %}
+                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar"
+                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback" style="display:none; font-size:5rem; align-items:center; justify-content:center; color:#7f5af0;"></i>
+                                    {% else %}
+                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback" style="font-size:5rem; display:flex; align-items:center; justify-content:center; color:#7f5af0;"></i>
+                                    {% endif %}
                                 </div>
                                 <div class="profile-hero-meta">
                                     <p class="profile-username">{{ user.username }}</p>
@@ -247,7 +290,8 @@
 
     {% if request.resolver_match.url_name != 'game_play' %}
     <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
-    <audio id="background-music" preload="auto" loop
+    <!-- preload="none": el audio NO se descarga hasta que el usuario interactúe -->
+    <audio id="background-music" preload="none" loop
         src="{% static 'audio/bouncyrunner-arcade-all-night-396133.mp3' %}">
     </audio>
 
@@ -264,7 +308,8 @@
     </div>
 
     {% endif %}
-    <script src="{% static 'js/main.js' %}"></script>
+    <!-- defer: el navegador parsea el HTML completo antes de ejecutar el script -->
+    <script src="{% static 'js/main.js' %}" defer></script>
     {% if user.is_authenticated %}
     {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
     {% endif %}

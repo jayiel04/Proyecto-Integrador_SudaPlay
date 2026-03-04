@@ -20,7 +20,7 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True, help_text="Biografía del usuario")
-    avatar = models.ImageField(upload_to='avatars/', default='avatars/default.png', help_text="Foto de perfil")
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, help_text="Foto de perfil")
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     is_verified = models.BooleanField(default=False, help_text="¿Email verificado?")
     phone = models.CharField(max_length=20, blank=True)
@@ -54,6 +54,9 @@ class FriendRequest(models.Model):
         verbose_name = "Solicitud de Amistad"
         verbose_name_plural = "Solicitudes de Amistad"
         unique_together = ('from_user', 'to_user')
+        indexes = [
+            models.Index(fields=['to_user'], name='idx_friend_request_to'),
+        ]
 
     def __str__(self):
         return f"{self.from_user.username} -> {self.to_user.username}"

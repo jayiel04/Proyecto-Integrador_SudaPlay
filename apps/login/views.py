@@ -12,6 +12,7 @@ from pathlib import Path
 
 import requests
 from django.conf import settings
+from django.core.cache import cache
 from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import FormView
@@ -25,7 +26,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.db.models import Q
+from django.db.models import Count, Case, When, IntegerField, Q
 
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest
@@ -159,8 +160,13 @@ class ProfileView(View):
 
         profile = UserProfile.objects.filter(user=request.user).first()
         user_games = Game.objects.filter(uploaded_by=request.user).order_by('-created_at')
-        approved = user_games.filter(is_approved=True).count()
-        pending = user_games.filter(is_approved=False).count()
+        # Una sola query con aggregate en vez de 3 queries separadas
+        counts = user_games.aggregate(
+            approved=Count(Case(When(is_approved=True, then=1), output_field=IntegerField())),
+            pending=Count(Case(When(is_approved=False, then=1), output_field=IntegerField())),
+        )
+        approved = counts['approved']
+        pending = counts['pending']
 
         # Resolver URL del avatar: si el usuario tiene uno subido y existe en disco, usarlo.
         # De lo contrario, usar el avatar por defecto del sistema.
@@ -326,10 +332,11 @@ class NotificationsAPIView(View):
                 'url': reverse_lazy('login:player_profile', args=[req.from_user.username])
             })
 
-        unread_messages = ChatMessage.objects.filter(
+        # Convertir a list para evaluar la query una sola vez (evita query duplicada en .count())
+        unread_messages = list(ChatMessage.objects.filter(
             receiver=request.user,
             is_read=False
-        ).exclude(sender=request.user).order_by('-timestamp')[:4]
+        ).exclude(sender=request.user).select_related('sender').order_by('-timestamp')[:4])
 
         for msg in unread_messages:
             notifications.append({
@@ -340,7 +347,7 @@ class NotificationsAPIView(View):
                 'url': reverse_lazy('chat:chat', args=[msg.sender.username])
             })
 
-        unread_count = unread_requests + unread_messages.count()
+        unread_count = unread_requests + len(unread_messages)
 
         if not notifications:
             notifications.append({
@@ -417,7 +424,9 @@ class PlayerProfileView(View):
         except User.profile.RelatedObjectDoesNotExist:
             from .models import UserProfile
             my_profile = UserProfile.objects.create(user=request.user)
-        user_games = Game.objects.filter(uploaded_by=target_user, is_approved=True).order_by('-created_at')
+        user_games = Game.objects.filter(
+            uploaded_by=target_user, is_approved=True
+        ).select_related('uploaded_by').order_by('-created_at')
 
         # Determinar el estado de amistad
         friendship_status = 'none' # none, pending_sent, pending_received, friends
