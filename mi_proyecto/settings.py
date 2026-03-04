@@ -210,6 +210,15 @@ SUPABASE_CHAT_TABLE = config('SUPABASE_CHAT_TABLE', default='auto_messages')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Cache (memoria local — sin dependencias externas)
+# Para producción, considera django-redis para caché compartida entre workers.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'sudaplay-cache',
+    }
+}
+
 # Email Configuration
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
 # These will be used if a real SMTP backend is configured later
