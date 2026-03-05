@@ -1,11 +1,13 @@
 from pathlib import Path
 
 from django.conf import settings
+from django.core.cache import cache
 from django.templatetags.static import static
 
 from .models import UserProfile
 
 _AVATAR_CACHE = None
+
 
 def _avatar_variants():
     global _AVATAR_CACHE
@@ -23,12 +25,10 @@ def _avatar_variants():
 
 
 def _resolve_avatar(profile):
-    """Devuelve la URL del avatar del usuario o cadena vacía si no tiene uno propio."""
-    if profile and profile.avatar and hasattr(profile.avatar, 'path'):
+    """Devuelve la URL del avatar del usuario sin verificar si existe en disco."""
+    if profile and profile.avatar:
         try:
-            avatar_path = Path(profile.avatar.path)
-            if avatar_path.exists():
-                return profile.avatar.url
+            return profile.avatar.url
         except (ValueError, NotImplementedError):
             pass
     return ''
@@ -50,25 +50,35 @@ def _calculate_completion(user, profile):
 
 
 def navbar_profile(request):
-    avatar_url = ''
-    completion = 0
-    profile_bio = ''
+    if not request.user.is_authenticated:
+        return {
+            'navbar_avatar_url': '',
+            'navbar_profile_completion': 0,
+            'navbar_profile_bio': '',
+            'navbar_avatar_variants': _avatar_variants(),
+            'sudaplay_logo_url': static('img/SudaPlay.png'),
+        }
 
-    if request.user.is_authenticated:
-        try:
-            profile = request.user.profile
-        except UserProfile.DoesNotExist:
-            profile = None
+    cache_key = f'navbar_profile_{request.user.id}'
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
 
-        if profile:
-            avatar_url = _resolve_avatar(profile)
-            profile_bio = profile.bio or ''
-            completion = _calculate_completion(request.user, profile)
+    # Una sola query con select_related para evitar queries adicionales
+    profile = UserProfile.objects.filter(user=request.user).first()
 
-    return {
+    avatar_url = _resolve_avatar(profile)
+    profile_bio = profile.bio or '' if profile else ''
+    completion = _calculate_completion(request.user, profile) if profile else 0
+
+    result = {
         'navbar_avatar_url': avatar_url,
         'navbar_profile_completion': completion,
         'navbar_profile_bio': profile_bio,
         'navbar_avatar_variants': _avatar_variants(),
         'sudaplay_logo_url': static('img/SudaPlay.png'),
     }
+    # Cachear por 30 segundos para evitar queries repetidas en cada request
+    cache.set(cache_key, result, timeout=30)
+    return result
+

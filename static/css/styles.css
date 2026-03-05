@@ -148,7 +148,7 @@ body.has-sidebar .music-controls {
     height: 100%;
     background:
         linear-gradient(rgba(2, 10, 16, 0.58), rgba(2, 10, 16, 0.62)),
-        url('/static/img/panda.png') center center / 38% auto no-repeat,
+        url('/static/img/panda.png') center center / 30% auto no-repeat,
         linear-gradient(120deg, #021414, #053030, #064545, #021414);
     z-index: -1;
     filter: saturate(1.1);
