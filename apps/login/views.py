@@ -24,6 +24,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.contrib import messages
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import JsonResponse
+from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Case, When, IntegerField, Q
@@ -31,6 +32,28 @@ from django.db.models import Count, Case, When, IntegerField, Q
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest
 from apps.chat.models import ChatMessage
+
+
+def _available_avatar_names():
+    avatars_dir = Path(settings.BASE_DIR) / 'static' / 'avatars'
+    if not avatars_dir.exists():
+        return []
+    return sorted([avatar.name for avatar in avatars_dir.iterdir() if avatar.is_file()])
+
+
+def _default_avatar_name(available_avatars):
+    if 'sonriente.png' in available_avatars:
+        return 'sonriente.png'
+    return available_avatars[0] if available_avatars else ''
+
+
+def _resolve_avatar_url(profile, available_avatars):
+    available_set = set(available_avatars)
+    avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
+    if avatar_name and avatar_name in available_set:
+        return static(f'avatars/{avatar_name}')
+    default_avatar = _default_avatar_name(available_avatars)
+    return static(f'avatars/{default_avatar}') if default_avatar else ''
 
 
 class LoginView(FormView):
@@ -115,12 +138,7 @@ class ProfileUpdateView(FormView):
 
     @staticmethod
     def _available_avatars():
-        avatars_dir = Path(settings.BASE_DIR) / 'static' / 'avatars'
-        if not avatars_dir.exists():
-            return []
-        return sorted([
-            avatar.name for avatar in avatars_dir.iterdir() if avatar.is_file()
-        ])
+        return _available_avatar_names()
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -136,8 +154,15 @@ class ProfileUpdateView(FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = UserProfile.objects.filter(user=self.request.user).first()
-        context['current_avatar_url'] = profile.avatar.url if profile and profile.avatar else ''
-        context['available_avatars'] = self._available_avatars()
+        available_avatars = self._available_avatars()
+        current_avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
+        current_avatar_name = current_avatar_name if current_avatar_name in available_avatars else ''
+        default_avatar_name = _default_avatar_name(available_avatars)
+
+        context['current_avatar_name'] = current_avatar_name
+        context['current_avatar_url'] = _resolve_avatar_url(profile, available_avatars)
+        context['default_avatar_url'] = static(f'avatars/{default_avatar_name}') if default_avatar_name else ''
+        context['available_avatars'] = available_avatars
         return context
 
 
@@ -154,9 +179,7 @@ class ProfileView(View):
 
     def get(self, request, *args, **kwargs):
         from django.shortcuts import render
-        from django.templatetags.static import static
         from apps.web.models import Game
-        from pathlib import Path
 
         profile = UserProfile.objects.filter(user=request.user).first()
         user_games = Game.objects.filter(uploaded_by=request.user).order_by('-created_at')
@@ -168,20 +191,17 @@ class ProfileView(View):
         approved = counts['approved']
         pending = counts['pending']
 
-        # Resolver URL del avatar: si el usuario tiene uno subido y existe en disco, usarlo.
-        # De lo contrario, usar el avatar por defecto del sistema.
-        avatar_url = ''
-        if profile and profile.avatar:
-            avatar_path = Path(profile.avatar.path)
-            if avatar_path.exists():
-                avatar_url = profile.avatar.url
-
-        if not avatar_url:
-            avatar_url = static('avatars/sonriente.png')
+        available_avatars = _available_avatar_names()
+        avatar_url = _resolve_avatar_url(profile, available_avatars)
             
         # Obtener solicitudes de amistad entrantes y amigos
         friend_requests = FriendRequest.objects.filter(to_user=request.user).select_related('from_user__profile')
-        friends = profile.friends.all().select_related('user')
+        friends = profile.friends.all().select_related('user') if profile else UserProfile.objects.none()
+
+        for req in friend_requests:
+            req.avatar_url = _resolve_avatar_url(getattr(req.from_user, 'profile', None), available_avatars)
+        for friend in friends:
+            friend.avatar_url = _resolve_avatar_url(friend, available_avatars)
 
         context = {
             'profile': profile,
@@ -438,9 +458,11 @@ class PlayerProfileView(View):
         elif FriendRequest.objects.filter(from_user=target_user, to_user=request.user).exists():
             friendship_status = 'pending_received'
 
+        available_avatars = _available_avatar_names()
         context = {
             'target_user': target_user,
             'profile': profile,
+            'profile_avatar_url': _resolve_avatar_url(profile, available_avatars),
             'user_games': user_games,
             'friendship_status': friendship_status,
         }

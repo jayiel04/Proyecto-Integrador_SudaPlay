@@ -210,8 +210,8 @@
     <div class="profile-card profile-card-main">
         <div class="profile-hero">
             <div class="profile-avatar-wrapper">
-                {% if profile.avatar %}
-                    <img src="{{ profile.avatar.url }}" alt="Avatar de {{ target_user.username }}" class="profile-avatar-img" id="player-avatar-preview">
+                {% if profile_avatar_url %}
+                    <img src="{{ profile_avatar_url }}" alt="Avatar de {{ target_user.username }}" class="profile-avatar-img" id="player-avatar-preview">
                 {% else %}
                     <div class="profile-avatar-fallback">
                         <i class="fas fa-user"></i>

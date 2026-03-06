@@ -382,8 +382,8 @@
             {% for req in friend_requests %}
             <div class="profile-hero-card" style="padding: 1rem; margin-bottom: 0; min-height: 80px;" id="request-{{ req.id }}">
                 <div style="display: flex; align-items: center; gap: 1rem; width: 100%;">
-                    {% if req.from_user.profile.avatar %}
-                        <img src="{{ req.from_user.profile.avatar.url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                    {% if req.avatar_url %}
+                        <img src="{{ req.avatar_url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                     {% else %}
                         <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff;">
                             <i class="fas fa-user"></i>
@@ -421,8 +421,8 @@
             {% for friend in friends %}
             <div class="profile-hero-card" style="padding: 1rem; margin: 0; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s;">
                 <a href="{% url 'login:player_profile' friend.user.username %}" style="display: flex; align-items: center; gap: 1rem; flex: 1; text-decoration: none; overflow: hidden;">
-                    {% if friend.avatar %}
-                        <img src="{{ friend.avatar.url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                    {% if friend.avatar_url %}
+                        <img src="{{ friend.avatar_url }}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
                     {% else %}
                         <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff;">
                             <i class="fas fa-user"></i>

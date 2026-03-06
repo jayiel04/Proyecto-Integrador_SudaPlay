@@ -1364,6 +1364,10 @@
     border: none;
     border-radius: 0;
     font-size: clamp(1.58rem, 1.2vw, 2.08rem );
+    color: #d4af37;
+    -webkit-text-stroke: 0;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.65), 0 0 16px rgba(255, 255, 255, 0.35);
+    animation: none;
 
 }
 .body-left-brand span {
