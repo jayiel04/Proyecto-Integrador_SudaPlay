@@ -43,7 +43,7 @@
     align-items: stretch;
     justify-content: flex-end;
     padding-right: 0;
-    margin: 0 0 0 auto;
+    margin: 0 2vw 0 auto;
     display: flex;
     flex-direction: column;
 }
@@ -152,6 +152,7 @@
     /* botón principal: rango estrecho 10px-12px */
     padding: clamp(10px, 1.4dvh, 12px);
     font-size: clamp(1rem, 2.1dvh, 1.16rem);
+    margin-top: 50px;
 }
 
 .body-auth-page .signup-link {
@@ -229,6 +230,7 @@
 @media (max-width: 600px) {
     .body-auth-page .login-header h1 {
         font-size: 2.05rem;
+    
     }
 
     .body-auth-page .btn-login {
