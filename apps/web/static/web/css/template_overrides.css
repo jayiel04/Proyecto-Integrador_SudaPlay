@@ -61,6 +61,134 @@
     margin-bottom: 40px;
 }
 
+#catalog-hero {
+    position: relative;
+    z-index: 0;
+}
+
+#catalogo-juegos {
+    position: relative;
+    margin-top: 1rem;
+}
+
+.arena-anchor {
+    display: block;
+    height: 0;
+    width: 0;
+}
+
+.catalogo-panel {
+    width: 100%;
+    padding: clamp(2rem, 3vw, 2.8rem);
+    border-radius: 36px;
+    background: radial-gradient(circle at 12% 5%, rgba(6, 255, 255, 0.14), transparent 45%),
+        radial-gradient(circle at 80% 5%, rgba(255, 57, 207, 0.15), transparent 55%),
+        linear-gradient(145deg, #030f19 0%, #0f1b34 40%, #091526 100%);
+    border: 1px solid rgba(0, 255, 255, 0.35);
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.85),
+        inset 0 0 24px rgba(0, 255, 255, 0.08),
+        inset 0 0 70px rgba(255, 255, 255, 0.03);
+    overflow: hidden;
+    position: relative;
+}
+
+.catalogo-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(115deg,
+            rgba(255, 255, 255, 0.08) 0,
+            rgba(255, 255, 255, 0.08) 3px,
+            transparent 3px,
+            transparent 14px);
+    opacity: 0.35;
+    mix-blend-mode: screen;
+    pointer-events: none;
+}
+
+.catalogo-panel::after {
+    content: '';
+    position: absolute;
+    inset: auto 10% 12% 10%;
+    background: radial-gradient(circle at 80% 30%, rgba(0, 255, 255, 0.35), transparent 70%);
+    filter: blur(18px);
+    opacity: 0.9;
+    pointer-events: none;
+}
+
+.catalogo-panel > * {
+    position: relative;
+    z-index: 1;
+}
+
+.catalogo-panel-header {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.catalogo-panel-greeting {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.35em;
+    color: #ffd96a;
+    text-shadow:
+        0 0 16px rgba(255, 217, 106, 0.9),
+        0 0 25px rgba(255, 107, 50, 0.7);
+}
+
+.catalogo-panel-title {
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: transparent;
+    background: linear-gradient(120deg, #ff6bd1 0%, #c700ff 50%, #4400ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 0 12px rgba(255, 107, 209, 0.75);
+    position: relative;
+    padding-bottom: 0.35rem;
+}
+
+.catalogo-panel-title::after {
+    content: '';
+    position: absolute;
+    display: block;
+    bottom: -0.25rem;
+    left: 18%;
+    right: 18%;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 0, 190, 0.9);
+    box-shadow: 0 0 12px rgba(255, 0, 190, 0.8);
+}
+
+.catalogo-panel-subtitle {
+    font-size: 0.95rem;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: #fff;
+    border: 1px solid rgba(6, 156, 255, 0.8);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    background: linear-gradient(90deg, rgba(2, 87, 255, 0.9), rgba(0, 197, 255, 0.6));
+    box-shadow:
+        0 0 14px rgba(15, 166, 255, 0.7),
+        0 0 26px rgba(2, 115, 255, 0.5);
+    font-family: 'Rajdhani', 'Roboto', sans-serif;
+}
+
 .catalog-search-label {
     margin-bottom: 6px;
     color: #9ad3cf;
@@ -115,10 +243,33 @@
 }
 
 .my-games-title {
-    font-size: 2.5rem;
+    font-size: clamp(2rem, 3vw, 2.6rem);
     margin-bottom: 10px;
-    color: #fff;
-    text-shadow: 0 0 20px var(--neon-green);
+    font-family: 'Orbitron', 'Rajdhani', sans-serif;
+    letter-spacing: 0.18em;
+    line-height: 1.1;
+    color: transparent;
+    background: linear-gradient(90deg, #f5ffff 0%, #c9eeff 60%, #00f5ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow:
+        0 0 18px rgba(11, 235, 255, 0.8),
+        0 0 26px rgba(0, 0, 0, 0.65);
+    position: relative;
+    padding-bottom: 0.85rem;
+}
+
+.my-games-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 42%;
+    bottom: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(3, 252, 255, 0.95), rgba(84, 128, 255, 0.7));
+    box-shadow: 0 0 18px rgba(3, 252, 255, 0.85);
 }
 
 .home-subtitle {
@@ -129,30 +280,26 @@
 }
 
 .my-games-subtitle {
-    color: var(--neon-green);
-    font-size: 1rem;
-    letter-spacing: 1px;
+    font-size: clamp(0.95rem, 1.6vw, 1.35rem);
+    letter-spacing: 0.5em;
     text-transform: uppercase;
-}
-
-.welcome-header-home .my-games-subtitle {
-    color: #70e98a;
-    font-size: clamp(1.05rem, 2vw, 1.28rem);
-    font-weight: 800;
-    letter-spacing: 1.3px;
-    background-image: linear-gradient(90deg, #9eea67 0%, #70e98a 46%, #3fd980 100%);
+    font-weight: 700;
+    color: transparent;
+    background: linear-gradient(90deg, #96f2ff 0%, #33c7ff 45%, #0c6eff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     text-shadow:
-        -1px -1px 0 rgba(0, 0, 0, 0.9),
-        1px -1px 0 rgba(0, 0, 0, 0.9),
-        -1px 1px 0 rgba(0, 0, 0, 0.9),
-        1px 1px 0 rgba(0, 0, 0, 0.9),
-        0 0 14px rgba(126, 245, 152, 0.86),
-        0 0 28px rgba(85, 232, 145, 0.62),
-        0 0 42px rgba(55, 214, 128, 0.46);
-    animation: cyberFlicker 2.4s infinite, subtitlePulse 1.8s ease-in-out infinite;
+        0 0 14px rgba(14, 184, 255, 0.9),
+        0 0 24px rgba(2, 95, 255, 0.55);
+    border: 1px solid rgba(144, 248, 255, 0.55);
+    padding: 0.3rem 0.85rem;
+    border-radius: 999px;
+    background-color: rgba(1, 12, 20, 0.55);
+    mix-blend-mode: screen;
+    animation: subtitlePulse 2.1s ease-in-out infinite alternate;
+    display: inline-flex;
+    gap: 0.35rem;
 }
 
 @keyframes subtitlePulse {

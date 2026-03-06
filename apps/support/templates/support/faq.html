@@ -13,6 +13,7 @@
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px;
         backdrop-filter: blur(10px);
+        position: relative;
     }
     .faq-header {
         text-align: center;
@@ -71,11 +72,36 @@
         line-height: 1.6;
         margin: 0;
     }
+    .faq-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        transition: background 0.2s, transform 0.2s;
+    }
+    .faq-close:hover {
+        background: rgba(255, 255, 255, 0.18);
+        transform: scale(1.1);
+    }
+    .faq-container.hidden {
+        display: none;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="faq-container">
+    <button type="button" class="faq-close" aria-label="Cerrar soporte">×</button>
     <div class="faq-header">
         <h1>Centro de Ayuda</h1>
         <p>Preguntas frecuentes y soporte técnico de SudaPlay.</p>
@@ -118,6 +144,18 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.toggle('active');
         });
     });
+
+    const closeButton = document.querySelector('.faq-close');
+    const faqContainer = document.querySelector('.faq-container');
+    if (closeButton && faqContainer) {
+        closeButton.addEventListener('click', () => {
+            faqContainer.classList.add('hidden');
+            const catalogSection = document.getElementById('catalogos-de-juegos') || document.getElementById('catalogo-juegos');
+            if (catalogSection) {
+                catalogSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 });
 </script>
 {% endblock %}

@@ -1,46 +1,55 @@
 <section id="catalogo-juegos">
-    <div class="welcome-header welcome-header-left welcome-header-home">
-        <h1 class="my-games-title">Catalogo de juegos</h1>
-        <p class="my-games-subtitle">Explora, juega y diviertete</p>
-    </div>
-
-    {% if games %}
-    <div id="catalog-game-grid" class="game-grid">
-        {% for game in games %}
-        <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
-            {% if game.is_featured %}
-            <div class="game-badge-wrap">
-                <span class="badge badge-hot">Destacado</span>
-            </div>
+    <div id="catalogos-de-juegos" class="arena-anchor" aria-hidden="true"></div>
+    <div class="catalogo-panel">
+        <div class="catalogo-panel-header">
+            {% if user.is_authenticated %}
+            <span class="catalogo-panel-greeting">Hola, {{ user.username }}</span>
+            {% else %}
+            <span class="catalogo-panel-greeting">Hola, invitado</span>
             {% endif %}
+            <h1 class="catalogo-panel-title">Catálogo de juegos</h1>
+            <p class="catalogo-panel-subtitle">Explora, juega y diviértete</p>
+        </div>
 
-            <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img">
-
-            <div class="game-info">
-                <div class="game-title">{{ game.title }}</div>
-                <div class="game-short-description">
-                    {{ game.short_description|truncatechars:75 }}
+        {% if games %}
+        <div id="catalog-game-grid" class="game-grid">
+            {% for game in games %}
+            <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
+                {% if game.is_featured %}
+                <div class="game-badge-wrap">
+                    <span class="badge badge-hot">Destacado</span>
                 </div>
-                <div class="game-stats">
-                    <span><i class="fa fa-download"></i> {{ game.downloads }} Descargas</span>
-                    <span><i class="fa fa-star star-gold"></i> {{ game.rating }}</span>
-                </div>
+                {% endif %}
 
-                <span class="navbar-link game-detail-link">Ver detalles</span>
-            </div>
-        </a>
-        {% endfor %}
+                <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img">
+
+                <div class="game-info">
+                    <div class="game-title">{{ game.title }}</div>
+                    <div class="game-short-description">
+                        {{ game.short_description|truncatechars:75 }}
+                    </div>
+                    <div class="game-stats">
+                        <span><i class="fa fa-download"></i> {{ game.downloads }} Descargas</span>
+                        <span><i class="fa fa-star star-gold"></i> {{ game.rating }}</span>
+                    </div>
+
+                    <span class="navbar-link game-detail-link">Ver detalles</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+        <div id="catalog-no-results" class="login-card full-width-card catalog-no-results" hidden>
+            <h2 class="card-title-small">No se encontraron juegos</h2>
+            <p class="card-muted-text">Prueba con otro termino de busqueda.</p>
+        </div>
+        {% else %}
+        <div class="login-card full-width-card">
+            <h2 class="card-title-small">Aun no hay juegos publicados</h2>
+            <p class="card-muted-text">Todavia no hay juegos disponibles en el catalogo.</p>
+        </div>
+        {% endif %}
+
     </div>
-    <div id="catalog-no-results" class="login-card full-width-card catalog-no-results" hidden>
-        <h2 class="card-title-small">No se encontraron juegos</h2>
-        <p class="card-muted-text">Prueba con otro termino de busqueda.</p>
-    </div>
-    {% else %}
-    <div class="login-card full-width-card">
-        <h2 class="card-title-small">Aun no hay juegos publicados</h2>
-        <p class="card-muted-text">Todavia no hay juegos disponibles en el catalogo.</p>
-    </div>
-    {% endif %}
 </section>
 
 <script>
