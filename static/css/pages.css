@@ -50,7 +50,7 @@
     animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
-    isolation: isolate;
+    
 }
 
 .login-card::before,
@@ -184,10 +184,16 @@ label {
 .input-icon {
     position: absolute;
     left: 12px;
-    color: var(--neon-green);
+    color: #b266ff;
     font-size: 1rem;
     pointer-events: none;
-    text-shadow: 0 0 5px var(--neon-green);
+    text-shadow:
+        0 0 8px #e0b3ff,
+        0 0 16px #b266ff,
+        1px 1px 0 #000,
+        -1px 1px 0 #000,
+        1px -1px 0 #000,
+        -1px -1px 0 #000;
 }
 
 input[type="text"],
@@ -205,16 +211,7 @@ input[type="email"] {
     transition: 0.3s;
 }
 
-input[type="file"] {
-    width: 100%;
-    padding: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    color: #fff;
-    font-size: 0.85rem;
-    font-family: inherit;
-}
+
 
 input[type="file"]::file-selector-button {
     margin-right: 10px;
@@ -307,6 +304,7 @@ input:focus {
 .remember-forgot a {
     color: var(--neon-green);
     text-decoration: none;
+    
 }
 
 .remember-forgot a:hover {
@@ -327,6 +325,7 @@ input:focus {
     align-items: center;
     margin: 20px 0;
     color: #444;
+    margin-top: 30px;
 }
 
 .divider::before,
@@ -399,6 +398,7 @@ input:focus {
     color: var(--neon-green);
     text-decoration: none;
     font-weight: 700;
+    margin-top: 40px;
 }
 
 .signup-link a:hover {
@@ -530,27 +530,7 @@ input:focus {
     animation: cyberFlicker 2.8s infinite;
 }
 
-.user-greeting {
-    margin: -12cm auto 16px;
-    width: fit-content;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #ffe5a3;
-    font-weight: 800;
-    font-size: clamp(1.4rem, 3.2vw, 2rem);
-    letter-spacing: 1.6px;
-    background-image: linear-gradient(90deg, #fff1bf 0%, #f3c64d 46%, #d39a1d 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow:
-        0 0 18px rgba(255, 236, 170, 0.96),
-        0 0 34px rgba(255, 210, 92, 0.88),
-        0 0 52px rgba(231, 167, 26, 0.74);
-    animation: greetingPulse 1.45s ease-in-out infinite, cyberFlicker 2.2s infinite;
-    cursor: default;
-}
+
 
 .user-greeting:hover {
     transform: scale(1.1);

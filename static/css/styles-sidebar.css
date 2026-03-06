@@ -116,7 +116,7 @@ body.sidebar-open .secondary-nav-container {
 }
 
 .secondary-nav-container::-webkit-scrollbar-thumb {
-    background: rgba(0, 255, 255, 0.4);
+    background: rgb(209, 31, 254);
     border-radius: 10px;
 }
 
@@ -130,7 +130,7 @@ body.sidebar-open .secondary-nav-container {
     justify-content: center;
     gap: 4px;
     width: 32px;
-    padding: 8px;
+    padding: 8px;+
     background: transparent;
     border-radius: 50%;
     color: var(--accent-cyan);
@@ -139,7 +139,7 @@ body.sidebar-open .secondary-nav-container {
     font-weight: 600;
     white-space: nowrap;
     transition: background 0.3s ease, width 0.3s ease;
-    text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+    text-shadow: 0 0 8px rgb(205, 31, 248);
     /* Brillo base en iconos */
 }
 

@@ -91,6 +91,7 @@
         inset 0 0 70px rgba(255, 255, 255, 0.03);
     overflow: hidden;
     position: relative;
+    
 }
 
 .catalogo-panel::before {
@@ -147,16 +148,13 @@
     font-size: clamp(2rem, 3vw, 2.6rem);
     letter-spacing: 0.45em;
     text-transform: uppercase;
-    color: transparent;
-    background: linear-gradient(120deg, #ff6bd1 0%, #c700ff 50%, #4400ff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
+    color: #bdbdbd;
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
     text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000,
-        0 0 12px rgba(255, 107, 209, 0.75);
+        0 0 12px #ff6bd1,
+        0 0 24px #ff6bd1;
     position: relative;
     padding-bottom: 0.35rem;
 }
