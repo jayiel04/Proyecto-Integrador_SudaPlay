@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.validators import FileExtensionValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models.signals import post_save
@@ -39,10 +38,13 @@ class Game(models.Model):
         storage=GameFilesStorage(),
         null=True,
         blank=True,
-        verbose_name="Archivo del juego",
-        validators=[FileExtensionValidator(allowed_extensions=["zip"])],
-        help_text="Archivo ZIP web con index.html (max 500MB)",
+        default="",
+        verbose_name="Archivo del juego (URL)",
+        help_text="URL pública del ZIP en Supabase Storage",
     )
+    # ────────────────────────────────────────────────────────────────────────
+
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, verbose_name="Género")
     external_url = models.URLField(
         blank=True,
         verbose_name="URL externa",
@@ -53,7 +55,8 @@ class Game(models.Model):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, verbose_name="Calificación")
     rating_votes = models.PositiveIntegerField(default=0, verbose_name="Total de votos")
     is_web_playable = models.BooleanField(default=False, verbose_name="Jugable en web")
-    web_build_path = models.CharField(max_length=500, blank=True, default="", verbose_name="Ruta web del build")
+    # Ahora almacena la URL pública del index.html en Supabase
+    web_build_path = models.CharField(max_length=2000, blank=True, default="", verbose_name="URL del build web")
     processing_error = models.CharField(
         max_length=255,
         blank=True,
