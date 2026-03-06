@@ -2,6 +2,10 @@ from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from .storage_backends import GameCoversStorage, GameFilesStorage
 
 
 class Game(models.Model):
@@ -26,10 +30,13 @@ class Game(models.Model):
         verbose_name="Descripción corta",
         help_text="Breve resumen del juego",
     )
-    cover_image = models.ImageField(upload_to="games/covers/", verbose_name="Imagen de portada")
+    cover_image = models.ImageField(
+        storage=GameCoversStorage(),
+        verbose_name="Imagen de portada"
+    )
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, verbose_name="Género")
     game_file = models.FileField(
-        upload_to="games/files/",
+        storage=GameFilesStorage(),
         null=True,
         blank=True,
         verbose_name="Archivo del juego",
@@ -98,4 +105,21 @@ class GameRating(models.Model):
         return f"{self.user_id}:{self.game_id}={self.value}"
 
 
+# ---------------------------------------------------------------------------
+# Signal: post_save en Game
+# ---------------------------------------------------------------------------
+@receiver(post_save, sender=Game)
+def process_game_zip(sender, instance, created, **kwargs):
+    """
+    Se dispara después de guardar un Game.
+    Si es nuevo y tiene game_file, actualiza is_web_playable y web_build_path.
 
+    Para lógica avanzada de descompresión (extraer index.html del ZIP en
+    Supabase y servir los archivos), agrega una tarea Celery aquí.
+    """
+    if created and instance.game_file:
+        # Usamos update() para evitar recursión infinita con el signal
+        Game.objects.filter(pk=instance.pk).update(
+            is_web_playable=True,
+            web_build_path=instance.game_file.url,
+        )

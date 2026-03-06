@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'storages',
 
     # Allauth apps
     'allauth',
@@ -230,6 +231,31 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 
-#Avatars conección a Supabase
-SUPABASE_URL = "https://uqontjetlobocgmfoojd.supabase.co"
-SUPABASE_KEY = "sb_publishable_vYzudElwCqUfSyIX-LtrtA_HfoItyIc"
+# Supabase (avatares y conexión directa)
+SUPABASE_URL = config('SUPABASE_URL', default='https://uqontjetlobocgmfoojd.supabase.co')
+SUPABASE_KEY = config('SUPABASE_KEY', default='')
+
+# ---------------------------------------------------------------------------
+# Configuración de Supabase Storage (compatible con S3 via django-storages)
+# Obtén tus credenciales en: Supabase > Project Settings > Storage
+# ---------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID = config('SUPABASE_S3_ACCESS_KEY', default='')
+AWS_SECRET_ACCESS_KEY = config('SUPABASE_S3_SECRET_KEY', default='')
+AWS_STORAGE_BUCKET_NAME = config('SUPABASE_S3_BUCKET', default='juegos')
+AWS_S3_ENDPOINT_URL = config('SUPABASE_S3_ENDPOINT', default='https://uqontjetlobocgmfoojd.supabase.co/storage/v1/s3')
+AWS_S3_REGION_NAME = config('SUPABASE_S3_REGION', default='sa-east-1')
+AWS_S3_ADDRESSING_STYLE = 'path'        # Obligatorio para Supabase S3
+AWS_S3_SIGNATURE_VERSION = 's3v4'       # Firma requerida por Supabase
+AWS_S3_FILE_OVERWRITE = True            # Evita el HeadObject check (que falla con RLS de Supabase)
+AWS_DEFAULT_ACL = None                  # Supabase usa RLS — dejar en None
+AWS_QUERYSTRING_AUTH = False            # URLs públicas directas en vez de presigned
+
+# Almacenamiento de media en Supabase S3 (portadas y archivos de juegos)
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}

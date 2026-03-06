@@ -16,4 +16,6 @@ sqlparse
 tzdata
 urllib3
 supabase
+django-storages
+boto3
 

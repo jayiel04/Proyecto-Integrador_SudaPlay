@@ -9,7 +9,7 @@ Mejores prácticas:
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import DetailView
@@ -117,7 +117,13 @@ class GameDetailView(DetailView):
 
         if game.is_approved:
             if game.is_web_playable and game.web_build_path:
-                play_url = f"{settings.MEDIA_URL}{game.web_build_path}"
+                path = game.web_build_path
+                if path.startswith("http"):
+                    # URL de Supabase: usar el proxy Django para corregir Content-Type
+                    from django.urls import reverse
+                    play_url = reverse("web:game_asset", kwargs={"pk": game.pk, "asset_path": "index.html"})
+                else:
+                    play_url = f"{settings.MEDIA_URL}{path}"
                 play_mode = "embedded"
             elif game.external_url:
                 play_url = game.external_url
@@ -185,7 +191,13 @@ class GamePlayView(DetailView):
         play_mode = "unavailable"
 
         if game.is_web_playable and game.web_build_path:
-            play_url = f"{settings.MEDIA_URL}{game.web_build_path}"
+            path = game.web_build_path
+            if path.startswith("http"):
+                # URL de Supabase: usar el proxy Django para corregir Content-Type
+                from django.urls import reverse
+                play_url = reverse("web:game_asset", kwargs={"pk": game.pk, "asset_path": "index.html"})
+            else:
+                play_url = f"{settings.MEDIA_URL}{path}"
             play_mode = "embedded"
         elif game.external_url:
             play_url = game.external_url
@@ -226,3 +238,66 @@ class GameDownloadView(LoginRequiredMixin, View):
 
         Game.objects.filter(pk=game.pk).update(downloads=F("downloads") + 1)
         return FileResponse(file_handle, as_attachment=True, filename="archivo.zip")
+
+
+class GameAssetProxyView(View):
+    """
+    Proxy que descarga archivos del build de juego desde Supabase
+    y los re-sirve al browser con el Content-Type MIME correcto.
+
+    Supabase (tanto por S3 como por su API REST) siempre devuelve text/plain
+    para todos los archivos, rompiendo el renderizado de HTML/JS/CSS en iframes.
+    Este proxy corrige ese problema inyectando el header correcto desde Django.
+
+    URL: /juegos/<pk>/asset/<path:asset_path>
+    """
+
+    MIME_MAP = {
+        ".html": "text/html; charset=utf-8",
+        ".htm":  "text/html; charset=utf-8",
+        ".js":   "application/javascript",
+        ".css":  "text/css",
+        ".wasm": "application/wasm",
+        ".json": "application/json",
+        ".png":  "image/png",
+        ".jpg":  "image/jpeg",
+        ".jpeg": "image/jpeg",
+        ".gif":  "image/gif",
+        ".svg":  "image/svg+xml",
+        ".ico":  "image/x-icon",
+        ".mp3":  "audio/mpeg",
+        ".ogg":  "audio/ogg",
+        ".wav":  "audio/wav",
+        ".mp4":  "video/mp4",
+    }
+
+    def get(self, request, pk, asset_path):
+        import requests as req
+        import mimetypes
+        from pathlib import PurePosixPath
+
+        game = Game.objects.filter(pk=pk).first()
+        if not game or not game.web_build_path:
+            raise Http404("Juego no encontrado")
+
+        # Construir la URL base del build: quitar el nombre del archivo de web_build_path
+        # web_build_path = https://.../object/public/juegos/games/builds/14/snake/index.html
+        build_url = game.web_build_path
+        base_url = build_url.rsplit("/", 1)[0]  # Quitar 'index.html'
+        asset_url = f"{base_url}/{asset_path}"
+
+        try:
+            resp = req.get(asset_url, timeout=15)
+            resp.raise_for_status()
+        except Exception:
+            raise Http404(f"Asset no encontrado: {asset_path}")
+
+        # Determinar Content-Type por extensión (ignoramos lo que manda Supabase)
+        ext = PurePosixPath(asset_path).suffix.lower()
+        content_type = self.MIME_MAP.get(ext)
+        if not content_type:
+            content_type, _ = mimetypes.guess_type(asset_path)
+        if not content_type:
+            content_type = "application/octet-stream"
+
+        return HttpResponse(resp.content, content_type=content_type)
