@@ -6,10 +6,11 @@ Mejores prácticas:
 - Decoradores de autenticación
 - Templates centralizados
 """
-from django.conf import settings
+import io
+
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.http import FileResponse, Http404
+from django.http import Http404
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import DetailView
@@ -22,6 +23,7 @@ from decimal import Decimal, ROUND_HALF_UP
 from .forms import GameForm
 from .models import Game, GameRating
 from .services import process_uploaded_web_build
+from .supabase_storage import upload_file
 
 
 class HomeView(TemplateView):
@@ -69,21 +71,46 @@ class GameCreateView(LoginRequiredMixin, CreateView):
     login_url = "login:login"
 
     def form_valid(self, form):
-        form.instance.uploaded_by = self.request.user
-        # Publicacion inmediata para que otros usuarios puedan jugar al instante.
-        form.instance.is_approved = True
-        response = super().form_valid(form)
+        # Crear la instancia pero aún no guardarla (commit=False)
+        game = form.save(commit=False)
+        game.uploaded_by = self.request.user
+        game.is_approved = True
 
-        if self.object.game_file:
-            ok, error_message = process_uploaded_web_build(self.object)
+        # ── Subir portada a Supabase Storage ──────────────────────────────
+        cover_file = form.cleaned_data.get("cover_image_file")
+        if cover_file:
+            cover_bytes = cover_file.read()
+            storage_path = f"covers/{self.request.user.id}/{cover_file.name}"
+            try:
+                game.cover_image = upload_file(cover_bytes, storage_path, cover_file.content_type)
+            except Exception as exc:
+                messages.error(self.request, f"No se pudo subir la portada: {exc}")
+                return redirect("web:game_create")
+
+        # ── Subir ZIP a Supabase Storage ───────────────────────────────────
+        zip_file = form.cleaned_data.get("game_file_upload")
+        if zip_file:
+            zip_bytes = zip_file.read()
+            storage_path = f"files/{self.request.user.id}/{zip_file.name}"
+            try:
+                game.game_file = upload_file(zip_bytes, storage_path, "application/zip")
+            except Exception as exc:
+                messages.error(self.request, f"No se pudo subir el archivo del juego: {exc}")
+                return redirect("web:game_create")
+
+        game.save()
+        self.object = game
+
+        # ── Procesar build web (extraer ZIP y subir archivos a builds/) ────
+        if game.game_file:
+            ok, error_message = process_uploaded_web_build(game)
             if not ok:
-                self.object.delete()
+                game.delete()
                 messages.error(self.request, f"No se pudo publicar el juego: {error_message}")
                 return redirect("web:game_create")
 
         messages.success(self.request, "Juego publicado y disponible para jugar.")
-
-        return response
+        return redirect(self.success_url)
 
 
 class MyGamesView(LoginRequiredMixin, TemplateView):
@@ -117,7 +144,8 @@ class GameDetailView(DetailView):
 
         if game.is_approved:
             if game.is_web_playable and game.web_build_path:
-                play_url = f"{settings.MEDIA_URL}{game.web_build_path}"
+                # web_build_path ahora es la URL pública del index.html en Supabase
+                play_url = game.web_build_path
                 play_mode = "embedded"
             elif game.external_url:
                 play_url = game.external_url
@@ -185,7 +213,8 @@ class GamePlayView(DetailView):
         play_mode = "unavailable"
 
         if game.is_web_playable and game.web_build_path:
-            play_url = f"{settings.MEDIA_URL}{game.web_build_path}"
+            # URL directa de Supabase Storage
+            play_url = game.web_build_path
             play_mode = "embedded"
         elif game.external_url:
             play_url = game.external_url
@@ -204,7 +233,7 @@ class GamePlayView(DetailView):
 
 class GameDownloadView(LoginRequiredMixin, View):
     """
-    Descarga del archivo ZIP del juego como archivo.zip.
+    Redirige al usuario a la URL de descarga del ZIP en Supabase Storage.
     """
     login_url = "login:login"
 
@@ -219,10 +248,8 @@ class GameDownloadView(LoginRequiredMixin, View):
         if not game.game_file:
             raise Http404("Este juego no tiene archivo descargable.")
 
-        try:
-            file_handle = game.game_file.open("rb")
-        except FileNotFoundError:
-            raise Http404("El archivo no está disponible en el servidor.")
-
+        # Incrementar contador de descargas
         Game.objects.filter(pk=game.pk).update(downloads=F("downloads") + 1)
-        return FileResponse(file_handle, as_attachment=True, filename="archivo.zip")
+
+        # Redirigir a la URL de Supabase (descarga directa)
+        return redirect(game.game_file)

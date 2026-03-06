@@ -1,10 +1,24 @@
-from django import forms
+import io
 import zipfile
+
+from django import forms
 
 from .models import Game
 
 
 class GameForm(forms.ModelForm):
+    # Campos de archivo como FileField independientes (no del modelo, que ya es URLField)
+    cover_image_file = forms.ImageField(
+        label="Imagen de portada",
+        required=True,
+        widget=forms.ClearableFileInput(attrs={"accept": "image/*"}),
+    )
+    game_file_upload = forms.FileField(
+        label="Archivo del juego (.zip con index.html)",
+        required=False,
+        widget=forms.ClearableFileInput(attrs={"accept": ".zip"}),
+    )
+
     class Meta:
         model = Game
         fields = [
@@ -12,43 +26,38 @@ class GameForm(forms.ModelForm):
             "short_description",
             "description",
             "genre",
-            "cover_image",
             "external_url",
-            "game_file",
         ]
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
             "short_description": forms.Textarea(attrs={"rows": 2}),
-            "game_file": forms.ClearableFileInput(attrs={"accept": ".zip"}),
         }
 
     def clean(self):
         cleaned_data = super().clean()
-        game_file = cleaned_data.get("game_file")
+        game_file = cleaned_data.get("game_file_upload")
         external_url = cleaned_data.get("external_url")
 
         if not game_file and not external_url:
-            raise forms.ValidationError("Debes subir un archivo o proporcionar un enlace externo.")
+            raise forms.ValidationError("Debes subir un archivo ZIP o proporcionar un enlace externo.")
 
         if game_file:
-            file_name = game_file.name.lower()
-            if not file_name.endswith(".zip"):
-                raise forms.ValidationError("Para jugar dentro de la plataforma, el archivo debe ser .zip.")
+            if not game_file.name.lower().endswith(".zip"):
+                raise forms.ValidationError("El archivo del juego debe ser un .zip.")
 
             try:
-                with zipfile.ZipFile(game_file) as zip_file:
-                    names = [name.lower() for name in zip_file.namelist()]
-                    has_index = any(name.endswith("index.html") for name in names)
-                    if not has_index:
+                game_file.seek(0)
+                with zipfile.ZipFile(io.BytesIO(game_file.read())) as zf:
+                    names = [n.lower() for n in zf.namelist()]
+                    if not any(n.endswith("index.html") for n in names):
                         raise forms.ValidationError("El ZIP debe incluir un archivo index.html.")
             except zipfile.BadZipFile:
-                raise forms.ValidationError("El archivo subido no es un ZIP valido.")
+                raise forms.ValidationError("El archivo subido no es un ZIP válido.")
             finally:
                 game_file.seek(0)
 
         return cleaned_data
-    
-from django import forms
+
 
 class PerfilForm(forms.Form):
-    avatar = forms.ImageField(required=True)  # Subida de imagen
+    avatar = forms.ImageField(required=True)

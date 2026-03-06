@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.validators import FileExtensionValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -26,16 +25,25 @@ class Game(models.Model):
         verbose_name="Descripción corta",
         help_text="Breve resumen del juego",
     )
-    cover_image = models.ImageField(upload_to="games/covers/", verbose_name="Imagen de portada")
-    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, verbose_name="Género")
-    game_file = models.FileField(
-        upload_to="games/files/",
-        null=True,
+
+    # ── Supabase Storage ────────────────────────────────────────────────────
+    # Las imágenes y el ZIP ya no se guardan localmente; se almacena la URL
+    # pública que devuelve Supabase Storage.
+    cover_image = models.URLField(
         blank=True,
-        verbose_name="Archivo del juego",
-        validators=[FileExtensionValidator(allowed_extensions=["zip"])],
-        help_text="Archivo ZIP web con index.html (max 500MB)",
+        default="",
+        verbose_name="Imagen de portada",
+        help_text="URL pública de la portada en Supabase Storage",
     )
+    game_file = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Archivo del juego (URL)",
+        help_text="URL pública del ZIP en Supabase Storage",
+    )
+    # ────────────────────────────────────────────────────────────────────────
+
+    genre = models.CharField(max_length=100, choices=GENRE_CHOICES, verbose_name="Género")
     external_url = models.URLField(
         blank=True,
         verbose_name="URL externa",
@@ -46,7 +54,8 @@ class Game(models.Model):
     rating = models.DecimalField(max_digits=2, decimal_places=1, default=0, verbose_name="Calificación")
     rating_votes = models.PositiveIntegerField(default=0, verbose_name="Total de votos")
     is_web_playable = models.BooleanField(default=False, verbose_name="Jugable en web")
-    web_build_path = models.CharField(max_length=500, blank=True, default="", verbose_name="Ruta web del build")
+    # Ahora almacena la URL pública del index.html en Supabase
+    web_build_path = models.CharField(max_length=2000, blank=True, default="", verbose_name="URL del build web")
     processing_error = models.CharField(
         max_length=255,
         blank=True,
@@ -96,6 +105,3 @@ class GameRating(models.Model):
 
     def __str__(self):
         return f"{self.user_id}:{self.game_id}={self.value}"
-
-
-
