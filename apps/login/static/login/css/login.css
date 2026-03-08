@@ -251,6 +251,91 @@
     color: #7fbfff;
 }
 
+/* Login only: ensure full form content fits visibly inside the card. */
+.body-auth-page .login-page-layout {
+    justify-content: center;
+    padding-block: clamp(10px, 2.2dvh, 24px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card {
+    justify-content: flex-start;
+    overflow: hidden;
+    max-height: calc(100dvh - var(--navbar-height) - 24px);
+    padding: clamp(16px, 2.2dvh, 24px) clamp(18px, 2.5vw, 30px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .login-header {
+    margin-bottom: clamp(8px, 1.2dvh, 12px);
+    padding-top: 0;
+}
+
+.body-auth-page .auth-page-layout .login-page-card .login-card-logo {
+    width: clamp(56px, 7.2dvh, 72px);
+    height: clamp(56px, 7.2dvh, 72px);
+    margin-bottom: clamp(6px, 1dvh, 10px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .login-header h1 {
+    font-size: clamp(1.7rem, 3.6dvh, 2.2rem);
+    margin-bottom: clamp(2px, 0.4dvh, 5px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .login-form {
+    margin-bottom: clamp(6px, 1dvh, 10px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .form-group {
+    margin-bottom: clamp(6px, 0.85dvh, 9px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card input[type="text"],
+.body-auth-page .auth-page-layout .login-page-card input[type="password"],
+.body-auth-page .auth-page-layout .login-page-card input[type="email"] {
+    padding-top: clamp(8px, 1dvh, 10px);
+    padding-bottom: clamp(8px, 1dvh, 10px);
+    font-size: clamp(0.95rem, 1.7dvh, 1.04rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .remember-forgot {
+    margin: clamp(6px, 0.9dvh, 10px) 0;
+    font-size: clamp(0.85rem, 1.55dvh, 0.95rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .btn-login {
+    margin-top: clamp(5px, 0.75dvh, 8px);
+    padding-top: clamp(9px, 1.05dvh, 11px);
+    padding-bottom: clamp(9px, 1.05dvh, 11px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .divider {
+    margin: clamp(8px, 1dvh, 12px) 0;
+}
+
+.body-auth-page .auth-page-layout .login-page-card .divider span {
+    font-size: clamp(0.72rem, 1.3dvh, 0.82rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .social-login {
+    margin: clamp(8px, 1dvh, 12px) 0 clamp(6px, 0.9dvh, 10px);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .google-btn-icon {
+    width: clamp(46px, 5.2dvh, 56px);
+    height: clamp(46px, 5.2dvh, 56px);
+    font-size: clamp(1.35rem, 2.4dvh, 1.65rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .signup-link {
+    margin-top: clamp(4px, 0.7dvh, 8px);
+    font-size: clamp(0.9rem, 1.5dvh, 1rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .signup-link a,
+.body-auth-page .auth-page-layout .login-page-card .login-signup-link .signup-link-cta {
+    margin-top: 0;
+    margin-left: 10px;
+}
+
 .body-auth-page .auth-page-layout .register-card {
     max-height: none;
     overflow: hidden;

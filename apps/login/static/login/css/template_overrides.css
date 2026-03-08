@@ -424,10 +424,6 @@
     outline: none;
 }
 
-.profile-edit-card label[for="id_avatar"] {
-    display: none;
-}
-
 .avatar-preview-wrap {
     display: flex;
     justify-content: center;
@@ -530,73 +526,4 @@
 .avatar-choice-item.is-selected img {
     border-color: #86a6ff;
 }
-
-.avatar-cropper-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(2, 7, 15, 0.85);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    padding: 16px;
-}
-
-.avatar-cropper-modal.is-open {
-    display: flex;
-}
-
-.avatar-cropper-dialog {
-    width: min(92vw, 560px);
-    background: rgba(8, 16, 28, 0.98);
-    border: 1px solid rgba(70, 123, 121, 0.35);
-    border-radius: 12px;
-    padding: 14px;
-}
-
-.avatar-cropper-dialog h3 {
-    color: #fff;
-    font-size: 1rem;
-    margin: 0 0 10px 0;
-}
-
-.avatar-cropper-stage {
-    width: 100%;
-    height: min(62vh, 380px);
-    background: #07111f;
-    border-radius: 10px;
-    overflow: hidden;
-}
-
-.avatar-cropper-stage img {
-    display: block;
-    max-width: 100%;
-}
-
-.avatar-cropper-actions {
-    margin-top: 12px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-}
-
-.avatar-cropper-btn {
-    border-radius: 8px;
-    padding: 8px 14px;
-    border: 1px solid transparent;
-    cursor: pointer;
-}
-
-.avatar-cropper-btn.cancel {
-    background: rgba(255, 255, 255, 0.08);
-    color: #d9dee4;
-    border-color: rgba(255, 255, 255, 0.18);
-}
-
-.avatar-cropper-btn.apply {
-    background: linear-gradient(135deg, var(--neon-green), var(--neon-emerald));
-    color: #f4fffe;
-    font-weight: 700;
-}
-
 
