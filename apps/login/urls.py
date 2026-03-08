@@ -14,6 +14,9 @@ urlpatterns = [
     path('perfil/editar/', views.ProfileUpdateView.as_view(), name='profile_edit'),
     path('api/check_availability/', views.CheckUserAPIView.as_view(), name='check_availability'),
     path('api/validate_password/', views.ValidatePasswordAPIView.as_view(), name='validate_password'),
+    # Password Management (Overrides allauth)
+    path('password/change/', views.CustomPasswordChangeView.as_view(), name='account_change_password'),
+    path('password/set/', views.CustomPasswordSetView.as_view(), name='account_set_password'),
     path('api/auto_messages/', views.AutoMessagesAPIView.as_view(), name='auto_messages_api'),
     path('api/notifications/', views.NotificationsAPIView.as_view(), name='notifications_api'),
     

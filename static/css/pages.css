@@ -32,6 +32,7 @@
 }
 
 /* Cards */
+.info-card,
 .login-card,
 .welcome-card {
     width: 100%;
@@ -76,6 +77,7 @@
     padding: 3px;
 }
 
+.info-card>*,
 .login-card>*,
 .welcome-card>* {
     position: relative;

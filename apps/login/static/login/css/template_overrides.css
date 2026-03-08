@@ -159,34 +159,25 @@
 }
 
 /* Socialaccount signup */
+.navbar-auth:has(.finalizar-registro-page) .navbar-menu {
+    display: flex !important;
+}
+
 .finalizar-registro-card {
-    /* Ajuste Dinámico Profesional (Responsivo a computadoras variadas) */
-    width: clamp(280px, 90vw, 500px);
+    /* Ajuste dinámico responsivo */
+    width: clamp(300px, 88vw, 480px);
     max-width: 100%;
 
-    /* Alto de la tarjeta dinámico con Scroll interno anti-recortes */
+    /* Oculta el desbordamiento del cuadrado animado */
     height: auto;
-    max-height: clamp(400px, 90vh, 850px);
-    overflow-y: auto;
+    overflow: hidden;
 
-    /* Scroll minimalista */
-    scrollbar-width: thin;
-    scrollbar-color: rgba(127, 191, 255, 0.4) transparent;
-
-    /* Flow interno */
+    /* Padding más equilibrado: más espacio horizontal que vertical */
     display: flex;
     flex-direction: column;
-    padding: clamp(20px, 3.5vh, 40px) clamp(20px, 4vw, 36px);
+    padding: clamp(32px, 5vh, 52px) clamp(32px, 6vw, 56px) clamp(24px, 4vh, 40px);
 }
 
-.finalizar-registro-card::-webkit-scrollbar {
-    width: 6px;
-}
-
-.finalizar-registro-card::-webkit-scrollbar-thumb {
-    background: rgba(127, 191, 255, 0.4);
-    border-radius: 4px;
-}
 
 .finalizar-registro-card form {
     display: flex;
@@ -200,11 +191,13 @@
 }
 
 .finalizar-registro-submit {
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .finalizar-registro-page .finalizar-registro-title {
-    font-size: 2.8rem;
+    font-size: clamp(2rem, 5vw, 2.4rem);
+    margin-bottom: 6px;
+    line-height: 1.15;
 }
 
 .finalizar-registro-page .login-header p {
@@ -237,7 +230,7 @@
 }
 
 .signup-footer p {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: #aaa;
     margin: 0;
 }
@@ -293,8 +286,8 @@
 
 /* Password reset pages */
 .password-reset-card {
-    max-width: 430px;
-    padding: 20px;
+    max-width: 440px;
+    padding: clamp(40px, 6dvh, 70px) clamp(36px, 6vw, 66px);
 }
 
 .password-reset-card .login-header {
@@ -369,6 +362,50 @@
 /* Profile edit */
 .profile-edit-card {
     max-width: 520px;
+}
+
+.profile-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(127, 191, 255, 0.3), transparent);
+    margin: 30px 0;
+}
+
+.profile-section-label {
+    font-size: 0.9rem;
+    color: #7fbfff;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.profile-secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: rgba(127, 191, 255, 0.1);
+    border: 1px solid rgba(127, 191, 255, 0.4);
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.profile-secondary-btn:hover {
+    background: rgba(127, 191, 255, 0.2);
+    border-color: rgba(127, 191, 255, 0.8);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(127, 191, 255, 0.2);
+    color: #fff;
+}
+
+.profile-secondary-btn i {
+    font-size: 1.1rem;
+    color: #7fbfff;
 }
 
 .profile-edit-card #id_username {
@@ -526,4 +563,3 @@
 .avatar-choice-item.is-selected img {
     border-color: #86a6ff;
 }
-

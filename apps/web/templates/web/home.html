@@ -40,13 +40,7 @@
 {% endif %}
 
 <div class="container page-stack-container">
-    {% if messages %}
-    <div class="inline-messages">
-        {% for message in messages %}
-        <p class="inline-message-text">{{ message }}</p>
-        {% endfor %}
-    </div>
-    {% endif %}
+
 
     {% include "web/home/_catalogo.html" %}
 </div>

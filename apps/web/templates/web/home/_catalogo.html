@@ -74,14 +74,14 @@
                 const description = normalize(card.querySelector('.game-short-description')?.textContent);
                 const matches = !query || title.includes(query) || description.includes(query);
 
-                card.hidden = !matches;
+                card.style.display = matches ? '' : 'none';
                 if (matches) {
                     visibleCount += 1;
                 }
             });
 
             if (noResults) {
-                noResults.hidden = visibleCount !== 0;
+                noResults.style.display = visibleCount === 0 ? '' : 'none';
             }
         });
     });

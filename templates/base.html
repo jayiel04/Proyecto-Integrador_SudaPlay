@@ -78,12 +78,12 @@
 
     <header class="site-header">
         <nav
-            class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' %} navbar-auth{% endif %}">
+            class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} navbar-auth{% endif %}">
             <div class="navbar-container">
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
             {% endif %}
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' %}
+            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
                 <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
                         class="navbar-brand-letter-logo"></span>
@@ -176,6 +176,11 @@
                                 <a href="{% url 'login:profile_edit' %}" class="profile-menu-item profile-menu-edit" role="menuitem">
                                     <i class="fa fa-pencil-alt"></i>
                                     <span>Editar perfil</span>
+                                </a>
+                                <div class="profile-divider"></div>
+                                <a href="{% url 'login:logout' %}" class="profile-menu-item profile-logout-btn" role="menuitem" style="color: #ff5e5e;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Cerrar sesión</span>
                                 </a>
                             </div>
                         </div>
@@ -284,6 +289,48 @@
             </div>
         </div>
     </div>
+    {% endif %}
+
+    <div id="success-popup-panel" class="success-popup-panel" aria-hidden="true">
+        <div class="success-popup-card" role="dialog" aria-modal="true" aria-labelledby="success-popup-title">
+            <div class="success-popup-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 id="success-popup-title">¡Éxito!</h3>
+            <p id="success-popup-message"></p>
+            <div class="success-popup-actions">
+                <button type="button" id="close-success-popup" class="success-popup-btn primary">Aceptar</button>
+            </div>
+        </div>
+    </div>
+
+    {% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                {% if 'popup' in message.tags %}
+                    const popup = document.getElementById('success-popup-panel');
+                    const messageEl = document.getElementById('success-popup-message');
+                    if (popup && messageEl) {
+                        messageEl.textContent = "{{ message|escapejs }}";
+                        popup.classList.add('is-open');
+                        popup.setAttribute('aria-hidden', 'false');
+                    }
+                {% endif %}
+            {% endfor %}
+
+            const closeBtn = document.getElementById('close-success-popup');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    const popup = document.getElementById('success-popup-panel');
+                    if (popup) {
+                        popup.classList.remove('is-open');
+                        popup.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            }
+        });
+    </script>
     {% endif %}
 
     {% if request.resolver_match.url_name != 'game_play' %}

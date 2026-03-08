@@ -29,6 +29,8 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Case, When, IntegerField, Q
 
+from allauth.account.views import PasswordChangeView, PasswordSetView
+
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest
 from apps.chat.models import ChatMessage
@@ -164,6 +166,38 @@ class ProfileUpdateView(FormView):
         context['default_avatar_url'] = static(f'avatars/{default_avatar_name}') if default_avatar_name else ''
         context['available_avatars'] = available_avatars
         return context
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    """Override allauth PasswordChangeView to set a custom success URL."""
+    success_url = reverse_lazy('web:home')
+
+    def form_valid(self, form):
+        msg = 'La contraseña fue cambiada exitosamente.'
+        messages.success(self.request, msg, extra_tags='popup')
+        
+        sys_notifs = self.request.session.get('system_notifs', [])
+        sys_notifs.append(msg)
+        self.request.session['system_notifs'] = sys_notifs
+        cache.delete(f'notifications_{self.request.user.id}')
+        
+        return super().form_valid(form)
+
+
+class CustomPasswordSetView(PasswordSetView):
+    """Override allauth PasswordSetView to set a custom success URL."""
+    success_url = reverse_lazy('web:home')
+
+    def form_valid(self, form):
+        msg = 'La contraseña fue establecida exitosamente.'
+        messages.success(self.request, msg, extra_tags='popup')
+        
+        sys_notifs = self.request.session.get('system_notifs', [])
+        sys_notifs.append(msg)
+        self.request.session['system_notifs'] = sys_notifs
+        cache.delete(f'notifications_{self.request.user.id}')
+        
+        return super().form_valid(form)
 
 
 class ProfileView(View):
@@ -343,6 +377,20 @@ class NotificationsAPIView(View):
             return JsonResponse(cached)
 
         notifications = []
+        
+        sys_notifs = request.session.pop('system_notifs', [])
+        if sys_notifs:
+            request.session.modified = True
+            
+        for notif in sys_notifs:
+            notifications.append({
+                'id': f"sys-{uuid.uuid4().hex[:8]}",
+                'type': 'system',
+                'text': notif,
+                'created_at': '',
+                'url': ''
+            })
+
         pending_requests = list(FriendRequest.objects.filter(
             to_user=request.user
         ).select_related('from_user').order_by('-created_at')[:4])
@@ -371,7 +419,7 @@ class NotificationsAPIView(View):
                 'url': str(reverse_lazy('chat:chat', args=[msg.sender.username]))
             })
 
-        unread_count = unread_requests + len(unread_messages)
+        unread_count = unread_requests + len(unread_messages) + len(sys_notifs)
 
         if not notifications:
             notifications.append({
@@ -402,17 +450,33 @@ class SearchPlayersView(View):
     def get(self, request, *args, **kwargs):
         from django.shortcuts import render
         query = request.GET.get('q', '').strip()
+        tab = request.GET.get('tab', 'players')
         results = []
 
-        if query:
-            # Buscar usuarios cuyo username contenga el término, excluyendo al usuario actual
-            results = User.objects.filter(
-                username__icontains=query,
-                is_active=True
-            ).exclude(id=request.user.id).select_related('profile')
+        if tab == 'friends':
+            profile = getattr(request.user, 'profile', None)
+            if profile:
+                friends_qs = profile.friends.filter(user__is_active=True).select_related('user')
+                if query:
+                    friends_qs = friends_qs.filter(user__username__icontains=query)
+                results = [f.user for f in friends_qs]
+                for f in friends_qs:
+                    f.user.profile = f
+        else:
+            if query:
+                # Buscar usuarios cuyo username contenga el término, excluyendo al usuario actual
+                results = User.objects.filter(
+                    username__icontains=query,
+                    is_active=True
+                ).exclude(id=request.user.id).select_related('profile')
+
+        available_avatars = _available_avatar_names()
+        for u in results:
+            u.avatar_url = _resolve_avatar_url(getattr(u, 'profile', None), available_avatars)
 
         context = {
             'query': query,
+            'tab': tab,
             'results': results,
         }
         return render(request, self.template_name, context)

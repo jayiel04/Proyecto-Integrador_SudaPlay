@@ -68,39 +68,8 @@ class RegisterForm(UserCreationForm):
 
 class CustomSocialSignupForm(SignupForm):
     """Formulario para finalizar el registro social (Google)."""
-
-    password1 = forms.CharField(
-        label='Nueva Contrasena',
-        widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'placeholder': 'Minimo 8 caracteres', 'id': 'id_password1'}
-        ),
-        required=True,
-    )
-    password2 = forms.CharField(
-        label='Confirmar Contrasena',
-        widget=forms.PasswordInput(
-            attrs={'class': 'form-control', 'placeholder': 'Repite tu contrasena', 'id': 'id_password2'}
-        ),
-        required=True,
-    )
-
-    def clean(self):
-        cleaned_data = super().clean()
-        p1 = cleaned_data.get('password1')
-        p2 = cleaned_data.get('password2')
-        if p1 and p2:
-            if p1 != p2:
-                self.add_error('password2', 'Las contrasenas no coinciden.')
-            elif len(p1) < 8:
-                self.add_error('password1', 'La contrasena debe tener al menos 8 caracteres.')
-        return cleaned_data
-
-    def save(self, request):
-        user = super().save(request)
-        password = self.cleaned_data.get('password1')
-        user.set_password(password)
-        user.save()
-        return user
+    # Se remueven los campos de contraseña para pedirlos después en el perfil
+    pass
 
 
 class ProfileUpdateForm(forms.ModelForm):

@@ -3,16 +3,46 @@
 
 {% block title %}Buscar Jugadores - SudaPlay{% endblock %}
 
+{% block extra_css %}
+<style>
+    .profile-secondary-btn {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--color-text, #e2e8f0);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+    .profile-secondary-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: #fff;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container" style="margin-top: calc(var(--navbar-height) + 2rem);">
+<div class="container" style="align-self: flex-start; margin-bottom: auto; width: 100%; padding-top: calc(var(--navbar-height) + 2rem);">
     <div class="profile-card" style="width: 100%; max-width: 800px; margin: 0 auto; padding: 2rem;">
-        <h2 class="profile-hero-title" style="margin-bottom: 1.5rem; text-align: center;">
-            <i class="fas fa-users" style="color: var(--neon-cyan); margin-right: 10px;"></i>
-            Buscar Jugadores
-        </h2>
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <a href="?tab=players&q={{ query }}" class="{% if tab != 'friends' %}profile-primary-btn{% else %}profile-secondary-btn{% endif %}" style="flex: 1; min-width: 140px; max-width: 200px; justify-content: center; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.8rem; border-radius: 12px; font-weight: bold; border: {% if tab == 'friends' %}1px solid rgba(255,255,255,0.15){% else %}none{% endif %};">
+                <i class="fas fa-globe"></i> Buscar Jugadores
+            </a>
+            <a href="?tab=friends&q={{ query }}" class="{% if tab == 'friends' %}profile-primary-btn{% else %}profile-secondary-btn{% endif %}" style="flex: 1; min-width: 140px; max-width: 200px; justify-content: center; display: flex; align-items: center; gap: 0.5rem; text-decoration: none; padding: 0.8rem; border-radius: 12px; font-weight: bold; border: {% if tab != 'friends' %}1px solid rgba(255,255,255,0.15){% else %}none{% endif %};">
+                <i class="fas fa-user-friends"></i> Amigos
+            </a>
+        </div>
 
         <form method="GET" action="{% url 'login:search_players' %}" style="display: flex; gap: 15px; margin-bottom: 2rem; align-items: stretch; justify-content: center;">
-            <input type="text" name="q" value="{{ query }}" placeholder="Nombre del jugador..." 
+            <input type="hidden" name="tab" value="{{ tab }}">
+            <input type="text" name="q" value="{{ query }}" placeholder="Nombre del {% if tab == 'friends' %}amigo{% else %}jugador{% endif %}..." 
                    class="form-control" style="flex: 1; max-width: 600px; padding: 0.8rem 1.5rem; height: 50px; border-radius: 12px; border: 2px solid rgba(0, 255, 255, 0.4); background: rgba(0,0,0,0.5); color: #fff; font-size: 1.1rem; line-height: normal; transition: border-color 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); margin: 0;">
             <button type="submit" class="profile-primary-btn" style="height: 50px; width: auto; flex: none; padding: 0 2rem; font-size: 1rem; display: flex; align-items: center; justify-content: center; border-radius: 12px; white-space: nowrap; margin: 0;">
                 <i class="fas fa-search" style="margin-right: 8px;"></i> Buscar
@@ -20,13 +50,12 @@
         </form>
 
         <div class="search-results-list" style="display: flex; flex-direction: column; gap: 1rem;">
-            {% if query %}
-                {% if results %}
-                    {% for p_user in results %}
+            {% if results %}
+                {% for p_user in results %}
                         <div class="player-result-item" style="display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s;">
                             <div style="display: flex; align-items: center; gap: 1rem;">
-                                {% if p_user.profile.avatar %}
-                                    <img src="{{ p_user.profile.avatar.url }}" alt="Avatar de {{ p_user.username }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-cyan);">
+                                {% if p_user.avatar_url %}
+                                    <img src="{{ p_user.avatar_url }}" alt="Avatar de {{ p_user.username }}" style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--neon-cyan);">
                                 {% else %}
                                     <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; border: 2px solid var(--neon-cyan);">
                                         <i class="fas fa-user"></i>
@@ -42,16 +71,20 @@
                             <a href="{% url 'login:player_profile' p_user.username %}" class="profile-secondary-btn" style="text-decoration: none; font-size: 0.9rem;">Ver Perfil</a>
                         </div>
                     {% endfor %}
-                {% else %}
-                    <div style="text-align: center; padding: 2rem; color: #aaa;">
-                        <i class="fas fa-ghost" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                        <p>No se encontraron jugadores con el nombre "{{ query }}".</p>
-                    </div>
-                {% endif %}
+            {% elif query %}
+                <div style="text-align: center; padding: 2rem; color: #aaa;">
+                    <i class="fas fa-ghost" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>No se encontraron {% if tab == 'friends' %}amigos{% else %}jugadores{% endif %} con el nombre "{{ query }}".</p>
+                </div>
+            {% elif tab == 'friends' %}
+                <div style="text-align: center; padding: 2rem; color: #aaa;">
+                    <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>Aún no tienes amigos. ¡Busca jugadores y añádelos!</p>
+                </div>
             {% else %}
                 <div style="text-align: center; padding: 2rem; color: #aaa;">
                     <i class="fas fa-keyboard" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <p>Ingresa un nombre para empezar a buscar.</p>
+                    <p>Ingresa un nombre para empezar a buscar jugadores.</p>
                 </div>
             {% endif %}
         </div>

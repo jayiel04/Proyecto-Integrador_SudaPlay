@@ -52,6 +52,12 @@
     padding: 40px 20px;
 }
 
+.page-stack-container-left {
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: clamp(20px, 4vw, 60px);
+}
+
 .welcome-header-left {
     text-align: left;
     width: 100%;
@@ -91,7 +97,7 @@
         inset 0 0 70px rgba(255, 255, 255, 0.03);
     overflow: hidden;
     position: relative;
-    
+
 }
 
 .catalogo-panel::before {
@@ -118,7 +124,7 @@
     pointer-events: none;
 }
 
-.catalogo-panel > * {
+.catalogo-panel>* {
     position: relative;
     z-index: 1;
 }
@@ -282,19 +288,16 @@
     letter-spacing: 0.5em;
     text-transform: uppercase;
     font-weight: 700;
-    color: transparent;
-    background: linear-gradient(90deg, #96f2ff 0%, #33c7ff 45%, #0c6eff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #ccffff;
     text-shadow:
-        0 0 14px rgba(14, 184, 255, 0.9),
-        0 0 24px rgba(2, 95, 255, 0.55);
-    border: 1px solid rgba(144, 248, 255, 0.55);
-    padding: 0.3rem 0.85rem;
+        0 0 10px rgba(0, 238, 255, 0.8),
+        0 0 20px rgba(0, 204, 255, 0.5);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    padding: 0.5rem 1.2rem;
     border-radius: 999px;
-    background-color: rgba(1, 12, 20, 0.55);
-    mix-blend-mode: screen;
+    background: linear-gradient(135deg, rgba(4, 30, 36, 0.8), rgba(6, 40, 50, 0.8));
+    box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.1), 0 5px 15px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
     animation: subtitlePulse 2.1s ease-in-out infinite alternate;
     display: inline-flex;
     gap: 0.35rem;
@@ -343,7 +346,8 @@
     padding: 6px 10px;
 }
 
-.login-card.full-width-card {
+.login-card.full-width-card,
+.info-card.full-width-card {
     max-width: 900px;
     width: 95%;
     max-height: 75vh;
@@ -385,6 +389,7 @@
     width: auto;
     margin: 0;
     padding: 10px 16px;
+    text-decoration: none;
 }
 
 .badge-pending {
@@ -762,6 +767,7 @@
     filter: brightness(1.12);
     box-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
 }
+
 /* Search bar refresh */
 .navbar-catalog-search {
     width: min(430px, 52vw);

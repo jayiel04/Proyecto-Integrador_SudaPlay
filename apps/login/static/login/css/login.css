@@ -30,8 +30,8 @@
 }
 
 .auth-page-layout .login-card {
-    flex: 0 1 500px;
-    max-width: 500px;
+    flex: 0 1 540px;
+    max-width: 540px;
 }
 
 .body-auth-page .auth-page-layout {
@@ -61,10 +61,43 @@
     flex-direction: column;
 }
 
+/* ── Centro de pantalla (Para password reset y otras páginas que lo requieran) ── */
+.body-auth-page .center-page-layout {
+    margin: auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Override específico para finalizar-registro centrado */
+.body-auth-page .finalizar-registro-page.center-page-layout {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 !important;
+    margin: 0 !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+
+.body-auth-page .center-page-layout .login-card {
+    margin: 0 auto !important;
+    flex: none !important;
+    width: min(560px, calc(100vw - 24px)) !important;
+}
+
+
 /* Evita que el branding lateral intercepte clicks sobre inputs del login/registro. */
 .body-auth-page .body-left-brand,
 .body-auth-page .body-left-brand * {
     pointer-events: none;
+}
+
+/* Oculta el branding lateral en la página de Finalizar Registro */
+.body-auth-page .finalizar-registro-page~.body-left-brand,
+.body-auth-page:has(.finalizar-registro-page) .body-left-brand {
+    display: none !important;
 }
 
 .body-auth-page .auth-page-layout .login-card {
@@ -86,11 +119,11 @@
 /* ── Fluid scaling proporcional a la altura del viewport (dvh) ── */
 
 .body-auth-page .login-card {
-    width: min(500px, calc(100vw - 24px));
+    width: min(560px, calc(100vw - 24px));
     max-width: 100%;
     box-sizing: border-box;
-    /* padding escala suavemente: mínimo 20px, máximo 30px */
-    padding: clamp(20px, 3dvh, 30px) clamp(20px, 3vw, 34px);
+    /* Relleno aumentado significativamente para un look más premium y espacioso */
+    padding: clamp(40px, 6dvh, 70px) clamp(36px, 6vw, 66px);
 }
 
 .body-auth-page .login-header {
@@ -99,29 +132,29 @@
 }
 
 .body-auth-page .login-header h1 {
-    /* fuente: rango estrecho 2rem-2.45rem */
-    font-size: clamp(2rem, 4.5dvh, 2.45rem);
-    margin-bottom: clamp(2px, 0.5dvh, 6px);
+    /* fuente: aumentado para ser más prominente */
+    font-size: clamp(2.3rem, 5.5dvh, 3rem);
+    margin-bottom: clamp(4px, 1dvh, 10px);
 }
 
 .body-auth-page label {
-    /* fuente: rango estrecho 0.92rem-1.05rem */
-    font-size: clamp(0.92rem, 1.9dvh, 1.05rem);
+    /* fuente: aumentado para legibilidad */
+    font-size: clamp(1.1rem, 2.2dvh, 1.3rem);
 }
 
 .body-auth-page input[type="text"],
 .body-auth-page input[type="password"],
 .body-auth-page input[type="email"] {
-    /* fuente: rango estrecho 0.98rem-1.1rem */
-    font-size: clamp(0.98rem, 2dvh, 1.1rem);
-    /* padding vertical: rango estrecho 9px-12px */
-    padding-top: clamp(9px, 1.2dvh, 12px);
-    padding-bottom: clamp(9px, 1.2dvh, 12px);
+    /* fuente: aumentado */
+    font-size: clamp(1.1rem, 2.3dvh, 1.3rem);
+    /* padding vertical: aumentado */
+    padding-top: clamp(12px, 1.5dvh, 16px);
+    padding-bottom: clamp(12px, 1.5dvh, 16px);
 }
 
 .body-auth-page .form-group {
-    /* margen entre campos: rango estrecho 8px-10px */
-    margin-bottom: clamp(8px, 1.1dvh, 10px);
+    /* margen aumentado */
+    margin-bottom: clamp(12px, 1.5dvh, 16px);
 }
 
 .body-auth-page .remember-forgot {
@@ -148,11 +181,17 @@
 }
 
 .body-auth-page .btn-login {
-    margin-top: clamp(5px, 0.8dvh, 6px);
-    /* botón principal: rango estrecho 10px-12px */
-    padding: clamp(10px, 1.4dvh, 12px);
-    font-size: clamp(1rem, 2.1dvh, 1.16rem);
-    margin-top: 50px;
+    margin-top: clamp(10px, 1.2dvh, 15px);
+    /* botón principal: aumentado */
+    padding: clamp(14px, 1.8dvh, 18px);
+    font-size: clamp(1.2rem, 2.5dvh, 1.4rem);
+    margin-top: 40px;
+}
+
+.body-auth-page .finalizar-registro-card .btn-login {
+    margin-top: clamp(10px, 1.5dvh, 20px);
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
 
 .body-auth-page .signup-link {
@@ -162,7 +201,8 @@
 }
 
 /* ── Ocultar logo dentro de la tarjeta en pantallas bajas (no escala, es binario) ── */
-@media (max-height: 870px) {
+/* Logo visible en la tarjeta siempre que no sea extremadamente pequeña */
+@media (max-height: 600px) {
     .body-auth-page .login-card-logo {
         display: none;
     }
@@ -208,8 +248,10 @@
     }
 
     /* Ocultar logo dentro de la tarjeta en móvil */
+    /* Logo visible en móvil si hay espacio */
     .body-auth-page .login-card-logo {
-        display: none;
+        display: block;
+        margin: 0 auto 15px;
     }
 }
 
@@ -222,15 +264,15 @@
         max-height: none;
         flex: 1;
         /* El navbar fijo mide ~112px en pantallas muy estrechas;
-           usamos 120px para cubrir el navbar + su sombra/glow. */
-        padding: 120px 20px 16px;
+           usamos 115px para cubrir el navbar + su sombra/glow, reduciendo el exceso. */
+        padding: 115px 20px 8px;
     }
 }
 
 @media (max-width: 600px) {
     .body-auth-page .login-header h1 {
         font-size: 2.05rem;
-    
+
     }
 
     .body-auth-page .btn-login {
@@ -254,14 +296,17 @@
 /* Login only: ensure full form content fits visibly inside the card. */
 .body-auth-page .login-page-layout {
     justify-content: center;
-    padding-block: clamp(10px, 2.2dvh, 24px);
+    padding-block: clamp(8px, 1.5dvh, 16px);
 }
 
-.body-auth-page .auth-page-layout .login-page-card {
-    justify-content: flex-start;
+.body-auth-page .auth-page-layout .login-page-card,
+.body-auth-page .auth-page-layout .register-card,
+.body-auth-page .auth-page-layout .finalizar-registro-card,
+.body-auth-page .auth-page-layout .password-reset-card {
+    justify-content: center;
     overflow: hidden;
-    max-height: calc(100dvh - var(--navbar-height) - 24px);
-    padding: clamp(16px, 2.2dvh, 24px) clamp(18px, 2.5vw, 30px);
+    max-height: calc(100dvh - var(--navbar-height) - 16px);
+    padding: clamp(12px, 1.8dvh, 20px) clamp(18px, 2.5vw, 30px);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .login-header {
@@ -276,8 +321,8 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .login-header h1 {
-    font-size: clamp(1.7rem, 3.6dvh, 2.2rem);
-    margin-bottom: clamp(2px, 0.4dvh, 5px);
+    font-size: clamp(2.3rem, 5.5dvh, 4.5rem);
+    margin-bottom: clamp(6px, 1.8dvh, 18px);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .login-form {
@@ -291,20 +336,21 @@
 .body-auth-page .auth-page-layout .login-page-card input[type="text"],
 .body-auth-page .auth-page-layout .login-page-card input[type="password"],
 .body-auth-page .auth-page-layout .login-page-card input[type="email"] {
-    padding-top: clamp(8px, 1dvh, 10px);
-    padding-bottom: clamp(8px, 1dvh, 10px);
-    font-size: clamp(0.95rem, 1.7dvh, 1.04rem);
+    padding-top: clamp(14px, 2.2dvh, 20px);
+    padding-bottom: clamp(14px, 2.2dvh, 20px);
+    font-size: clamp(1.05rem, 2.2dvh, 1.3rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .remember-forgot {
-    margin: clamp(6px, 0.9dvh, 10px) 0;
-    font-size: clamp(0.85rem, 1.55dvh, 0.95rem);
+    margin: clamp(8px, 1.2dvh, 14px) 0;
+    font-size: clamp(1.05rem, 2dvh, 1.2rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .btn-login {
-    margin-top: clamp(5px, 0.75dvh, 8px);
-    padding-top: clamp(9px, 1.05dvh, 11px);
-    padding-bottom: clamp(9px, 1.05dvh, 11px);
+    margin-top: clamp(12px, 2.5dvh, 28px);
+    padding-top: clamp(13px, 2.6dvh, 26px);
+    padding-bottom: clamp(13px, 2.6dvh, 26px);
+    font-size: clamp(1rem, 2.2dvh, 1.6rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .divider {
@@ -312,7 +358,7 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .divider span {
-    font-size: clamp(0.72rem, 1.3dvh, 0.82rem);
+    font-size: clamp(0.95rem, 1.6dvh, 1.05rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .social-login {
@@ -320,14 +366,14 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .google-btn-icon {
-    width: clamp(46px, 5.2dvh, 56px);
-    height: clamp(46px, 5.2dvh, 56px);
-    font-size: clamp(1.35rem, 2.4dvh, 1.65rem);
+    width: clamp(64px, 8.5dvh, 110px);
+    height: clamp(64px, 8.5dvh, 110px);
+    font-size: clamp(1.9rem, 4.5dvh, 4rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .signup-link {
-    margin-top: clamp(4px, 0.7dvh, 8px);
-    font-size: clamp(0.9rem, 1.5dvh, 1rem);
+    margin-top: clamp(12px, 1.8dvh, 20px);
+    font-size: clamp(1.15rem, 2.15dvh, 1.35rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .signup-link a,
@@ -339,4 +385,27 @@
 .body-auth-page .auth-page-layout .register-card {
     max-height: none;
     overflow: hidden;
+}
+
+@media (min-height: 782px) {
+
+    .body-auth-page .auth-page-layout .login-page-card,
+    .body-auth-page .auth-page-layout .register-card,
+    .body-auth-page .auth-page-layout .finalizar-registro-card,
+    .body-auth-page .auth-page-layout .password-reset-card {
+        padding: clamp(12px, 2dvh, 24px) clamp(18px, 2vw, 24px);
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card input[type="text"],
+    .body-auth-page .auth-page-layout .login-page-card input[type="password"],
+    .body-auth-page .auth-page-layout .login-page-card input[type="email"] {
+        padding-top: clamp(12px, 1.8dvh, 16px);
+        padding-bottom: clamp(12px, 1.8dvh, 16px);
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .btn-login {
+        padding-top: clamp(12px, 1.8dvh, 16px);
+        padding-bottom: clamp(12px, 1.8dvh, 16px);
+        margin-top: clamp(12px, 2dvh, 20px);
+    }
 }
