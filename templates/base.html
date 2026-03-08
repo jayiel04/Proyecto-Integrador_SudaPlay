@@ -76,13 +76,14 @@
     </aside>
     {% endif %}
 
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
+    {% endif %}
     <header class="site-header">
         <nav
             class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} navbar-auth{% endif %}">
             <div class="navbar-container">
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
-            <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
-            {% endif %}
+
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
                 <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/SudaPlay.png' %}" alt="Logo de SudaPlay"
