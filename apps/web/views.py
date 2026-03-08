@@ -21,7 +21,7 @@ from decimal import Decimal, ROUND_HALF_UP
 
 from .forms import GameForm
 from .models import Game, GameRating
-from .services import process_uploaded_web_build
+from .services import process_uploaded_web_build_async
 
 
 class HomeView(TemplateView):
@@ -36,7 +36,13 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['user'] = self.request.user
         context['username'] = self.request.user.username
-        context["games"] = Game.objects.filter(is_approved=True)
+        context["games"] = (
+            Game.objects
+            .filter(is_approved=True)
+            .select_related('uploaded_by')
+            .only('pk', 'title', 'short_description', 'cover_image',
+                  'downloads', 'rating', 'is_featured', 'uploaded_by')
+        )
         context["show_post_login_welcome"] = self.request.session.pop("show_post_login_welcome", False)
         return context
 
@@ -70,20 +76,41 @@ class GameCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.uploaded_by = self.request.user
-        # Publicacion inmediata para que otros usuarios puedan jugar al instante.
         form.instance.is_approved = True
-        response = super().form_valid(form)
 
-        if self.object.game_file:
-            ok, error_message = process_uploaded_web_build(self.object)
-            if not ok:
-                self.object.delete()
-                messages.error(self.request, f"No se pudo publicar el juego: {error_message}")
-                return redirect("web:game_create")
+        # Si hay un ZIP, intercepción: guardarlo localmente (instantáneo)
+        # en vez de subir a Supabase S3 durante el request (10+ seg).
+        if form.cleaned_data.get("game_file"):
+            from .storage_backends import GameTempFilesStorage
+            from django.core.files.storage import default_storage
+            uploaded_file = form.cleaned_data["game_file"]
+            temp_storage = GameTempFilesStorage()
+            temp_name = temp_storage.save(uploaded_file.name, uploaded_file)
+            temp_path = temp_storage.path(temp_name)
+            # Guardar el juego SIN el game_file por ahora (se asignará en el worker)
+            form.instance.game_file = None
+            self.object = form.save()
+        else:
+            temp_path = None
+            self.object = form.save()
 
-        messages.success(self.request, "Juego publicado y disponible para jugar.")
+        # Marcar como en procesamiento si la migración ya fue aplicada
+        if temp_path:
+            try:
+                self.object.__class__.objects.filter(pk=self.object.pk).update(is_processing=True)
+            except Exception:
+                pass
 
-        return response
+        if temp_path:
+            process_uploaded_web_build_async(self.object.pk, temp_path=temp_path)
+            messages.success(
+                self.request,
+                "¡Juego recibido! Estamos procesando el archivo ZIP, en unos momentos estará listo para jugar."
+            )
+        else:
+            messages.success(self.request, "Juego publicado y disponible.")
+
+        return redirect("web:game_detail", self.object.pk)
 
 
 class MyGamesView(LoginRequiredMixin, TemplateView):

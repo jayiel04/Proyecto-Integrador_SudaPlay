@@ -2,8 +2,6 @@ from django.conf import settings
 from django.core.validators import FileExtensionValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from .storage_backends import GameCoversStorage, GameFilesStorage
 
@@ -54,6 +52,11 @@ class Game(models.Model):
     rating_votes = models.PositiveIntegerField(default=0, verbose_name="Total de votos")
     is_web_playable = models.BooleanField(default=False, verbose_name="Jugable en web")
     web_build_path = models.CharField(max_length=500, blank=True, default="", verbose_name="Ruta web del build")
+    is_processing = models.BooleanField(
+        default=False,
+        verbose_name="En procesamiento",
+        help_text="True mientras el ZIP se está extrayendo en segundo plano.",
+    )
     processing_error = models.CharField(
         max_length=255,
         blank=True,
@@ -105,21 +108,4 @@ class GameRating(models.Model):
         return f"{self.user_id}:{self.game_id}={self.value}"
 
 
-# ---------------------------------------------------------------------------
-# Signal: post_save en Game
-# ---------------------------------------------------------------------------
-@receiver(post_save, sender=Game)
-def process_game_zip(sender, instance, created, **kwargs):
-    """
-    Se dispara después de guardar un Game.
-    Si es nuevo y tiene game_file, actualiza is_web_playable y web_build_path.
 
-    Para lógica avanzada de descompresión (extraer index.html del ZIP en
-    Supabase y servir los archivos), agrega una tarea Celery aquí.
-    """
-    if created and instance.game_file:
-        # Usamos update() para evitar recursión infinita con el signal
-        Game.objects.filter(pk=instance.pk).update(
-            is_web_playable=True,
-            web_build_path=instance.game_file.url,
-        )

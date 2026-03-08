@@ -4,12 +4,87 @@ Procesamiento de archivos ZIP subidos como juegos web.
 Soporta tanto almacenamiento LOCAL (media/) como almacenamiento S3/Supabase.
 """
 import io
+import logging
 import mimetypes
+import threading
 import zipfile
 import requests
 
 from django.conf import settings
 from django.core.files.base import ContentFile
+
+logger = logging.getLogger(__name__)
+
+
+def process_uploaded_web_build_async(game_id: int, temp_path: str | None = None) -> None:
+    """
+    Lanza el procesamiento del ZIP en un hilo de fondo.
+
+    Si se proporciona `temp_path`, el ZIP fue guardado localmente (para evitar
+    bloquear el request HTTP). El worker lo sube a Supabase S3 y lo procesa.
+    Si `temp_path` es None, asume que game.game_file ya apunta a S3.
+
+    Django responde al usuario en < 1 segundo; todo el trabajo pesado
+    (subida a S3 + extracción + subida de archivos) ocurre aquí.
+    """
+    def _worker():
+        import os
+        from .models import Game
+        from django.core.files.base import File
+
+        try:
+            game = Game.objects.get(pk=game_id)
+        except Game.DoesNotExist:
+            logger.error("process_async: Game %s no encontrado.", game_id)
+            return
+
+        # --- Paso 1: subir el ZIP a Supabase S3 si viene de almacenamiento temporal ---
+        if temp_path and os.path.exists(temp_path):
+            try:
+                from .storage_backends import GameFilesStorage
+                s3_storage = GameFilesStorage()
+                filename = os.path.basename(temp_path)
+                with open(temp_path, "rb") as f:
+                    s3_name = s3_storage.save(filename, File(f))
+                # Actualizar el campo game_file apuntando al objeto en S3
+                Game.objects.filter(pk=game_id).update(game_file=s3_name)
+                game.refresh_from_db()
+            except Exception as exc:
+                logger.error("process_async Game %s: error subiendo ZIP a S3: %s", game_id, exc)
+                try:
+                    Game.objects.filter(pk=game_id).update(
+                        is_processing=False,
+                        processing_error=f"Error al subir archivo: {str(exc)[:200]}",
+                        is_approved=False,
+                    )
+                except Exception:
+                    pass
+                return
+            finally:
+                # Limpiar el archivo temporal local
+                try:
+                    os.remove(temp_path)
+                except OSError:
+                    pass
+
+        # --- Paso 2: extraer el ZIP y subir cada archivo (ya existente en S3) ---
+        ok, error_message = process_uploaded_web_build(game)
+
+        try:
+            if ok:
+                Game.objects.filter(pk=game_id).update(is_processing=False)
+            else:
+                Game.objects.filter(pk=game_id).update(
+                    is_processing=False,
+                    processing_error=error_message[:255],
+                    is_approved=False,
+                )
+                logger.error("process_async Game %s falló: %s", game_id, error_message)
+        except Exception:
+            pass  # La migración puede no estar aplicada aún
+
+    thread = threading.Thread(target=_worker, daemon=True, name=f"zip-{game_id}")
+    thread.start()
 
 
 def _find_index_html_in_zip(zip_file: zipfile.ZipFile) -> str | None:

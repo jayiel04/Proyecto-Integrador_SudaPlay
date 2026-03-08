@@ -878,12 +878,11 @@
     top: calc(100% + 8px);
     right: 0;
     min-width: 180px;
-    background: rgba(7, 10, 32, 0.96);
+    background: rgb(7, 10, 32);
     border: 1px solid rgba(70, 123, 121, 0.35);
     border-radius: 10px;
     padding: 0.35rem;
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
-    backdrop-filter: blur(10px);
     opacity: 0;
     visibility: hidden;
     transform: translateY(-6px);
@@ -903,7 +902,7 @@
 }
 
 .profile-dropdown-card {
-    background: rgba(4, 9, 30, 0.85);
+    background: rgb(4, 9, 30);
     border-radius: 28px;
     padding: 26px;
     display: flex;
@@ -913,7 +912,6 @@
     box-shadow:
         0 24px 60px rgba(0, 0, 0, 0.7),
         inset 0 0 40px rgba(71, 170, 255, 0.16);
-    backdrop-filter: blur(12px);
 }
 
 .profile-dropdown-hero {
@@ -1363,9 +1361,10 @@
     padding: 0;
     border: none;
     border-radius: 0;
-    font-size: clamp(1.58rem, 1.2vw, 2.08rem );
+    font-size: clamp(1.58rem, 1.2vw, 2.08rem);
 
 }
+
 .body-left-brand span {
     animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
 }

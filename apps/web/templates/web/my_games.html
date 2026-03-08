@@ -41,7 +41,9 @@
                 {% if game.is_featured %}
                 <span class="badge badge-hot">Destacado</span>
                 {% endif %}
-                {% if game.is_approved %}
+                {% if game.is_processing %}
+                <span class="badge badge-processing">Procesando…</span>
+                {% elif game.is_approved %}
                 <span class="badge badge-new">Publicado</span>
                 {% else %}
                 <span class="badge badge-pending">Pendiente</span>

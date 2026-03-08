@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from storages.backends.s3boto3 import S3Boto3Storage
 
 
@@ -38,3 +39,16 @@ class GameCoversStorage(S3Boto3Storage):
 
     def url(self, name):
         return _supabase_public_url(self.location, name)
+
+
+class GameTempFilesStorage(FileSystemStorage):
+    """
+    Almacenamiento temporal LOCAL para los ZIPs recién subidos.
+    El worker asíncrono sube el archivo a Supabase S3 en segundo plano,
+    evitando que form.save() bloquee el request HTTP durante 10+ segundos.
+    """
+    def __init__(self):
+        import os
+        temp_root = os.path.join(settings.MEDIA_ROOT, 'games', 'temp')
+        os.makedirs(temp_root, exist_ok=True)
+        super().__init__(location=temp_root, base_url=None)

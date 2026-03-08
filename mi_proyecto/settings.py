@@ -112,7 +112,8 @@ DATABASES = {
         'USER': 'postgres.uqontjetlobocgmfoojd',
         'PASSWORD': 'Sudaplay2026',
         'HOST':'aws-1-us-east-1.pooler.supabase.com',
-        'PORT':'6543',
+        'PORT':'5432',
+        'CONN_MAX_AGE': 60,   # Reutiliza conexiones hasta 60s — evita abrir/cerrar por cada request
         'OPTIONS': {
             'sslmode': 'require',
     },

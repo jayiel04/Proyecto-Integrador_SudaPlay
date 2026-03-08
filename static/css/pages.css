@@ -50,7 +50,7 @@
     animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
     position: relative;
     overflow: hidden;
-    
+
 }
 
 .login-card::before,
@@ -304,7 +304,7 @@ input:focus {
 .remember-forgot a {
     color: var(--neon-green);
     text-decoration: none;
-    
+
 }
 
 .remember-forgot a:hover {
@@ -734,6 +734,88 @@ input:focus {
     color: #fff;
     box-shadow: 0 0 12px rgba(255, 62, 165, 0.35);
 }
+
+.badge-pending {
+    background: rgba(255, 180, 0, 0.18);
+    color: #ffb400;
+    border: 1px solid rgba(255, 180, 0, 0.45);
+}
+
+.badge-processing {
+    background: rgba(57, 231, 255, 0.15);
+    color: #39e7ff;
+    border: 1px solid rgba(57, 231, 255, 0.45);
+    animation: processingPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes processingPulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.55;
+    }
+}
+
+/* ===== PROCESSING BANNER ===== */
+.processing-banner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    background: rgba(57, 231, 255, 0.08);
+    border: 1px solid rgba(57, 231, 255, 0.35);
+    box-shadow: 0 0 18px rgba(57, 231, 255, 0.12);
+    color: #c8f7ff;
+    font-size: 0.9rem;
+    line-height: 1.45;
+}
+
+.processing-banner strong {
+    display: block;
+    font-size: 1rem;
+    color: #39e7ff;
+    text-shadow: 0 0 8px rgba(57, 231, 255, 0.6);
+}
+
+.processing-banner p {
+    margin: 4px 0 0;
+    color: #9adcef;
+}
+
+.processing-banner-error {
+    background: rgba(255, 71, 87, 0.08);
+    border-color: rgba(255, 71, 87, 0.35);
+    box-shadow: 0 0 18px rgba(255, 71, 87, 0.12);
+    color: #ffc8cc;
+}
+
+.processing-banner-error strong {
+    color: #ff6b7a;
+    text-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+}
+
+.processing-spinner {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: 3px solid rgba(57, 231, 255, 0.25);
+    border-top-color: #39e7ff;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 @keyframes cyberFlicker {
 

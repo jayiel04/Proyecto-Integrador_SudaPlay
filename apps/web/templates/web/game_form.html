@@ -39,10 +39,171 @@
             {% endfor %}
 
             <div class="game-upload-actions">
-                <button type="submit" class="btn-login login-main-submit game-upload-submit-btn">Guardar juego</button>
+                <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit game-upload-submit-btn">Guardar juego</button>
                 <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login game-upload-cancel-link">Cancelar</a>
             </div>
         </form>
     </div>
 </div>
+
+<!-- ===== MODAL TÉRMINOS Y CONDICIONES ===== -->
+<div class="tc-modal-overlay" id="tc-modal-overlay" aria-modal="true" role="dialog" aria-labelledby="tc-modal-title" hidden>
+    <div class="tc-modal">
+        <div class="tc-modal-header">
+            <span class="tc-modal-icon">📋</span>
+            <h2 id="tc-modal-title">Términos y Condiciones para Publicación de Juegos</h2>
+        </div>
+
+        <div class="tc-modal-body" id="tc-modal-body">
+            <section>
+                <h3>1. Aceptación de los términos</h3>
+                <p>Al subir un juego a esta plataforma, el usuario declara haber leído, entendido y aceptado los presentes Términos y Condiciones.</p>
+            </section>
+
+            <section>
+                <h3>2. Responsabilidad del contenido</h3>
+                <p>El usuario declara y garantiza que:</p>
+                <ul>
+                    <li>Es el autor del juego o tiene los derechos legales necesarios para publicarlo.</li>
+                    <li>El contenido no infringe derechos de autor, marcas registradas u otros derechos de terceros.</li>
+                    <li>No incluye material ilegal, ofensivo, difamatorio o que promueva actividades ilícitas.</li>
+                    <li>Posee los derechos sobre música, imágenes, código, modelos 3D, efectos de sonido y cualquier otro recurso utilizado.</li>
+                </ul>
+                <p>La responsabilidad legal del contenido recae exclusivamente en el usuario que lo publica.</p>
+            </section>
+
+            <section>
+                <h3>3. Contenido prohibido</h3>
+                <p>Está estrictamente prohibido subir juegos que:</p>
+                <ul>
+                    <li>Utilicen personajes, marcas o propiedades intelectuales protegidas sin autorización.</li>
+                    <li>Contengan software malicioso (virus, malware, scripts dañinos).</li>
+                    <li>Promuevan odio, violencia extrema o actividades ilegales.</li>
+                    <li>Incluyan contenido pornográfico ilegal o no autorizado.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>4. Licencia otorgada a la plataforma</h3>
+                <p>Al subir un juego, el usuario concede a la plataforma una licencia no exclusiva para:</p>
+                <ul>
+                    <li>Almacenar el archivo.</li>
+                    <li>Mostrarlo públicamente dentro del sitio.</li>
+                    <li>Permitir su descarga o ejecución en línea.</li>
+                    <li>Usar imágenes o descripciones con fines promocionales dentro de la plataforma.</li>
+                </ul>
+                <p>La propiedad del juego sigue perteneciendo al usuario.</p>
+            </section>
+
+            <section>
+                <h3>5. Reportes de infracción (Copyright / DMCA)</h3>
+                <p>Si un tercero considera que un juego infringe sus derechos, puede enviar una notificación a:</p>
+                <p>📧 <a href="mailto:correo@tusitio.com">correo@tusitio.com</a></p>
+                <p>La plataforma podrá:</p>
+                <ul>
+                    <li>Deshabilitar temporalmente el contenido.</li>
+                    <li>Solicitar información adicional al usuario que lo publicó.</li>
+                    <li>Eliminar permanentemente el juego si se confirma la infracción.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>6. Eliminación de contenido</h3>
+                <p>La plataforma se reserva el derecho de eliminar cualquier juego que:</p>
+                <ul>
+                    <li>Infrinja estos términos.</li>
+                    <li>Genere riesgos legales.</li>
+                    <li>Afecte el funcionamiento o reputación del sitio.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>7. Limitación de responsabilidad</h3>
+                <p>La plataforma actúa únicamente como intermediaria y no revisa previamente todos los juegos subidos. No se hace responsable por:</p>
+                <ul>
+                    <li>Daños derivados del uso de los juegos.</li>
+                    <li>Contenido creado por los usuarios.</li>
+                    <li>Pérdida de datos o archivos.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>8. Suspensión de cuentas</h3>
+                <p>El incumplimiento de estos términos podrá resultar en:</p>
+                <ul>
+                    <li>Eliminación del contenido.</li>
+                    <li>Suspensión temporal.</li>
+                    <li>Eliminación permanente de la cuenta.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>9. Modificaciones</h3>
+                <p>La plataforma puede modificar estos términos en cualquier momento. Los cambios entrarán en vigor al ser publicados.</p>
+            </section>
+        </div>
+
+        <div class="tc-modal-footer">
+            <label class="tc-accept-label" for="tc-accept-checkbox">
+                <input type="checkbox" id="tc-accept-checkbox">
+                <span>He leído y acepto los Términos y Condiciones</span>
+            </label>
+            <div class="tc-modal-actions">
+                <button type="button" id="tc-cancel-btn" class="tc-btn tc-btn-cancel">Cancelar</button>
+                <button type="button" id="tc-confirm-btn" class="tc-btn tc-btn-confirm" disabled>Aceptar y publicar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const overlay   = document.getElementById('tc-modal-overlay');
+    const openBtn   = document.getElementById('open-tc-modal-btn');
+    const cancelBtn = document.getElementById('tc-cancel-btn');
+    const confirmBtn= document.getElementById('tc-confirm-btn');
+    const checkbox  = document.getElementById('tc-accept-checkbox');
+    const form      = document.getElementById('game-upload-form');
+
+    function openModal() {
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        checkbox.checked = false;
+        confirmBtn.disabled = true;
+    }
+
+    function closeModal() {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close on backdrop click
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    // Enable/disable confirm button based on checkbox
+    checkbox.addEventListener('change', function () {
+        confirmBtn.disabled = !this.checked;
+    });
+
+    // Submit the real form
+    confirmBtn.addEventListener('click', function () {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Publicando…';
+        openBtn.disabled = true;
+        openBtn.textContent = 'Publicando…';
+        closeModal();
+        form.submit();
+    });
+
+    // Keyboard accessibility: close on Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !overlay.hidden) closeModal();
+    });
+})();
+</script>
 {% endblock %}

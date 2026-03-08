@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Términos y Condiciones - SudaPlay Soporte{% endblock %}
+
+{% block extra_css %}
+<style>
+    .terms-container {
+        max-width: 820px;
+        margin: 2rem auto;
+        padding: 2.5rem;
+        background: rgba(2, 22, 22, 0.9);
+        border: 1px solid rgba(0, 128, 128, 0.28);
+        border-radius: 14px;
+        position: relative;
+    }
+
+    .terms-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .terms-header .terms-icon {
+        font-size: 2.8rem;
+        display: block;
+        margin-bottom: 0.6rem;
+    }
+
+    .terms-header h1 {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--accent-cyan);
+        text-shadow: 0 0 14px rgba(57, 231, 255, 0.45);
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .terms-header p {
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 0.88rem;
+    }
+
+    .terms-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(0, 128, 128, 0.22);
+    }
+
+    .terms-nav a {
+        font-size: 0.75rem;
+        color: var(--accent-cyan);
+        text-decoration: none;
+        padding: 4px 10px;
+        border: 1px solid rgba(57, 231, 255, 0.25);
+        border-radius: 20px;
+        transition: background 0.2s, border-color 0.2s;
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .terms-nav a:hover {
+        background: rgba(57, 231, 255, 0.1);
+        border-color: var(--accent-cyan);
+    }
+
+    .terms-section {
+        margin-bottom: 2rem;
+        scroll-margin-top: 100px;
+    }
+
+    .terms-section h2 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.95rem;
+        color: var(--accent-cyan);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid rgba(0, 128, 128, 0.2);
+        letter-spacing: 0.04em;
+    }
+
+    .terms-section p {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.88rem;
+        line-height: 1.7;
+        margin-bottom: 0.6rem;
+    }
+
+    .terms-section ul {
+        padding-left: 1.4rem;
+        margin-bottom: 0.6rem;
+    }
+
+    .terms-section ul li {
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.88rem;
+        line-height: 1.7;
+        margin-bottom: 0.3rem;
+    }
+
+    .terms-section ul li::marker {
+        color: var(--accent-cyan);
+    }
+
+    .terms-section a {
+        color: var(--accent-cyan);
+        text-decoration: underline;
+    }
+
+    .terms-highlight {
+        background: rgba(57, 231, 255, 0.07);
+        border-left: 3px solid var(--accent-cyan);
+        padding: 0.8rem 1rem;
+        border-radius: 0 6px 6px 0;
+        margin-bottom: 0.75rem;
+    }
+
+    .terms-highlight p {
+        margin: 0;
+    }
+
+    .terms-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 2rem;
+        padding: 10px 20px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: #fff;
+        background: linear-gradient(135deg, var(--neon-cyan), var(--accent-violet));
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: box-shadow 0.2s, filter 0.2s;
+        box-shadow: 0 0 14px rgba(57, 231, 255, 0.3);
+    }
+
+    .terms-back-btn:hover {
+        filter: brightness(1.12);
+        box-shadow: 0 0 22px rgba(57, 231, 255, 0.55);
+    }
+
+    .terms-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+        width: 32px;
+        height: 32px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        font-size: 1.25rem;
+        font-weight: 700;
+        line-height: 1;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .terms-close:hover {
+        background: rgba(255, 255, 255, 0.18);
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+        .terms-container {
+            padding: 1.5rem 1rem;
+        }
+        .terms-header h1 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="terms-container">
+    <button type="button" class="terms-close" aria-label="Cerrar" id="terms-close-btn">×</button>
+
+    <div class="terms-header">
+        <span class="terms-icon">📋</span>
+        <h1>Términos y Condiciones para Publicación de Juegos</h1>
+        <p>Última actualización: 2026 · SudaPlay</p>
+    </div>
+
+    <!-- Índice de navegación rápida -->
+    <nav class="terms-nav" aria-label="Índice de secciones">
+        <a href="#tc-1">1. Aceptación</a>
+        <a href="#tc-2">2. Responsabilidad</a>
+        <a href="#tc-3">3. Contenido prohibido</a>
+        <a href="#tc-4">4. Licencia</a>
+        <a href="#tc-5">5. DMCA</a>
+        <a href="#tc-6">6. Eliminación</a>
+        <a href="#tc-7">7. Limitación</a>
+        <a href="#tc-8">8. Suspensión</a>
+        <a href="#tc-9">9. Modificaciones</a>
+    </nav>
+
+    <section class="terms-section" id="tc-1">
+        <h2>1. Aceptación de los términos</h2>
+        <div class="terms-highlight">
+            <p>Al subir un juego a esta plataforma, el usuario declara haber leído, entendido y aceptado los presentes Términos y Condiciones.</p>
+        </div>
+    </section>
+
+    <section class="terms-section" id="tc-2">
+        <h2>2. Responsabilidad del contenido</h2>
+        <p>El usuario declara y garantiza que:</p>
+        <ul>
+            <li>Es el autor del juego o tiene los derechos legales necesarios para publicarlo.</li>
+            <li>El contenido no infringe derechos de autor, marcas registradas u otros derechos de terceros.</li>
+            <li>No incluye material ilegal, ofensivo, difamatorio o que promueva actividades ilícitas.</li>
+            <li>Posee los derechos sobre música, imágenes, código, modelos 3D, efectos de sonido y cualquier otro recurso utilizado.</li>
+        </ul>
+        <p>La responsabilidad legal del contenido recae exclusivamente en el usuario que lo publica.</p>
+    </section>
+
+    <section class="terms-section" id="tc-3">
+        <h2>3. Contenido prohibido</h2>
+        <p>Está estrictamente prohibido subir juegos que:</p>
+        <ul>
+            <li>Utilicen personajes, marcas o propiedades intelectuales protegidas sin autorización.</li>
+            <li>Contengan software malicioso (virus, malware, scripts dañinos).</li>
+            <li>Promuevan odio, violencia extrema o actividades ilegales.</li>
+            <li>Incluyan contenido pornográfico ilegal o no autorizado.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section" id="tc-4">
+        <h2>4. Licencia otorgada a la plataforma</h2>
+        <p>Al subir un juego, el usuario concede a la plataforma una licencia <strong>no exclusiva</strong> para:</p>
+        <ul>
+            <li>Almacenar el archivo.</li>
+            <li>Mostrarlo públicamente dentro del sitio.</li>
+            <li>Permitir su descarga o ejecución en línea.</li>
+            <li>Usar imágenes o descripciones con fines promocionales dentro de la plataforma.</li>
+        </ul>
+        <p>La propiedad del juego sigue perteneciendo al usuario.</p>
+    </section>
+
+    <section class="terms-section" id="tc-5">
+        <h2>5. Reportes de infracción (Copyright / DMCA)</h2>
+        <p>Si un tercero considera que un juego infringe sus derechos, puede enviar una notificación a:</p>
+        <p>📧 <a href="mailto:correo@tusitio.com">correo@tusitio.com</a></p>
+        <p>La plataforma podrá:</p>
+        <ul>
+            <li>Deshabilitar temporalmente el contenido.</li>
+            <li>Solicitar información adicional al usuario que lo publicó.</li>
+            <li>Eliminar permanentemente el juego si se confirma la infracción.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section" id="tc-6">
+        <h2>6. Eliminación de contenido</h2>
+        <p>La plataforma se reserva el derecho de eliminar cualquier juego que:</p>
+        <ul>
+            <li>Infrinja estos términos.</li>
+            <li>Genere riesgos legales.</li>
+            <li>Afecte el funcionamiento o reputación del sitio.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section" id="tc-7">
+        <h2>7. Limitación de responsabilidad</h2>
+        <p>La plataforma actúa únicamente como intermediaria y no revisa previamente todos los juegos subidos. No se hace responsable por:</p>
+        <ul>
+            <li>Daños derivados del uso de los juegos.</li>
+            <li>Contenido creado por los usuarios.</li>
+            <li>Pérdida de datos o archivos.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section" id="tc-8">
+        <h2>8. Suspensión de cuentas</h2>
+        <p>El incumplimiento de estos términos podrá resultar en:</p>
+        <ul>
+            <li>Eliminación del contenido.</li>
+            <li>Suspensión temporal.</li>
+            <li>Eliminación permanente de la cuenta.</li>
+        </ul>
+    </section>
+
+    <section class="terms-section" id="tc-9">
+        <h2>9. Modificaciones</h2>
+        <p>La plataforma puede modificar estos términos en cualquier momento. Los cambios entrarán en vigor al ser publicados en esta página.</p>
+    </section>
+
+    <div>
+        <a href="{% url 'support:faq' %}" class="terms-back-btn">
+            <i class="fas fa-arrow-left"></i> Volver al Centro de Ayuda
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const closeBtn = document.getElementById('terms-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = "{% url 'support:faq' %}";
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

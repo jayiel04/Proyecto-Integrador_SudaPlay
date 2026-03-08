@@ -9,10 +9,9 @@
         max-width: 800px;
         margin: 2rem auto;
         padding: 2rem;
-        background: rgba(30,30,40,0.8);
+        background: rgba(30,30,40,0.97);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 12px;
-        backdrop-filter: blur(10px);
         position: relative;
     }
     .faq-header {
@@ -121,6 +120,18 @@
         {% empty %}
         <p style="text-align: center; color: #888;">No hay preguntas frecuentes disponibles en este momento.</p>
         {% endfor %}
+    </div>
+
+    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+        <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.75rem;">¿Quieres publicar un juego?</p>
+        <a href="{% url 'support:terms' %}"
+           style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px;
+                  font-family:'Orbitron',sans-serif; font-size:0.75rem; font-weight:700;
+                  color:#fff; background:linear-gradient(135deg,#008080,#8f6bff);
+                  border-radius:8px; text-decoration:none;
+                  box-shadow:0 0 14px rgba(57,231,255,0.3); transition:filter 0.2s;">
+            <i class="fas fa-file-contract"></i> Términos y Condiciones de publicación
+        </a>
     </div>
 </div>
 {% endblock %}

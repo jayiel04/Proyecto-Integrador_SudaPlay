@@ -21,7 +21,7 @@
                 </div>
                 {% endif %}
 
-                <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img">
+                <img src="{{ game.cover_image.url }}" alt="{{ game.title }}" class="game-img" loading="lazy" decoding="async">
 
                 <div class="game-info">
                     <div class="game-title">{{ game.title }}</div>
