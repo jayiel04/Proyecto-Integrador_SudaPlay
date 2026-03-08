@@ -2,8 +2,31 @@
 
 {% block title %}{{ game.title }} - Detalle{% endblock %}
 
+{% if game.is_processing %}
+<meta http-equiv="refresh" content="5">
+{% endif %}
+
 {% block content %}
 <div class="container game-detail-container">
+
+    {% if game.is_processing %}
+    <div class="processing-banner">
+        <span class="processing-spinner"></span>
+        <div>
+            <strong>⏳ Procesando tu juego…</strong>
+            <p>Estamos extrayendo y subiendo los archivos. Esta página se actualizará automáticamente en unos segundos.</p>
+        </div>
+    </div>
+    {% elif game.processing_error %}
+    <div class="processing-banner processing-banner-error">
+        <span>❌</span>
+        <div>
+            <strong>Error al procesar el juego</strong>
+            <p>{{ game.processing_error }}</p>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="login-card game-detail-card">
         <div class="game-detail-grid">
             <div>
@@ -26,16 +49,18 @@
                 </p>
 
                 <div class="game-detail-actions">
-                    {% if can_play %}
-                    <a href="{% url 'web:game_play' game.pk %}" class="btn-login game-detail-action-btn">
-                        Jugar ahora
-                    </a>
-                    {% endif %}
+                    {% if not game.is_processing %}
+                        {% if can_play %}
+                        <a href="{% url 'web:game_play' game.pk %}" class="btn-login game-detail-action-btn">
+                            Jugar ahora
+                        </a>
+                        {% endif %}
 
-                    {% if game.game_file %}
-                    <a href="{% url 'web:game_download' game.pk %}" class="btn-login game-detail-action-btn" {% if not user.is_authenticated %}data-login-required="true"{% endif %}>
-                        Descargar
-                    </a>
+                        {% if game.game_file %}
+                        <a href="{% url 'web:game_download' game.pk %}" class="btn-login game-detail-action-btn" {% if not user.is_authenticated %}data-login-required="true"{% endif %}>
+                            Descargar
+                        </a>
+                        {% endif %}
                     {% endif %}
 
                     <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login game-detail-action-btn game-detail-back-btn">
@@ -43,7 +68,7 @@
                     </a>
                 </div>
 
-                {% if not game.is_approved and is_owner %}
+                {% if not game.is_approved and is_owner and not game.is_processing %}
                 <p class="game-detail-unapproved-note">
                     Este juego todavía no está publicado para otros usuarios.
                 </p>
@@ -53,3 +78,4 @@
     </div>
 </div>
 {% endblock %}
+

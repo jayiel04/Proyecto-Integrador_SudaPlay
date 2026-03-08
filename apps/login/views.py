@@ -337,22 +337,26 @@ class NotificationsAPIView(View):
 
     @method_decorator(login_required(login_url='login:login'))
     def get(self, request, *args, **kwargs):
-        notifications = []
-        pending_requests = FriendRequest.objects.filter(
-            to_user=request.user
-        ).select_related('from_user').order_by('-created_at')[:4]
+        cache_key = f'notifications_{request.user.id}'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return JsonResponse(cached)
 
-        unread_requests = pending_requests.count()
+        notifications = []
+        pending_requests = list(FriendRequest.objects.filter(
+            to_user=request.user
+        ).select_related('from_user').order_by('-created_at')[:4])
+
+        unread_requests = len(pending_requests)
         for req in pending_requests:
             notifications.append({
                 'id': f"fr-{req.id}",
                 'type': 'friend_request',
                 'text': f"{req.from_user.username} te envió una solicitud",
                 'created_at': req.created_at.isoformat(),
-                'url': reverse_lazy('login:player_profile', args=[req.from_user.username])
+                'url': str(reverse_lazy('login:player_profile', args=[req.from_user.username]))
             })
 
-        # Convertir a list para evaluar la query una sola vez (evita query duplicada en .count())
         unread_messages = list(ChatMessage.objects.filter(
             receiver=request.user,
             is_read=False
@@ -364,7 +368,7 @@ class NotificationsAPIView(View):
                 'type': 'chat_message',
                 'text': f"Nuevo mensaje de {msg.sender.username}",
                 'created_at': msg.timestamp.isoformat(),
-                'url': reverse_lazy('chat:chat', args=[msg.sender.username])
+                'url': str(reverse_lazy('chat:chat', args=[msg.sender.username]))
             })
 
         unread_count = unread_requests + len(unread_messages)
@@ -378,10 +382,12 @@ class NotificationsAPIView(View):
                 'url': ''
             })
 
-        return JsonResponse({
+        result = {
             'notifications': notifications,
             'unread_count': unread_count
-        })
+        }
+        cache.set(cache_key, result, timeout=20)  # Cachear 20s por usuario
+        return JsonResponse(result)
 
 class SearchPlayersView(View):
     """

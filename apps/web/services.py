@@ -1,33 +1,253 @@
-from pathlib import Path
-import shutil
+"""
+Procesamiento de archivos ZIP subidos como juegos web.
+
+Soporta tanto almacenamiento LOCAL (media/) como almacenamiento S3/Supabase.
+"""
+import io
+import logging
+import mimetypes
+import threading
 import zipfile
+import requests
 
 from django.conf import settings
+from django.core.files.base import ContentFile
+
+logger = logging.getLogger(__name__)
 
 
-def _safe_extract(zip_file: zipfile.ZipFile, destination: Path) -> None:
-    destination = destination.resolve()
+def process_uploaded_web_build_async(game_id: int, temp_path: str | None = None) -> None:
+    """
+    Lanza el procesamiento del ZIP en un hilo de fondo.
 
-    for member in zip_file.infolist():
-        member_path = (destination / member.filename).resolve()
-        if not str(member_path).startswith(str(destination)):
-            raise ValueError("El archivo ZIP contiene rutas no permitidas.")
+    Si se proporciona `temp_path`, el ZIP fue guardado localmente (para evitar
+    bloquear el request HTTP). El worker lo sube a Supabase S3 y lo procesa.
+    Si `temp_path` es None, asume que game.game_file ya apunta a S3.
 
-    zip_file.extractall(destination)
+    Django responde al usuario en < 1 segundo; todo el trabajo pesado
+    (subida a S3 + extracción + subida de archivos) ocurre aquí.
+    """
+    def _worker():
+        import os
+        from .models import Game
+        from django.core.files.base import File
+
+        try:
+            game = Game.objects.get(pk=game_id)
+        except Game.DoesNotExist:
+            logger.error("process_async: Game %s no encontrado.", game_id)
+            return
+
+        # --- Paso 1: subir el ZIP a Supabase S3 si viene de almacenamiento temporal ---
+        if temp_path and os.path.exists(temp_path):
+            try:
+                from .storage_backends import GameFilesStorage
+                s3_storage = GameFilesStorage()
+                filename = os.path.basename(temp_path)
+                with open(temp_path, "rb") as f:
+                    s3_name = s3_storage.save(filename, File(f))
+                # Actualizar el campo game_file apuntando al objeto en S3
+                Game.objects.filter(pk=game_id).update(game_file=s3_name)
+                game.refresh_from_db()
+            except Exception as exc:
+                logger.error("process_async Game %s: error subiendo ZIP a S3: %s", game_id, exc)
+                try:
+                    Game.objects.filter(pk=game_id).update(
+                        is_processing=False,
+                        processing_error=f"Error al subir archivo: {str(exc)[:200]}",
+                        is_approved=False,
+                    )
+                except Exception:
+                    pass
+                return
+            finally:
+                # Limpiar el archivo temporal local
+                try:
+                    os.remove(temp_path)
+                except OSError:
+                    pass
+
+        # --- Paso 2: extraer el ZIP y subir cada archivo (ya existente en S3) ---
+        ok, error_message = process_uploaded_web_build(game)
+
+        try:
+            if ok:
+                Game.objects.filter(pk=game_id).update(is_processing=False)
+            else:
+                Game.objects.filter(pk=game_id).update(
+                    is_processing=False,
+                    processing_error=error_message[:255],
+                    is_approved=False,
+                )
+                logger.error("process_async Game %s falló: %s", game_id, error_message)
+        except Exception:
+            pass  # La migración puede no estar aplicada aún
+
+    thread = threading.Thread(target=_worker, daemon=True, name=f"zip-{game_id}")
+    thread.start()
 
 
-def _find_index_html(build_dir: Path) -> Path | None:
-    candidates = [path for path in build_dir.rglob("index.html") if path.is_file()]
+def _find_index_html_in_zip(zip_file: zipfile.ZipFile) -> str | None:
+    """
+    Devuelve el nombre del archivo index.html más superficial dentro del ZIP.
+    Ignora carpetas __MACOSX generadas por macOS.
+    """
+    candidates = [
+        name for name in zip_file.namelist()
+        if name.lower().endswith("index.html") and not name.startswith("__MACOSX")
+    ]
     if not candidates:
         return None
-
-    # Prefer the shortest path to avoid selecting nested demo folders.
-    return sorted(candidates, key=lambda p: (len(p.parts), len(str(p))))[0]
+    return sorted(candidates, key=lambda p: (p.count("/"), len(p)))[0]
 
 
-def process_uploaded_web_build(game):
-    if not game.game_file:
-        return False, "No se encontro un archivo para procesar."
+def _is_s3_storage() -> bool:
+    """Devuelve True si el proyecto está usando almacenamiento S3."""
+    storages = getattr(settings, "STORAGES", {})
+    if "default" in storages:
+        backend = storages["default"].get("BACKEND", "")
+    else:
+        backend = getattr(settings, "DEFAULT_FILE_STORAGE", "")
+        
+    return "s3" in backend.lower() or "boto" in backend.lower()
+
+
+def _supabase_public_url(path: str) -> str:
+    """
+    Construye la URL pública de Supabase Storage para un archivo.
+    La URL pública usa /storage/v1/object/public/<bucket>/<path>
+    que es DISTINTA a la URL del endpoint S3 (/storage/v1/s3/<bucket>/<path>).
+    """
+    supabase_url = settings.SUPABASE_URL.rstrip("/")
+    bucket = settings.AWS_STORAGE_BUCKET_NAME
+    clean_path = path.lstrip("/")
+    return f"{supabase_url}/storage/v1/object/public/{bucket}/{clean_path}"
+
+
+def _process_s3(game) -> tuple[bool, str]:
+    """
+    Procesa un ZIP almacenado en Supabase S3:
+    1. Lee el ZIP desde S3 en memoria.
+    2. Extrae TODOS los archivos y los sube a games/builds/<id>/ en S3.
+    3. Actualiza web_build_path con la URL PÚBLICA (object/public) del index.html.
+
+    Requisito: el bucket de Supabase debe ser PÚBLICO.
+    """
+    from django.core.files.storage import default_storage
+
+    # 1. Leer el ZIP desde S3
+    try:
+        with game.game_file.open("rb") as f:
+            zip_bytes = f.read()
+    except Exception as exc:
+        return False, f"No se pudo leer el archivo desde el almacenamiento: {exc}"
+
+    # 2. Abrir el ZIP y verificar que tiene index.html
+    try:
+        zf = zipfile.ZipFile(io.BytesIO(zip_bytes))
+    except zipfile.BadZipFile:
+        return False, "El archivo no es un ZIP válido."
+    except Exception as exc:
+        return False, f"No se pudo abrir el ZIP: {exc}"
+
+    index_entry = _find_index_html_in_zip(zf)
+    if not index_entry:
+        return False, "El ZIP debe contener un archivo index.html."
+
+    # 3. Extraer y subir cada archivo a games/builds/<game.id>/ en Supabase
+    build_prefix = f"games/builds/{game.id}/"
+    index_s3_path = None
+    
+    # ⚠️ FIX URGENCE: La API S3 de Supabase ignora el ContentType y fuerza text/plain.
+    # Usamos la API REST nativa de Supabase Storage directamente.
+    supabase_url = settings.SUPABASE_URL.rstrip("/")
+    bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+    
+    # Intentar obtener la clave de servicio (Service Role Key) que ignora RLS.
+    # Si no existe, usamos la anónima, pero requeriría RLS configurado a público para INSERT.
+    from decouple import config
+    api_key = config("SUPABASE_SERVICE_ROLE_KEY", default=getattr(settings, "SUPABASE_KEY", ""))
+    
+    api_url_base = f"{supabase_url}/storage/v1/object/{bucket_name}"
+    headers_base = {
+        "apikey": api_key,
+        "Authorization": f"Bearer {api_key}"
+    }
+
+    try:
+        for item in zf.infolist():
+            if item.is_dir() or item.filename.startswith("__MACOSX"):
+                continue
+
+            dest_path = build_prefix + item.filename
+
+            with zf.open(item) as file_content:
+                data = file_content.read()
+                
+                # Adivinar o forzar Content-Type
+                content_type, _ = mimetypes.guess_type(item.filename)
+                ext = item.filename.lower()
+                if ext.endswith('.html') or ext.endswith('.htm'):
+                    content_type = 'text/html'
+                elif ext.endswith('.js'):
+                    content_type = 'application/javascript'
+                elif ext.endswith('.css'):
+                    content_type = 'text/css'
+                elif ext.endswith('.wasm'):
+                    content_type = 'application/wasm'
+                elif ext.endswith('.json'):
+                    content_type = 'application/json'
+                elif ext.endswith('.png'):
+                    content_type = 'image/png'
+                elif ext.endswith('.jpg') or ext.endswith('.jpeg'):
+                    content_type = 'image/jpeg'
+                
+                if not content_type:
+                    content_type = 'application/octet-stream'
+
+                # Subida via API REST nativa de Supabase
+                upload_url = f"{api_url_base}/{dest_path}"
+                headers = headers_base.copy()
+                headers["Content-Type"] = content_type
+                
+                # Usar requests para hacer un POST/PUT directo a Supabase
+                resp = requests.post(upload_url, headers=headers, data=data)
+                
+                # Si falla por "Duplicate", hacer un PUT para sobreescribir
+                if resp.status_code == 400 and b"Duplicate" in resp.content:
+                    resp = requests.put(upload_url, headers=headers, data=data)
+                    
+                resp.raise_for_status()
+
+            if item.filename == index_entry:
+                index_s3_path = dest_path
+
+    except Exception as exc:
+        return False, f"Error al subir archivos extraídos a Supabase: {exc}"
+    finally:
+        zf.close()
+
+    if not index_s3_path:
+        return False, "No se pudo localizar el index.html tras la extracción."
+
+    # 4. Construir la URL PÚBLICA de Supabase (NO la URL del endpoint S3)
+    index_url = _supabase_public_url(index_s3_path)
+
+    game.web_build_path = index_url
+    game.is_web_playable = True
+    game.processing_error = ""
+    game.save(update_fields=["web_build_path", "is_web_playable", "processing_error", "updated_at"])
+
+    return True, ""
+
+
+def _process_local(game) -> tuple[bool, str]:
+    """
+    Procesa un ZIP almacenado localmente (desarrollo sin S3).
+    Extrae los archivos en media/games/builds/<id>/ y sirve el index.html.
+    """
+    from pathlib import Path
+    import shutil
 
     source_path = Path(game.game_file.path)
     if source_path.suffix.lower() != ".zip":
@@ -40,20 +260,42 @@ def process_uploaded_web_build(game):
 
     try:
         with zipfile.ZipFile(source_path, "r") as zip_file:
-            _safe_extract(zip_file, build_dir)
+            build_dir_resolved = build_dir.resolve()
+            for member in zip_file.infolist():
+                member_path = (build_dir_resolved / member.filename).resolve()
+                if not str(member_path).startswith(str(build_dir_resolved)):
+                    shutil.rmtree(build_dir, ignore_errors=True)
+                    return False, "El archivo ZIP contiene rutas no permitidas."
+            zip_file.extractall(build_dir)
     except Exception as exc:
         shutil.rmtree(build_dir, ignore_errors=True)
         return False, f"No se pudo extraer el ZIP: {exc}"
 
-    index_path = _find_index_html(build_dir)
-    if not index_path:
+    candidates = [p for p in build_dir.rglob("index.html") if p.is_file()]
+    if not candidates:
         shutil.rmtree(build_dir, ignore_errors=True)
         return False, "El ZIP debe contener un archivo index.html."
 
+    index_path = sorted(candidates, key=lambda p: (len(p.parts), len(str(p))))[0]
     relative_index = index_path.relative_to(Path(settings.MEDIA_ROOT)).as_posix()
+
     game.web_build_path = relative_index
     game.is_web_playable = True
     game.processing_error = ""
     game.save(update_fields=["web_build_path", "is_web_playable", "processing_error", "updated_at"])
 
     return True, ""
+
+
+def process_uploaded_web_build(game) -> tuple[bool, str]:
+    """
+    Punto de entrada: detecta si se usa S3 o almacenamiento local y procesa
+    el ZIP del juego, extrayendo sus archivos para servir el index.html.
+    """
+    if not game.game_file:
+        return False, "No se encontró un archivo para procesar."
+
+    if _is_s3_storage():
+        return _process_s3(game)
+    else:
+        return _process_local(game)

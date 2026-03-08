@@ -3,6 +3,8 @@ from django.core.validators import FileExtensionValidator
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from .storage_backends import GameCoversStorage, GameFilesStorage
+
 
 class Game(models.Model):
     GENRE_CHOICES = [
@@ -26,10 +28,13 @@ class Game(models.Model):
         verbose_name="Descripción corta",
         help_text="Breve resumen del juego",
     )
-    cover_image = models.ImageField(upload_to="games/covers/", verbose_name="Imagen de portada")
+    cover_image = models.ImageField(
+        storage=GameCoversStorage(),
+        verbose_name="Imagen de portada"
+    )
     genre = models.CharField(max_length=100, choices=GENRE_CHOICES, verbose_name="Género")
     game_file = models.FileField(
-        upload_to="games/files/",
+        storage=GameFilesStorage(),
         null=True,
         blank=True,
         verbose_name="Archivo del juego",
@@ -47,6 +52,11 @@ class Game(models.Model):
     rating_votes = models.PositiveIntegerField(default=0, verbose_name="Total de votos")
     is_web_playable = models.BooleanField(default=False, verbose_name="Jugable en web")
     web_build_path = models.CharField(max_length=500, blank=True, default="", verbose_name="Ruta web del build")
+    is_processing = models.BooleanField(
+        default=False,
+        verbose_name="En procesamiento",
+        help_text="True mientras el ZIP se está extrayendo en segundo plano.",
+    )
     processing_error = models.CharField(
         max_length=255,
         blank=True,

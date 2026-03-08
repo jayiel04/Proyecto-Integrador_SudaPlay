@@ -152,6 +152,7 @@
     /* botón principal: rango estrecho 10px-12px */
     padding: clamp(10px, 1.4dvh, 12px);
     font-size: clamp(1rem, 2.1dvh, 1.16rem);
+    margin-top: 50px;
 }
 
 .body-auth-page .signup-link {
