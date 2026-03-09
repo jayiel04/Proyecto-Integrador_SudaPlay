@@ -3,7 +3,7 @@
     <div class="catalogo-panel">
         <div class="catalogo-panel-header">
             {% if user.is_authenticated %}
-            <span class="catalogo-panel-greeting">Hola, {{ user.username }}</span>
+            <span class="catalogo-panel-greeting">Hola, {{ user.username|capfirst }}</span>
             {% else %}
             <span class="catalogo-panel-greeting">Hola, invitado</span>
             {% endif %}

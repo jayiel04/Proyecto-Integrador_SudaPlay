@@ -177,14 +177,9 @@ body.has-sidebar .music-controls {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: repeating-linear-gradient(45deg,
-            rgba(57, 231, 255, 0.07),
-            rgba(57, 231, 255, 0.07) 2px,
-            transparent 2px,
-            transparent 10px);
-    background-size: auto, 100% 6px;
-    animation: moveGrid 10s linear infinite;
-    opacity: 0.8;
+    background: none;
+    animation: none;
+    opacity: 0;
     will-change: transform;
 }
 
