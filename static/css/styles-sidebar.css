@@ -12,30 +12,51 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, rgba(0, 20, 20, 0.95), rgba(0, 50, 50, 0.90));
-    border: 1px solid rgba(0, 255, 255, 0.45);
+    background:
+        linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 70, 190, 0.1));
+    border: none;
     border-radius: 8px;
     box-shadow:
-        0 0 10px rgba(0, 255, 255, 0.2),
-        inset 0 0 8px rgba(0, 255, 255, 0.1);
-    color: var(--neon-cyan);
+        0 0 14px rgba(0, 255, 255, 0.34),
+        0 0 20px rgba(255, 70, 190, 0.2),
+        inset 0 0 12px rgba(0, 255, 255, 0.18);
+    color: #fff;
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0;
     z-index: 1100;
     transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar-toggle::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255, 80, 196, 0.35) 48%, transparent 64%);
+    transform: translateX(-130%);
+    transition: transform 0.45s ease;
+    pointer-events: none;
+}
+
+.sidebar-toggle::after {
+    content: none;
 }
 
 .sidebar-toggle:hover {
     color: #fff;
-    background: linear-gradient(135deg, rgba(0, 40, 40, 0.98), rgba(0, 80, 80, 0.92));
-    border-color: rgba(0, 255, 255, 0.85);
+    background:
+        linear-gradient(135deg, rgba(0, 255, 255, 0.18), rgba(255, 80, 196, 0.2));
     box-shadow:
-        0 0 18px rgba(0, 255, 255, 0.5),
-        0 0 30px rgba(0, 200, 200, 0.3),
-        inset 0 0 12px rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 10px #00ffff;
+        0 0 18px rgba(0, 255, 255, 0.55),
+        0 0 30px rgba(255, 80, 196, 0.35),
+        inset 0 0 14px rgba(0, 255, 255, 0.26);
+    text-shadow: 0 0 10px #00ffff, 0 0 18px rgba(255, 120, 215, 0.8);
     transform: translateY(-50%) scale(1.08);
+}
+
+.sidebar-toggle:hover::before {
+    transform: translateX(130%);
 }
 
 .secondary-nav {
@@ -158,7 +179,10 @@ body.sidebar-open .secondary-nav-container {
     font-weight: 600;
     white-space: nowrap;
     transition: background 0.3s ease, width 0.3s ease;
-    text-shadow: 0 0 8px rgb(205, 31, 248);
+    text-shadow:
+        0 0 10px rgba(255, 78, 190, 0.9),
+        0 0 18px rgba(255, 78, 190, 0.6),
+        0 0 28px rgba(126, 77, 255, 0.45);
     /* Brillo base en iconos */
 }
 
@@ -193,15 +217,35 @@ body.sidebar-open .secondary-nav-item span {
 .secondary-nav-item:hover {
     background: transparent;
     color: #fff;
-    text-shadow: 0 0 12px var(--accent-cyan), 0 0 20px #fff;
+    text-shadow:
+        0 0 12px rgba(255, 126, 214, 1),
+        0 0 22px rgba(255, 78, 190, 0.78),
+        0 0 36px rgba(143, 107, 255, 0.62);
     /* Efecto neón intenso en texto */
     transform: translateY(-2px);
+}
+
+.secondary-nav-normas {
+    text-shadow:
+        0 0 12px rgba(255, 78, 190, 0.95),
+        0 0 22px rgba(255, 78, 190, 0.65),
+        0 0 34px rgba(126, 77, 255, 0.45);
+}
+
+.secondary-nav-normas:hover,
+.secondary-nav-normas.is-active {
+    text-shadow:
+        0 0 14px rgba(255, 126, 214, 1),
+        0 0 28px rgba(255, 78, 190, 0.85),
+        0 0 44px rgba(143, 107, 255, 0.65);
 }
 
 /* indicador de activo en el sidebar */
 .secondary-nav-item.is-active {
     background: rgba(0, 255, 255, 0.2);
-    box-shadow: 0 0 14px rgba(0, 255, 255, 0.6);
+    box-shadow:
+        0 0 14px rgba(255, 78, 190, 0.55),
+        0 0 24px rgba(143, 107, 255, 0.35);
 }
 
 /* dropdown para controles de sonido dentro del sidebar */

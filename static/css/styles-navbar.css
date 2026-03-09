@@ -51,7 +51,7 @@
     width: 100%;
     max-width: none;
     margin: 0;
-    padding: 0 14px 0 52px;
+    padding: 0 14px 0 96px;
     height: 100%;
     display: flex;
     justify-content: flex-start;
@@ -172,16 +172,16 @@
     0%,
     100% {
         text-shadow:
-            0 0 10px rgba(57, 231, 255, 0.9),
-            0 0 18px rgba(57, 231, 255, 0.7),
-            0 0 30px rgba(255, 62, 165, 0.45);
+            0 0 12px rgba(160, 244, 255, 0.95),
+            0 0 24px rgba(57, 231, 255, 0.85),
+            0 0 40px rgba(255, 62, 165, 0.6);
     }
 
     50% {
         text-shadow:
-            0 0 14px rgba(57, 231, 255, 1),
-            0 0 26px rgba(57, 231, 255, 0.85),
-            0 0 40px rgba(255, 62, 165, 0.6);
+            0 0 16px rgba(190, 248, 255, 1),
+            0 0 32px rgba(57, 231, 255, 0.95),
+            0 0 52px rgba(255, 62, 165, 0.75);
     }
 }
 
@@ -202,9 +202,10 @@
 .navbar-brand span {
     color: #ffffff;
     text-shadow:
-        0 0 8px rgba(0, 0, 0, 1),
-        0 0 16px rgba(0, 0, 0, 0.92),
-        0 0 26px rgba(255, 255, 255, 0.62);
+        0 0 10px rgba(0, 0, 0, 1),
+        0 0 18px rgba(0, 0, 0, 0.92),
+        0 0 30px rgba(255, 255, 255, 0.8),
+        0 0 44px rgba(255, 78, 182, 0.42);
 }
 
 .navbar-brand::before {
@@ -335,6 +336,8 @@
     cursor: pointer;
     display: grid;
     place-items: center;
+    z-index: 5;
+    pointer-events: auto;
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
@@ -436,6 +439,34 @@
     color: #7fdfff;
     padding: 0.75rem 0.9rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.notification-panel-close {
+    position: relative;
+    z-index: 3;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    pointer-events: auto;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.notification-panel-close:hover,
+.notification-panel-close:focus-visible {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 .notification-list {
@@ -587,6 +618,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
+    overflow: hidden;
     background: #fff;
     color: #5f2be8;
     display: grid;
@@ -601,6 +633,7 @@
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
+    box-sizing: border-box;
     border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
@@ -897,17 +930,17 @@
 }
 
 .profile-dropdown-menu.profile-dropdown-card {
-    min-width: 340px;
-    padding: 20px;
+    min-width: 272px;
+    padding: 10px;
 }
 
 .profile-dropdown-card {
     background: rgb(4, 9, 30);
     border-radius: 28px;
-    padding: 26px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 9px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
         0 24px 60px rgba(0, 0, 0, 0.7),
@@ -918,9 +951,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     position: relative;
-    padding-top: 10px;
+    padding-top: 6px;
 }
 
 .profile-hero-meta {
@@ -928,8 +961,8 @@
 }
 
 .profile-avatar-ring {
-    width: 96px;
-    height: 96px;
+    width: 70px;
+    height: 70px;
     border-radius: 999px;
     padding: 3px;
     background: linear-gradient(140deg, #a878ff, #f95bff, #5ba7ff);
@@ -945,7 +978,7 @@
 }
 
 .profile-username {
-    font-size: 1.4rem;
+    font-size: 1.05rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: #f0f4ff;
@@ -953,9 +986,9 @@
 }
 
 .profile-email {
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     color: #94a7cf;
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     text-transform: lowercase;
     letter-spacing: 0.18em;
 }
@@ -973,7 +1006,7 @@
 .profile-action-row {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .profile-primary-btn {
@@ -982,13 +1015,13 @@
     color: #fff;
     border-radius: 999px;
     border: 1px solid rgba(18, 237, 214, 0.6);
-    padding: 11px 0;
+    padding: 8px 0;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     box-shadow: 0 14px 20px rgba(18, 237, 214, 0.35);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1001,14 +1034,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 14px;
+    padding: 7px 10px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.05);
     color: #dfe6ff;
     text-decoration: none;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.08em;
     transition: transform 0.2s ease, background 0.2s ease;
 }
 
@@ -1109,11 +1142,11 @@
 
 @media (max-width: 640px) {
     .profile-dropdown-card {
-        min-width: 260px;
+        min-width: 220px;
     }
 
     .profile-primary-btn {
-        font-size: 0.9rem;
+        font-size: 0.78rem;
     }
 }
 

@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
             profileToggle.setAttribute('aria-expanded', 'false');
         };
 
-        const profileCloseBtn = document.querySelector('.profile-dropdown-close');
+        const profileCloseBtns = profileDropdown.querySelectorAll('.profile-dropdown-close');
 
         profileToggle.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -258,12 +258,13 @@ document.addEventListener('DOMContentLoaded', function () {
             profileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
 
-        if (profileCloseBtn) {
+        profileCloseBtns.forEach((profileCloseBtn) => {
             profileCloseBtn.addEventListener('click', (event) => {
+                event.preventDefault();
                 event.stopPropagation();
                 closeMenu();
             });
-        }
+        });
 
         document.addEventListener('click', (event) => {
             if (!profileDropdown.contains(event.target)) {
@@ -458,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const notificationWidget = document.querySelector('.profile-notification-widget');
     const notificationToggle = notificationWidget ? notificationWidget.querySelector('.notification-toggle') : null;
     const notificationPanel = notificationWidget ? notificationWidget.querySelector('.notification-panel') : null;
+    const notificationCloseBtn = notificationPanel ? notificationPanel.querySelector('.notification-panel-close') : null;
     const notificationList = notificationPanel ? notificationPanel.querySelector('.notification-list') : null;
     const notificationBadge = notificationToggle ? notificationToggle.querySelector('.notification-badge') : null;
 
@@ -529,6 +531,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 loadNotifications();
             }
         });
+
+        if (notificationCloseBtn) {
+            const handleNotificationClose = (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                closeNotifications();
+            };
+            notificationCloseBtn.addEventListener('click', handleNotificationClose);
+            notificationCloseBtn.addEventListener('touchend', handleNotificationClose, { passive: false });
+        }
 
         document.addEventListener('click', (event) => {
             if (!notificationWidget.contains(event.target)) {
