@@ -71,34 +71,34 @@
 
 {% block extra_js %}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const previewImg = document.getElementById('current-avatar-preview');
-        const avatarChoiceGrid = document.querySelector('.avatar-choice-grid');
-        const avatarChoiceInput = document.getElementById('id_avatar_choice');
-        const avatarChoiceSection = document.querySelector('.avatar-choice-section');
-        const cameraToggle = document.getElementById('avatar-camera-toggle');
-        if (avatarChoiceGrid && avatarChoiceInput) {
-            const buttons = avatarChoiceGrid.querySelectorAll('.avatar-choice-item');
-            const navbarAvatar = document.querySelector('.navbar-avatar');
-
-            buttons.forEach((button) => {
-                button.addEventListener('click', () => {
-                    buttons.forEach((btn) => btn.classList.remove('is-selected'));
-                    button.classList.add('is-selected');
-
-                    const avatarName = button.dataset.avatarName;
-                    const newSrc = button.dataset.avatarUrl;
-                    avatarChoiceInput.value = avatarName;
-
-                    if (previewImg) {
-                        previewImg.src = newSrc;
-                    }
-                    if (navbarAvatar) {
-                        navbarAvatar.src = newSrc;
-                    }
-                });
-            });
-        }
+     document.addEventListener('DOMContentLoaded', function () {
+         const previewImg = document.getElementById('current-avatar-preview');
+         const avatarChoiceGrid = document.querySelector('.avatar-choice-grid');
+         const avatarChoiceInput = document.getElementById('id_avatar_choice');
+         const avatarChoiceSection = document.querySelector('.avatar-choice-section');
+         const cameraToggle = document.getElementById('avatar-camera-toggle');
+         if (avatarChoiceGrid && avatarChoiceInput) {
+             const buttons = avatarChoiceGrid.querySelectorAll('.avatar-choice-item');
+             const navbarAvatar = document.querySelector('.navbar-avatar');
+ 
+             buttons.forEach((button) => {
+                 button.addEventListener('click', () => {
+                     buttons.forEach((btn) => btn.classList.remove('is-selected'));
+                     button.classList.add('is-selected');
+ 
+                     const avatarName = button.dataset.avatarName;
+                     const newSrc = button.dataset.avatarUrl;
+                     avatarChoiceInput.value = avatarName;
+ 
+                     if (previewImg) {
+                         previewImg.src = newSrc;
+                     }
+                     if (navbarAvatar) {
+                         navbarAvatar.src = newSrc;
+                     }
+                 });
+             });
+         }
 
         if (cameraToggle && avatarChoiceSection) {
             cameraToggle.addEventListener('click', () => {

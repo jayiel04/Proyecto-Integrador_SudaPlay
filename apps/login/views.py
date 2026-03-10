@@ -151,6 +151,8 @@ class ProfileUpdateView(FormView):
 
     def form_valid(self, form):
         form.save()
+        # Refrescar avatar del navbar inmediatamente
+        cache.delete(f'navbar_profile_{self.request.user.id}')
         messages.success(self.request, 'Perfil actualizado correctamente.')
         return super().form_valid(form)
 

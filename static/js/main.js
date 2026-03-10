@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
         window.addEventListener('scroll', showFooter, { passive: true });
         document.body.addEventListener('scroll', showFooter, { passive: true });
 
-        // Mostrar al tocar la pantalla (para mÃ³viles)
+        // Mostrar al tocar la pantalla 
         window.addEventListener('touchstart', showFooter, { passive: true });
     }
 
@@ -454,14 +454,38 @@ document.addEventListener('DOMContentLoaded', function () {
         const botAvatarDefault = profileChatPanel.dataset.botAvatar || '';
         let avatarIndex = 0;
         const rotationAvatars = avatarVariants.length ? avatarVariants : (botAvatarDefault ? [botAvatarDefault] : []);
+        const CHATBOT_AVATAR_STORAGE_KEY = 'sudaplay.chatbot_avatar_frozen_src';
+        const CHATBOT_AVATAR_ROTATE_MS = 2000;
+        const CHATBOT_AVATAR_FREEZE_AFTER_MS = 30000;
 
         if (chatbotAvatarImg && rotationAvatars.length) {
-            chatbotAvatarImg.src = rotationAvatars[0];
-            if (rotationAvatars.length > 1) {
-                setInterval(() => {
-                    avatarIndex = (avatarIndex + 1) % rotationAvatars.length;
-                    chatbotAvatarImg.src = rotationAvatars[avatarIndex];
-                }, 4200);
+            let frozenAvatarSrc = '';
+            try {
+                frozenAvatarSrc = localStorage.getItem(CHATBOT_AVATAR_STORAGE_KEY) || '';
+            } catch (_) {
+                frozenAvatarSrc = '';
+            }
+
+            if (frozenAvatarSrc && rotationAvatars.includes(frozenAvatarSrc)) {
+                chatbotAvatarImg.src = frozenAvatarSrc;
+            } else {
+                chatbotAvatarImg.src = rotationAvatars[0];
+
+                if (rotationAvatars.length > 1) {
+                    const rotationIntervalId = setInterval(() => {
+                        avatarIndex = (avatarIndex + 1) % rotationAvatars.length;
+                        chatbotAvatarImg.src = rotationAvatars[avatarIndex];
+                    }, CHATBOT_AVATAR_ROTATE_MS);
+
+                    setTimeout(() => {
+                        clearInterval(rotationIntervalId);
+                        try {
+                            localStorage.setItem(CHATBOT_AVATAR_STORAGE_KEY, chatbotAvatarImg.src || '');
+                        } catch (_) {
+                            // ignore storage failures
+                        }
+                    }, CHATBOT_AVATAR_FREEZE_AFTER_MS);
+                }
             }
         }
 
