@@ -1,0 +1,121 @@
+<!-- Game Detail Modal Fragment -->
+<div id="game-detail-modal" class="game-modal-overlay" aria-hidden="true">
+    <div class="game-modal-content login-card">
+        <button id="close-game-modal" class="game-modal-close" aria-label="Cerrar">&times;</button>
+        
+        <div class="game-modal-grid">
+            <div class="game-modal-image-container">
+                <img id="modal-game-image" src="" alt="" class="game-detail-cover">
+            </div>
+            <div class="game-modal-info">
+                <h1 id="modal-game-title" class="game-detail-title"></h1>
+                <p class="game-detail-author">
+                    Creador: <strong id="modal-game-author" class="game-detail-author-name"></strong>
+                </p>
+
+                <div class="game-detail-stats">
+                    <span><i class="fa fa-eye"></i> <span id="modal-game-views"></span> vistas</span>
+                    <span><i class="fa fa-download"></i> <span id="modal-game-downloads"></span> descargas</span>
+                    <span><i class="fa fa-star star-gold"></i> <span id="modal-game-rating"></span></span>
+                </div>
+
+                <div id="modal-game-processing" class="processing-banner" style="display: none;">
+                    <span class="processing-spinner"></span>
+                    <div>
+                        <strong>⏳ Procesando tu juego…</strong>
+                    </div>
+                </div>
+
+                <p id="modal-game-description" class="game-detail-description"></p>
+
+                <div class="game-detail-actions">
+                    <a id="modal-play-btn" href="#" class="btn-login game-detail-action-btn" style="display: none;">
+                        Jugar ahora
+                    </a>
+                    <a id="modal-download-btn" href="#" class="btn-login game-detail-action-btn" style="display: none;">
+                        Descargar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('game-detail-modal');
+        const closeBtn = document.getElementById('close-game-modal');
+        if (!modal || !closeBtn) return;
+
+        const openModal = (data) => {
+            document.getElementById('modal-game-image').src = data.image;
+            document.getElementById('modal-game-title').textContent = data.title;
+            document.getElementById('modal-game-author').textContent = data.author;
+            document.getElementById('modal-game-views').textContent = data.views;
+            document.getElementById('modal-game-downloads').textContent = data.downloads;
+            document.getElementById('modal-game-rating').textContent = data.rating;
+            document.getElementById('modal-game-description').textContent = data.description;
+            
+            const playBtn = document.getElementById('modal-play-btn');
+            const downloadBtn = document.getElementById('modal-download-btn');
+            const processingBanner = document.getElementById('modal-game-processing');
+
+            if (data.isProcessing === 'true') {
+                processingBanner.style.display = 'flex';
+                playBtn.style.display = 'none';
+                downloadBtn.style.display = 'none';
+            } else {
+                processingBanner.style.display = 'none';
+                
+                if (data.urlPlay && data.urlPlay !== '') {
+                    playBtn.href = data.urlPlay;
+                    playBtn.style.display = 'inline-block';
+                } else {
+                    playBtn.style.display = 'none';
+                }
+
+                if (data.urlDownload && data.urlDownload !== '') {
+                    downloadBtn.href = data.urlDownload;
+                    downloadBtn.style.display = 'inline-block';
+                } else {
+                    downloadBtn.style.display = 'none';
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeGameModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        closeBtn.addEventListener('click', window.closeGameModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) window.closeGameModal();
+        });
+
+        // Event delegation for game items
+        document.body.addEventListener('click', function(e) {
+            const gameItem = e.target.closest('.game-item');
+            if (gameItem && gameItem.hasAttribute('data-game-id')) {
+                e.preventDefault();
+                const d = gameItem.dataset;
+                openModal({
+                    id: d.gameId,
+                    title: d.gameTitle,
+                    description: d.gameDescription,
+                    image: d.gameImage,
+                    author: d.gameAuthor,
+                    views: d.gameViews,
+                    downloads: d.gameDownloads,
+                    rating: d.gameRating,
+                    urlPlay: d.gameUrlPlay,
+                    urlDownload: d.gameUrlDownload,
+                    isProcessing: d.gameIsProcessing
+                });
+            }
+        });
+    });
+</script>
