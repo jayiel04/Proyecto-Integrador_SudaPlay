@@ -36,11 +36,11 @@ from .models import UserProfile, FriendRequest
 from apps.chat.models import ChatMessage
 
 
+from apps.login.context_processors import _AVATAR_NAME_CACHE
+from apps.web.storage_backends import AvatarStorage
+
 def _available_avatar_names():
-    avatars_dir = Path(settings.BASE_DIR) / 'static' / 'avatars'
-    if not avatars_dir.exists():
-        return []
-    return sorted([avatar.name for avatar in avatars_dir.iterdir() if avatar.is_file()])
+    return _AVATAR_NAME_CACHE
 
 
 def _default_avatar_name(available_avatars):
@@ -50,12 +50,13 @@ def _default_avatar_name(available_avatars):
 
 
 def _resolve_avatar_url(profile, available_avatars):
-    available_set = set(available_avatars)
-    avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
-    if avatar_name and avatar_name in available_set:
-        return static(f'avatars/{avatar_name}')
+    if profile and getattr(profile, 'avatar', None):
+        try:
+            return profile.avatar.url
+        except Exception:
+            pass
     default_avatar = _default_avatar_name(available_avatars)
-    return static(f'avatars/{default_avatar}') if default_avatar else ''
+    return AvatarStorage().url(default_avatar) if default_avatar else ''
 
 
 class LoginView(FormView):
@@ -157,14 +158,15 @@ class ProfileUpdateView(FormView):
         context = super().get_context_data(**kwargs)
         profile = UserProfile.objects.filter(user=self.request.user).first()
         available_avatars = self._available_avatars()
-        current_avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
-        current_avatar_name = current_avatar_name if current_avatar_name in available_avatars else ''
+        current_avatar_name_raw = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
+        current_avatar_name = current_avatar_name_raw if current_avatar_name_raw in available_avatars else ''
         default_avatar_name = _default_avatar_name(available_avatars)
 
         context['current_avatar_name'] = current_avatar_name
         context['current_avatar_url'] = _resolve_avatar_url(profile, available_avatars)
-        context['default_avatar_url'] = static(f'avatars/{default_avatar_name}') if default_avatar_name else ''
+        context['default_avatar_url'] = AvatarStorage().url(default_avatar_name) if default_avatar_name else ''
         context['available_avatars'] = available_avatars
+        context['available_avatar_data'] = [{'name': name, 'url': AvatarStorage().url(name)} for name in available_avatars]
         return context
 
 

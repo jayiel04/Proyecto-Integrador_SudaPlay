@@ -446,10 +446,9 @@
             <div class="chat-contacts-list" id="contacts-list">
                 {% if friends %}
                     {% for friend in friends %}
-                    <!-- Cada avatar ya viene convertido a base64 desde la vista -->
-                    <div class="contact-card" data-username="{{ friend.user.username }}" onclick="openChat('{{ friend.user.username }}', '{{ friend.avatar_base64|default_if_none:"" }}')">
-                        {% if friend.avatar_base64 %}
-                            <img src="{{ friend.avatar_base64 }}" alt="{{ friend.user.username }}" class="contact-avatar">
+                    <div class="contact-card" data-username="{{ friend.user.username }}" onclick="openChat('{{ friend.user.username }}', '{{ friend.avatar_url|default_if_none:"" }}')">
+                        {% if friend.avatar_url %}
+                            <img src="{{ friend.avatar_url }}" alt="{{ friend.user.username }}" class="contact-avatar">
                         {% else %}
                             <div class="contact-avatar-fallback"><i class="fas fa-user"></i></div>
                         {% endif %}
@@ -736,11 +735,10 @@
         if (pollingInterval) clearInterval(pollingInterval);
     });
 
-    // Check if URL has a targeted conversation on load (we'll implement this on ChatHistoryView)
     {% if target_user %}
-        // También usamos el avatar en base64 cuando abrimos el chat directo
+        // También usamos el avatar url cuando abrimos el chat directo
         const targetUsername = "{{ target_user.username }}";
-        const targetAvatarUrl = "{{ target_user.profile.avatar_base64|default_if_none:'' }}";
+        const targetAvatarUrl = "{{ target_user.profile.avatar_url|default_if_none:'' }}";
         setTimeout(() => openChat(targetUsername, targetAvatarUrl), 100);
     {% endif %}
 </script>

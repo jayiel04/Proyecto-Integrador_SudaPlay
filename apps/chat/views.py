@@ -13,28 +13,6 @@ from .models import ChatMessage
 from django.db import models
 
 
-def get_image_data_uri(image_field):
-    """Convierte el avatar en una cadena lista para incrustar en el HTML."""
-    if not image_field:
-        return None
-
-    try:
-        with image_field.open('rb') as avatar_file:
-            image_bytes = avatar_file.read()
-    except Exception:
-        return None
-
-    mime_type, _ = mimetypes.guess_type(image_field.name)
-    if not mime_type:
-        mime_type = 'image/png'
-
-    try:
-        encoded = base64.b64encode(image_bytes).decode('ascii')
-    except Exception:
-        return None
-
-    return f"data:{mime_type};base64,{encoded}"
-
 
 class ChatInboxView(View):
     """Renderiza la página del Inbox principal o un chat en específico usando el modelo WhatsApp."""
@@ -47,8 +25,11 @@ class ChatInboxView(View):
             
         friends = my_profile.friends.all().select_related('user')
         for friend in friends:
-            # Guardamos el avatar como Base64 para que el template lo renderice sin más peticiones.
-            friend.avatar_base64 = get_image_data_uri(friend.avatar)
+            # Usamos la URL pública (Supabase/S3 o local)
+            try:
+                friend.avatar_url = friend.avatar.url if friend.avatar else ""
+            except Exception:
+                friend.avatar_url = ""
         
         target_user = None
         if username:
@@ -59,7 +40,10 @@ class ChatInboxView(View):
             except User.profile.RelatedObjectDoesNotExist:
                 target_profile = UserProfile.objects.create(user=target_user)
 
-            target_profile.avatar_base64 = get_image_data_uri(target_profile.avatar)
+            try:
+                target_profile.avatar_url = target_profile.avatar.url if target_profile.avatar else ""
+            except Exception:
+                target_profile.avatar_url = ""
             target_user.profile = target_profile
 
             # Verifica si son amigos para chatear, si no, redirige al inbox general con un mensaje de advertencia.

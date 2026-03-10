@@ -5,6 +5,7 @@ Se extiende el modelo User de Django para agregar campos personalizados.
 """
 from django.db import models
 from django.contrib.auth.models import User
+from apps.web.storage_backends import AvatarStorage
 
 
 class UserProfile(models.Model):
@@ -20,7 +21,7 @@ class UserProfile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     bio = models.TextField(blank=True, help_text="Biografía del usuario")
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True, help_text="Foto de perfil")
+    avatar = models.ImageField(storage=AvatarStorage(), blank=True, null=True, help_text="Foto de perfil")
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='user')
     is_verified = models.BooleanField(default=False, help_text="¿Email verificado?")
     phone = models.CharField(max_length=20, blank=True)

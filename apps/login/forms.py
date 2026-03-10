@@ -114,8 +114,8 @@ class ProfileUpdateForm(forms.ModelForm):
 
         if profile:
             self.fields['bio'].initial = profile.bio
-            current_avatar_name = Path(getattr(profile.avatar, 'name', '')).name
-            self.fields['avatar_choice'].initial = current_avatar_name if current_avatar_name in self.available_avatars else ''
+            current_avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
+            self.fields['avatar_choice'].initial = current_avatar_name if current_avatar_name else ''
         else:
             self.fields['avatar_choice'].initial = ''
 
@@ -133,8 +133,6 @@ class ProfileUpdateForm(forms.ModelForm):
 
     def clean_avatar_choice(self):
         avatar_choice = Path((self.cleaned_data.get('avatar_choice') or '').strip()).name
-        if avatar_choice and avatar_choice not in self.available_avatars:
-            raise ValidationError('El avatar seleccionado no es valido.')
         return avatar_choice
 
     def save(self, commit=True):
@@ -146,27 +144,19 @@ class ProfileUpdateForm(forms.ModelForm):
         profile, _ = UserProfile.objects.get_or_create(user=user)
 
         avatar_choice = self.cleaned_data.get('avatar_choice')
+        current_avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name
+        
         if avatar_choice and avatar_choice in self.available_avatars:
-            avatars_root = Path(settings.BASE_DIR) / 'static' / 'avatars'
-            avatar_path = avatars_root / avatar_choice
-            if avatar_path.exists():
-                current_avatar_name = Path(getattr(profile.avatar, 'name', '')).name
-                if current_avatar_name != avatar_choice:
-                    with avatar_path.open('rb') as avatar_file:
-                        profile.avatar.save(avatar_choice, ContentFile(avatar_file.read()), save=False)
+            if current_avatar_name != avatar_choice:
+                profile.avatar.name = avatar_choice
         else:
-            current_avatar_name = Path(getattr(profile.avatar, 'name', '')).name
-            if current_avatar_name and current_avatar_name not in self.available_avatars:
+            # If nothing valid was chosen, only override if we don't already have one
+            if not current_avatar_name:
                 fallback = 'sonriente.png' if 'sonriente.png' in self.available_avatars else (
                     self.available_avatars[0] if self.available_avatars else ''
                 )
                 if fallback:
-                    fallback_path = Path(settings.BASE_DIR) / 'static' / 'avatars' / fallback
-                    if fallback_path.exists():
-                        with fallback_path.open('rb') as avatar_file:
-                            profile.avatar.save(fallback, ContentFile(avatar_file.read()), save=False)
-                else:
-                    profile.avatar = None
+                    profile.avatar.name = fallback
 
         profile.bio = self.cleaned_data.get('bio', '').strip()
         profile.save()

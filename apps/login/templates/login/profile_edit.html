@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Editar Perfil - SudaPlay{% endblock %}
@@ -30,9 +30,9 @@
         <div class="avatar-choice-section" data-visible="false">
             <p class="avatar-choice-label">Selecciona uno de nuestros avatares</p>
             <div class="avatar-choice-grid">
-                {% for avatar in available_avatars %}
-                <button type="button" class="avatar-choice-item{% if avatar == current_avatar_name %} is-selected{% endif %}" data-avatar-name="{{ avatar }}">
-                    <img src="{% static 'avatars/' %}{{ avatar }}" alt="Avatar {{ avatar }}">
+                {% for avatar in available_avatar_data %}
+                <button type="button" class="avatar-choice-item{% if avatar.name == current_avatar_name %} is-selected{% endif %}" data-avatar-name="{{ avatar.name }}" data-avatar-url="{{ avatar.url }}">
+                    <img src="{{ avatar.url }}" alt="Avatar {{ avatar.name }}">
                 </button>
                 {% endfor %}
             </div>
@@ -77,8 +77,6 @@
         const avatarChoiceInput = document.getElementById('id_avatar_choice');
         const avatarChoiceSection = document.querySelector('.avatar-choice-section');
         const cameraToggle = document.getElementById('avatar-camera-toggle');
-        const avatarsBaseUrl = "{% static 'avatars/' %}";
-
         if (avatarChoiceGrid && avatarChoiceInput) {
             const buttons = avatarChoiceGrid.querySelectorAll('.avatar-choice-item');
             const navbarAvatar = document.querySelector('.navbar-avatar');
@@ -89,8 +87,8 @@
                     button.classList.add('is-selected');
 
                     const avatarName = button.dataset.avatarName;
+                    const newSrc = button.dataset.avatarUrl;
                     avatarChoiceInput.value = avatarName;
-                    const newSrc = `${avatarsBaseUrl}${avatarName}`;
 
                     if (previewImg) {
                         previewImg.src = newSrc;
