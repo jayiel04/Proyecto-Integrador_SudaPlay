@@ -159,7 +159,10 @@
 
 .body-auth-page .remember-forgot {
     /* rango estrecho: 8px-10px */
-    margin: clamp(8px, 1.1dvh, 10px) 0;
+    margin: clamp(4px, 1.1dvh, 6px) 0;
+    margin-top: clamp(12px, 2dvh, 22px);
+    position: relative;
+    top: 12px;
     font-size: clamp(0.92rem, 1.9dvh, 1rem);
 }
 
@@ -198,86 +201,6 @@
     /* rango estrecho: 6px-8px */
     margin-top: clamp(6px, 0.9dvh, 8px);
     font-size: clamp(1rem, 1.9dvh, 1.08rem);
-}
-
-/* ── Ocultar logo dentro de la tarjeta en pantallas bajas (no escala, es binario) ── */
-/* Logo visible en la tarjeta siempre que no sea extremadamente pequeña */
-@media (max-height: 600px) {
-    .body-auth-page .login-card-logo {
-        display: none;
-    }
-}
-
-/* ── Mobile / pantallas angostas (layout) ── */
-@media (max-width: 1286px) {
-    .body-left-brand {
-        display: none !important;
-    }
-
-    .body-left-brand-tagline {
-        display: none !important;
-    }
-
-    .body-auth-page .main-content {
-        justify-content: center;
-        align-items: stretch;
-        /* Static site-header (86px) still pushes content down at this range */
-        padding: 8px 20px 16px;
-    }
-
-    .body-auth-page .auth-page-layout,
-    .body-auth-page .finalizar-registro-page {
-        justify-content: center;
-        align-items: stretch;
-        margin: 0 auto;
-        padding-right: 0;
-        flex: none;
-    }
-
-    .auth-page-layout,
-    .finalizar-registro-page {
-        max-width: 600px;
-        gap: 14px;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .auth-page-layout .login-card,
-    .finalizar-registro-page .login-card {
-        max-width: min(560px, calc(100vw - 24px));
-    }
-
-    /* Ocultar logo dentro de la tarjeta en móvil */
-    /* Logo visible en móvil si hay espacio */
-    .body-auth-page .login-card-logo {
-        display: block;
-        margin: 0 auto 15px;
-    }
-}
-
-/* ── Pantallas muy estrechas (≤ 980px): .site-header tiene height: auto → = 0 en el flujo
-      porque el .navbar es position: fixed. Hay que compensar con padding-top. ── */
-@media (max-width: 980px) {
-    .body-auth-page .main-content {
-        min-height: 0;
-        height: auto;
-        max-height: none;
-        flex: 1;
-        /* El navbar fijo mide ~112px en pantallas muy estrechas;
-           usamos 115px para cubrir el navbar + su sombra/glow, reduciendo el exceso. */
-        padding: 115px 20px 8px;
-    }
-}
-
-@media (max-width: 600px) {
-    .body-auth-page .login-header h1 {
-        font-size: 2.05rem;
-
-    }
-
-    .body-auth-page .btn-login {
-        font-size: 1.05rem;
-    }
 }
 
 .login-signup-link .signup-link-cta {
@@ -386,26 +309,381 @@
     max-height: none;
     overflow: hidden;
 }
+<<<<<<< HEAD
+=======
 
-@media (min-height: 782px) {
+/* Responsive breakpoints (reemplazados) */
+@media (max-width: 1100px) {
+    .panel-wrap {
+        width: 440px;
+        min-width: 440px;
+    }
 
-    .body-auth-page .auth-page-layout .login-page-card,
-    .body-auth-page .auth-page-layout .register-card,
-    .body-auth-page .auth-page-layout .finalizar-registro-card,
-    .body-auth-page .auth-page-layout .password-reset-card {
-        padding: clamp(12px, 2dvh, 24px) clamp(18px, 2vw, 24px);
+    .panel {
+        padding: 2.5rem 2rem;
+    }
+
+    .panel h1 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 980px) {
+    .panel-wrap {
+        width: 100%;
+        min-width: unset;
+        align-self: auto;
+    }
+
+    .panel {
+        padding: 2rem 1.4rem;
+    }
+
+    .panel h1 {
+        font-size: 1.8rem;
+        margin-bottom: 1.4rem;
+    }
+
+    .arcade-arrow {
+        display: none;
+    }
+
+    .arcade-row {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .input-wrap input {
+        font-size: 1.1rem;
+        padding: .85rem .85rem .85rem 2.8rem;
+    }
+
+    .field {
+        margin-bottom: 1.2rem;
+    }
+
+    .field label {
+        font-size: .95rem;
+    }
+
+    .row-opts {
+        flex-wrap: wrap;
+        gap: .5rem;
+        margin: .6rem 0 1.2rem;
+    }
+
+    .remember {
+        font-size: 1rem;
+    }
+
+    .forgot {
+        font-size: 1rem;
+    }
+
+    .btn-login {
+        font-size: 1rem;
+        padding: .95rem;
+    }
+
+    .register {
+        font-size: 1rem;
+    }
+
+    .divider {
+        font-size: .9rem;
+        margin: 1rem 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .panel {
+        padding: 1.6rem 1rem;
+    }
+
+    .panel h1 {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 768px) and (max-height: 750px) {
+    .panel {
+        padding: 1.6rem 2rem;
+    }
+
+    .panel h1 {
+        font-size: 2rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .field {
+        margin-bottom: 1rem;
+    }
+
+    .field label {
+        margin-bottom: .35rem;
+    }
+
+    .input-wrap input {
+        padding-top: .75rem;
+        padding-bottom: .75rem;
+    }
+
+    .row-opts {
+        margin: .5rem 0 1rem;
+    }
+
+    .btn-login {
+        padding: .85rem;
+    }
+
+    .divider {
+        margin: .8rem 0;
+    }
+
+    .register {
+        margin-top: 1rem;
+    }
+}
+
+@media (min-width: 768px) and (max-height: 620px) {
+    .divider {
+        display: none;
+    }
+
+    #row-google {
+        margin-top: .2rem;
+    }
+
+    .field {
+        margin-bottom: .5rem;
+    }
+
+    .field label {
+        margin-bottom: .2rem;
+    }
+
+    .input-wrap input {
+        padding-top: .55rem;
+        padding-bottom: .55rem;
+    }
+
+    .row-opts {
+        margin: .2rem 0 .5rem;
+    }
+
+    .btn-login {
+        padding: .6rem;
+    }
+
+    .register {
+        margin-top: .5rem;
+    }
+
+    .panel h1 {
+        margin-bottom: .8rem;
+    }
+}
+
+@media (max-width: 767px) and (max-height: 580px) {
+    .panel-wrap {
+        width: 460px;
+        min-width: unset;
+        max-width: 100%;
+    }
+
+    .panel {
+        padding: 1.2rem 1.8rem;
+    }
+
+    .panel h1 {
+        font-size: 1.6rem;
+        margin-bottom: .8rem;
+    }
+
+    .field {
+        margin-bottom: .75rem;
+    }
+
+    .row-opts {
+        margin: .3rem 0 .75rem;
+    }
+
+    .btn-login {
+        padding: .7rem;
+    }
+
+    .divider {
+        margin: .6rem 0;
+    }
+
+    .register {
+        margin-top: .7rem;
+    }
+}
+
+@media (max-width: 767px) and (max-height: 620px) {
+    .divider {
+        display: none;
+    }
+
+    #row-google {
+        margin-top: .2rem;
+    }
+
+    .field {
+        margin-bottom: .5rem;
+    }
+
+    .field label {
+        margin-bottom: .2rem;
+    }
+
+    .input-wrap input {
+        padding-top: .55rem;
+        padding-bottom: .55rem;
+    }
+
+    .row-opts {
+        margin: .2rem 0 .5rem;
+    }
+
+    .btn-login {
+        padding: .6rem;
+    }
+
+    .register {
+        margin-top: .5rem;
+    }
+
+    .panel h1 {
+        margin-bottom: .8rem;
+    }
+}
+
+@media (min-width: 768px) and (max-height: 730px) {
+    .body-auth-page .divider {
+        display: none;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .login-header,
+    .body-auth-page .auth-page-layout .login-page-card .login-form,
+    .body-auth-page .auth-page-layout .login-page-card .form-group,
+    .body-auth-page .auth-page-layout .login-page-card .remember-forgot,
+    .body-auth-page .auth-page-layout .login-page-card .btn-login,
+    .body-auth-page .auth-page-layout .login-page-card .social-login,
+    .body-auth-page .auth-page-layout .login-page-card .signup-link {
+        margin-top: 0;
+        margin-bottom: 0;
     }
 
     .body-auth-page .auth-page-layout .login-page-card input[type="text"],
     .body-auth-page .auth-page-layout .login-page-card input[type="password"],
     .body-auth-page .auth-page-layout .login-page-card input[type="email"] {
-        padding-top: clamp(12px, 1.8dvh, 16px);
-        padding-bottom: clamp(12px, 1.8dvh, 16px);
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 980px) {
+    .body-auth-page .main-content {
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100dvh - 124px);
+        height: auto;
+        max-height: none;
+        padding: 124px 12px 12px;
+        overflow: auto;
+    }
+
+    .body-auth-page .container {
+        min-height: 100%;
+        align-items: center;
+        justify-content: center;
+        padding-inline: 0;
+    }
+
+    .body-auth-page .auth-page-layout,
+    .body-auth-page .finalizar-registro-page {
+        width: 100%;
+        max-width: min(560px, calc(100vw - 24px));
+        margin: 0 auto;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .body-auth-page .auth-page-layout .login-card,
+    .body-auth-page .finalizar-registro-page .login-card {
+        margin: 0 auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .body-auth-page .auth-page-layout .login-page-card {
+        padding: 10px 12px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .login-header h1 {
+        font-size: 1.45rem;
+        letter-spacing: 0.02em;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .login-header {
+        margin-bottom: 4px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card label {
+        font-size: 0.78rem;
+        letter-spacing: 0.06em;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card input[type="text"],
+    .body-auth-page .auth-page-layout .login-page-card input[type="password"],
+    .body-auth-page .auth-page-layout .login-page-card input[type="email"] {
+        font-size: 0.88rem;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .form-group {
+        margin-bottom: 6px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .remember-forgot,
+    .body-auth-page .auth-page-layout .login-page-card .remember-forgot a {
+        font-size: 0.78rem;
+        margin: 4px 0 6px;
     }
 
     .body-auth-page .auth-page-layout .login-page-card .btn-login {
-        padding-top: clamp(12px, 1.8dvh, 16px);
-        padding-bottom: clamp(12px, 1.8dvh, 16px);
-        margin-top: clamp(12px, 2dvh, 20px);
+        font-size: 0.9rem;
+        letter-spacing: 0.1em;
+        margin-top: 6px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .divider {
+        margin: 6px 0;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .social-login {
+        margin: 4px 0;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .google-btn-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .signup-link {
+        font-size: 0.82rem;
+        margin-top: 6px;
     }
 }
+
+>>>>>>> d8949dc2bf8ffce5326518ffce33becd76abe498

@@ -54,6 +54,7 @@
 
 }
 
+
 .login-card::before,
 .welcome-card::before {
     content: '';
@@ -160,6 +161,58 @@
 .login-header p {
     color: #888;
     font-size: 0.75rem;
+}
+
+.game-upload-card .login-header h1 {
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: #b32cff;
+    color: #b32cff;
+    text-shadow: 0 0 12px rgba(179, 44, 255, 0.85);
+}
+
+.game-upload-card .game-upload-subtitle {
+    color: #d9dce5;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin: 0;
+    padding: 8px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 62, 165, 0.8);
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow:
+        0 0 8px rgba(57, 231, 255, 0.15),
+        inset 0 0 6px rgba(255, 62, 165, 0.25);
+    display: inline-flex;
+    gap: 4px;
+    margin-top: 18px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.game-upload-card .game-upload-subtitle-highlight {
+    color: #ff4dd2;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-shadow: 0 0 10px rgba(255, 77, 210, 0.35);
+}
+
+.game-upload-card .game-upload-help-text {
+    color: #d4d7de;
+    background: rgba(10, 16, 24, 0.88);
+    border: 1px solid rgba(255, 82, 82, 0.95);
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow:
+        inset 0 0 10px rgba(255, 82, 82, 0.35),
+        0 0 8px rgba(255, 82, 82, 0.2);
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    margin-top: 12px;
+    display: inline-block;
+    font-weight: 600;
 }
 
 /* Formulario */
@@ -299,7 +352,7 @@ input:focus {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 15px 0;
+    margin: 52px 0 4px;
     font-size: 0.8rem;
 }
 
@@ -902,4 +955,13 @@ input:focus {
         right: auto;
         left: 0;
     }
+}
+.body-left-brand-tagline {
+    color: #ffd166;
+    -webkit-text-stroke: 1px rgba(5, 5, 5, 0.9);
+    text-stroke: 1px rgba(5, 5, 5, 0.9);
+    text-shadow:
+        0 0 4px rgba(255, 209, 102, 0.65),
+        0 0 12px rgba(255, 209, 102, 0.4),
+        0 0 20px rgba(0, 0, 0, 0.55);
 }

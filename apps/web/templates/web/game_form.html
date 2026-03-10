@@ -5,9 +5,10 @@
 {% block content %}
 <div class="container">
     <div class="login-card game-upload-card">
+        <a class="game-upload-close-btn" href="{% url 'web:home' %}#catalogo-juegos" aria-label="Cerrar subir juego">&times;</a>
         <div class="login-header">
             <h1>Subir juego</h1>
-            <p>Publicacion inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+            <p class="game-upload-subtitle"><span class="game-upload-subtitle-highlight">Publicacion inmediata</span>: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
         </div>
 
         <form method="post" enctype="multipart/form-data" id="game-upload-form">

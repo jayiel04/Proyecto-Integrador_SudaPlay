@@ -1,0 +1,148 @@
+.login-card.full-width-card .normas-close-btn,
+.login-card.full-width-card .acerca-close-btn,
+.login-card.game-upload-card .game-upload-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    left: auto;
+    inset-inline-end: 16px;
+    inset-inline-start: auto;
+}
+
+/* Close buttons for Normas, Acerca y Subir comparten la misma sección cyberpunk */
+.normas-close-btn,
+.acerca-close-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background:
+        linear-gradient(145deg, rgba(6, 12, 30, 0.95), rgba(9, 68, 110, 0.9)),
+        radial-gradient(circle at 30% 30%, rgba(0, 162, 255, 0.7), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(255, 62, 165, 0.35), transparent 55%);
+    color: #e6f4ff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.95),
+        0 0 16px rgba(0, 162, 255, 0.85);
+    box-shadow:
+        0 0 20px rgba(0, 162, 255, 0.45),
+        inset 0 0 14px rgba(255, 255, 255, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease, background 0.3s ease;
+    z-index: 4;
+    filter: drop-shadow(0 0 10px rgba(0, 162, 255, 0.5));
+    position: absolute;
+    right: 16px;
+}
+
+/* Solo el botón de cerrar del formulario de subida necesita el estilo cyberpunk intenso */
+.game-upload-close-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background:
+        radial-gradient(circle at 30% 30%, rgba(0, 162, 255, 0.9), transparent 45%),
+        radial-gradient(circle at 70% 70%, rgba(255, 62, 165, 0.75), transparent 50%),
+        linear-gradient(145deg, rgba(2, 14, 32, 0.95), rgba(6, 46, 92, 0.9));
+    color: #f4faff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.9),
+        0 0 18px rgba(0, 162, 255, 0.85);
+    box-shadow:
+        0 0 20px rgba(0, 162, 255, 0.55),
+        inset 0 0 18px rgba(255, 255, 255, 0.45);
+    filter: drop-shadow(0 0 12px rgba(0, 162, 255, 0.65));
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+    position: absolute;
+    right: 16px;
+}
+
+/* Hover/focus pulso para los botones anteriores */
+.normas-close-btn:hover,
+.normas-close-btn:focus-visible,
+.acerca-close-btn:hover,
+.acerca-close-btn:focus-visible,
+.game-upload-close-btn:hover,
+.game-upload-close-btn:focus-visible {
+    transform: scale(1.15);
+    box-shadow:
+        0 0 18px rgba(0, 191, 255, 0.9),
+        inset 0 0 16px rgba(255, 62, 165, 0.45),
+        0 0 26px rgba(255, 62, 165, 0.55);
+    filter: drop-shadow(0 0 12px rgba(255, 62, 165, 0.75));
+}
+
+/* Estilo del botón de cierre del centro de ayuda (Soporte) */
+.faq-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 204, 255, 0.65);
+    background:
+        linear-gradient(145deg, rgba(4, 12, 32, 0.95), rgba(12, 58, 96, 0.9)),
+        radial-gradient(circle at 40% 20%, rgba(0, 204, 255, 0.55), transparent 55%),
+        radial-gradient(circle at 70% 70%, rgba(255, 50, 153, 0.35), transparent 55%);
+    color: #e0f7ff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-shadow:
+        0 0 8px rgba(255, 255, 255, 0.9),
+        0 0 16px rgba(0, 204, 255, 0.8);
+    box-shadow:
+        0 0 22px rgba(0, 204, 255, 0.5),
+        inset 0 0 10px rgba(255, 255, 255, 0.25),
+        inset 0 0 18px rgba(0, 0, 0, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+    z-index: 4;
+    filter: drop-shadow(0 0 12px rgba(0, 204, 255, 0.6));
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* Hover/focus para la X de Soporte */
+.faq-close:hover,
+.faq-close:focus-visible {
+    transform: scale(1.15);
+    box-shadow:
+        0 0 18px rgba(0, 191, 255, 0.9),
+        inset 0 0 16px rgba(255, 62, 165, 0.45),
+        0 0 26px rgba(255, 62, 165, 0.55);
+    filter: drop-shadow(0 0 12px rgba(255, 62, 165, 0.75));
+}
+
+/* Personas que todavía necesitan outlines llamativos */
+.normas-close-btn:focus-visible,
+.acerca-close-btn:focus-visible,
+.game-upload-close-btn:focus-visible {
+    outline: 2px solid rgba(57, 231, 255, 0.9);
+    outline-offset: 2px;
+}
+
+/* "La aventura te esta esperando" */
+.body-auth-page .body-left-brand-tagline {
+        
+    color: #c4c2c2;
+    -webkit-text-stroke: 1px #40E0D0;
+    
+   
+}
+
+
+

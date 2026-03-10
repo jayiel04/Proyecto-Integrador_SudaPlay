@@ -517,6 +517,12 @@
     scrollbar-color: var(--neon-green) transparent;
 }
 
+.info-card.full-width-card.info-page-card {
+    max-width: 1080px;
+    width: min(96%, 1080px);
+    padding: clamp(42px, 5vw, 56px);
+}
+
 .full-width-card::-webkit-scrollbar {
     width: 6px;
 }
@@ -530,12 +536,31 @@
     border-radius: 10px;
 }
 
+.login-card.full-width-card {
+    line-height: 1.6;
+}
+
 .card-title-small {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    line-height: 1.4;
 }
 
 .card-muted-text {
     color: #bbb;
+    margin-bottom: 10px;
+}
+
+.login-card.full-width-card .card-title-small {
+    color: #ff3ea5;
+    text-shadow: 0 0 8px rgba(255, 62, 165, 0.75);
+    letter-spacing: 0.5px;
+}
+
+.login-card.full-width-card::before {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(0, 0, 0, 0.2));
+    animation: none;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 .my-games-upload-wrap {
