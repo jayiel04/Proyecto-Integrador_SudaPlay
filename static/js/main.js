@@ -50,11 +50,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return stylesReadyPromise;
     };
 
+    waitForStylesReady().finally(() => {
+        document.documentElement.classList.add('is-ready');
+    });
+
     const runAfterStyles = (callback) => {
         if (navigationLocked) {
             return;
         }
         navigationLocked = true;
+        // Respaldo: si la navegacion no ocurre por algun motivo, liberamos el bloqueo en 3s.
+        setTimeout(() => { navigationLocked = false; }, 3000);
+
         waitForStylesReady().finally(() => {
             callback();
         });
@@ -75,9 +82,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const link = event.target.closest('a[href]');
-        if (!link || link.dataset.noStyleWait === 'true') {
+        if (!link) {
             return;
         }
+
+        // EXCLUSIONES: Evitamos interceptar links con comportamientos especiales.
+        if (
+            link.dataset.noStyleWait === 'true' ||
+            link.dataset.loginRequired === 'true' ||
+            link.classList.contains('profile-chat-toggle') ||
+            link.classList.contains('notification-toggle')
+        ) {
+            return;
+        }
+
         if (link.target && link.target !== '_self') {
             return;
         }
@@ -90,10 +108,10 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // En anchors de la misma pagina no forzamos navegacion.
+        // En anchors de la misma pagina o links vacios no bloqueamos la navegacion.
         const sameDoc = targetUrl.pathname === window.location.pathname
             && targetUrl.search === window.location.search;
-        if (sameDoc && targetUrl.hash) {
+        if (sameDoc && (targetUrl.hash || targetUrl.href === window.location.href)) {
             return;
         }
 
