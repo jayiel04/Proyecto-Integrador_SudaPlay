@@ -461,7 +461,7 @@
         {% if user_games %}
         <div class="profile-games-grid">
             {% for game in user_games %}
-            <a href="{% url 'web:game_detail' game.pk %}" class="profile-game-card" title="{{ game.title }}">
+            <a href="{% url 'web:game_play' game.pk %}" class="profile-game-card" title="{{ game.title }}">
                 {% if game.cover_image %}
                     <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="profile-game-cover" loading="lazy">
                 {% else %}

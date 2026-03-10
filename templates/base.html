@@ -65,10 +65,10 @@
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <a href="{% url 'web:home' %}#catalogo-juegos" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span class="body-left-brand-logo-sitting" aria-hidden="true">
-            <img src="{% static 'img/Jorgito.png' %}" alt="" class="body-left-brand-logo-sitting-img">
+            <img src="{{ SUPABASE_ADORNOS_BASE }}/Jorgito.png" alt="" class="body-left-brand-logo-sitting-img">
         </span>
         <span class="body-left-brand-name">
-            <img src="{% static 'img/logo.png' %}" alt="Logo de SudaPlay" class="body-left-brand-inline-logo">
+            <img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay" class="body-left-brand-inline-logo">
             <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
         </span>
         {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
@@ -114,7 +114,7 @@
 
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
-                <span class="navbar-brand-letter-logo-wrap"><img src="{% static 'img/logo.png' %}" alt="Logo de SudaPlay"
+                <span class="navbar-brand-letter-logo-wrap"><img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay"
                         class="navbar-brand-letter-logo"></span>
                 <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
             </a>
