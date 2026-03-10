@@ -110,7 +110,7 @@ class GameCreateView(LoginRequiredMixin, CreateView):
         else:
             messages.success(self.request, "Juego publicado y disponible.")
 
-        return redirect("web:game_detail", self.object.pk)
+        return redirect("web:home")
 
 
 class MyGamesView(LoginRequiredMixin, TemplateView):
@@ -126,41 +126,7 @@ class MyGamesView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class GameDetailView(DetailView):
-    model = Game
-    template_name = "web/game_detail.html"
-    context_object_name = "game"
 
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return Game.objects.filter(Q(is_approved=True) | Q(uploaded_by=self.request.user)).distinct()
-        return Game.objects.filter(is_approved=True)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        game = context["game"]
-        play_url = ""
-        play_mode = "unavailable"
-
-        if game.is_approved:
-            if game.is_web_playable and game.web_build_path:
-                path = game.web_build_path
-                if path.startswith("http"):
-                    # URL de Supabase: usar el proxy Django para corregir Content-Type
-                    from django.urls import reverse
-                    play_url = reverse("web:game_asset", kwargs={"pk": game.pk, "asset_path": "index.html"})
-                else:
-                    play_url = f"{settings.MEDIA_URL}{path}"
-                play_mode = "embedded"
-            elif game.external_url:
-                play_url = game.external_url
-                play_mode = "external"
-
-        context["play_url"] = play_url
-        context["play_mode"] = play_mode
-        context["can_play"] = play_mode in ("embedded", "external")
-        context["is_owner"] = self.request.user.is_authenticated and game.uploaded_by_id == self.request.user.id
-        return context
 
 
 class GamePlayView(DetailView):

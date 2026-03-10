@@ -14,7 +14,19 @@
         {% if games %}
         <div id="catalog-game-grid" class="game-grid">
             {% for game in games %}
-            <a class="game-item" href="{% url 'web:game_detail' game.pk %}" aria-label="Ver detalles de {{ game.title }}">
+            <a class="game-item" href="javascript:void(0)" 
+               aria-label="Ver detalles de {{ game.title }}"
+               data-game-id="{{ game.pk }}"
+               data-game-title="{{ game.title }}"
+               data-game-description="{{ game.description }}"
+               data-game-image="{{ game.cover_image.url }}"
+               data-game-author="{{ game.uploaded_by.username }}"
+               data-game-views="{{ game.views }}"
+               data-game-downloads="{{ game.downloads }}"
+               data-game-rating="{{ game.rating }}"
+               data-game-url-play="{% if not game.is_processing and game.is_web_playable %}{% url 'web:game_play' game.pk %}{% endif %}"
+               data-game-url-download="{% if not game.is_processing and game.game_file %}{% url 'web:game_download' game.pk %}{% endif %}"
+               data-game-is-processing="{{ game.is_processing|yesno:'true,false' }}">
                 {% if game.is_featured %}
                 <div class="game-badge-wrap">
                     <span class="badge badge-hot">Destacado</span>
@@ -51,6 +63,8 @@
 
     </div>
 </section>
+
+{% include "web/_game_modal.html" %}
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
