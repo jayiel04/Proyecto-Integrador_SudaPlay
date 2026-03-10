@@ -92,8 +92,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.login.context_processors.navbar_profile',
-
-                    
+                'apps.web.context_processors.supabase_config',
             ],
         },
     },

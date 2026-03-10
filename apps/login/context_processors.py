@@ -5,20 +5,20 @@ from django.core.cache import cache
 from django.templatetags.static import static
 
 from .models import UserProfile
+from apps.web.storage_backends import AvatarStorage
 
 _AVATAR_CACHE = None
-_AVATAR_NAME_CACHE = None
+_AVATAR_NAME_CACHE = [
+    "Psicologo.png", "acostado.png", "avatar-removebg-preview.png", 
+    "avatar-sentaado-bravo.jpg", "basura.png", "camara.png", "camara_parada.png",
+    "camara_sentaado.jpeg", "cartas.png", "cartas_amigo.png", "celular_parado.png",
+    "celular_sentado.png", "cocina.png", "jorge.png", "postre.png",
+    "sentado_bravo_turquesa.jpg", "sentado_solo.png", "sombrero.png",
+    "sonriente.png", "viuda.png"
+]
 
 
 def _avatar_names():
-    global _AVATAR_NAME_CACHE
-    if _AVATAR_NAME_CACHE is not None:
-        return _AVATAR_NAME_CACHE
-    avatars_dir = Path(settings.BASE_DIR) / 'static' / 'avatars'
-    if not avatars_dir.exists():
-        return []
-
-    _AVATAR_NAME_CACHE = [avatar.name for avatar in sorted(avatars_dir.iterdir()) if avatar.is_file()]
     return _AVATAR_NAME_CACHE
 
 
@@ -27,37 +27,34 @@ def _default_avatar_url():
     if not names:
         return ''
     preferred = 'sonriente.png' if 'sonriente.png' in names else names[0]
-    return static(f'avatars/{preferred}')
+    return AvatarStorage().url(preferred)
 
 
 def _avatar_variants():
     global _AVATAR_CACHE
     if _AVATAR_CACHE is not None:
         return _AVATAR_CACHE
-    _AVATAR_CACHE = [static(f'avatars/{avatar_name}') for avatar_name in _avatar_names()]
+    storage = AvatarStorage()
+    _AVATAR_CACHE = [storage.url(name) for name in _avatar_names()]
     return _AVATAR_CACHE
 
 
 def _resolve_avatar(profile):
-    """Devuelve la URL del avatar solo si pertenece al catalogo de avatares."""
-    available_names = set(_avatar_names())
+    """Devuelve la URL del avatar."""
     if profile and profile.avatar:
         try:
-            avatar_name = Path(getattr(profile.avatar, 'name', '')).name
-            if avatar_name in available_names:
-                return static(f'avatars/{avatar_name}')
-        except (ValueError, NotImplementedError):
+            return profile.avatar.url
+        except Exception:
             pass
     return _default_avatar_url()
 
 
 def _calculate_completion(user, profile):
-    available_names = set(_avatar_names())
-    avatar_name = Path(getattr(getattr(profile, 'avatar', None), 'name', '')).name if profile else ''
+    avatar_name = profile.avatar.name if profile and profile.avatar else ''
     steps = [
         bool(user.email),
         bool(profile and profile.bio and profile.bio.strip()),
-        bool(avatar_name and avatar_name in available_names),
+        bool(avatar_name),
         bool(profile and profile.phone and profile.phone.strip()),
         bool(profile and profile.date_of_birth),
         bool(profile and profile.is_verified),

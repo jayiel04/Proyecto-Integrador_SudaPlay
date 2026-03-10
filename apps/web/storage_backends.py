@@ -41,6 +41,18 @@ class GameCoversStorage(S3Boto3Storage):
         return _supabase_public_url(self.location, name)
 
 
+class AvatarStorage(S3Boto3Storage):
+    """
+    Almacena las imágenes de avatares en la carpeta 'avatars'
+    dentro del bucket de Supabase.
+    """
+    location = 'avatars'
+    file_overwrite = True
+
+    def url(self, name):
+        return _supabase_public_url(self.location, name)
+
+
 class GameTempFilesStorage(FileSystemStorage):
     """
     Almacenamiento temporal LOCAL para los ZIPs recién subidos.

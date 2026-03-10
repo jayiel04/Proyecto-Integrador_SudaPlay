@@ -228,7 +228,7 @@
                         <div
                             class="profile-chat-panel"
                             aria-hidden="true"
-                            data-bot-avatar="{% static 'avatars/sonriente.png' %}"
+                            data-bot-avatar="{{ default_avatar_url }}"
                             data-user-avatar="{{ navbar_avatar_url }}">
                             <div class="profile-chat-panel-header">
                                 <div class="profile-chatbot-avatar">
@@ -367,7 +367,7 @@
     <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
     <!-- preload="none": el audio NO se descarga hasta que el usuario interactúe -->
     <audio id="background-music" preload="none" loop
-        src="{% static 'audio/bouncyrunner-arcade-all-night-396133.mp3' %}">
+        src="{{ SUPABASE_URL }}/storage/v1/object/public/musica/audio/bouncyrunner-arcade-all-night-396133.mp3">
     </audio>
 
     <!-- Controles de volumen del audio de fondo. -->

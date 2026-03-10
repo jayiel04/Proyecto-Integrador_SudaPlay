@@ -29,8 +29,8 @@
             <div class="audio-setting-item">
                 <label for="advanced-audio-track">Canción de fondo</label>
                 <select id="advanced-audio-track" style="margin-top: 5px; padding: 5px; border-radius: 4px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); width: 100%;">
-                    <option value="{% static 'audio/bouncyrunner-arcade-all-night-396133.mp3' %}">Bouncyrunner Arcade All Night (Por defecto)</option>
-                    <option value="{% static 'audio/Neon Pulse.m4a' %}">Neon Pulse</option>
+                    <option value="{{ SUPABASE_URL }}/storage/v1/object/public/musica/audio/bouncyrunner-arcade-all-night-396133.mp3">Bouncyrunner Arcade All Night (Por defecto)</option>
+                    <option value="{{ SUPABASE_URL }}/storage/v1/object/public/musica/audio/Neon Pulse.m4a">Neon Pulse</option>
                 </select>
             </div>
         </div>
