@@ -65,14 +65,14 @@
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <a href="{% url 'web:home' %}#catalogo-juegos" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span class="body-left-brand-logo-sitting" aria-hidden="true">
-            <img src="{% static 'img/jorge_custom.png' %}" alt="" class="body-left-brand-logo-sitting-img">
+            <img src="{% static 'img/Jorgito.png' %}" alt="" class="body-left-brand-logo-sitting-img">
         </span>
         <span class="body-left-brand-name">
             <img src="{% static 'img/logo.png' %}" alt="Logo de SudaPlay" class="body-left-brand-inline-logo">
             <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
         </span>
         {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
-        <span class="body-left-brand-tagline">La aventura te esta esperando</span>
+        <span class="body-left-brand-tagline"><span class="body-left-brand-tagline-text">La aventura te esta esperando</span></span>
         {% endif %}
     </a>
     {% endif %}

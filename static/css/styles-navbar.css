@@ -1400,14 +1400,14 @@
 
 .body-left-brand-logo-sitting {
     position: absolute;
-    top: 0;
+    top: -1.05em;
     left: 50%;
-    transform: translate(-40%, -18%);
+    transform: translateX(-30%);
     pointer-events: none;
 }
 
 .body-left-brand-logo-sitting-img {
-    width: 4.85em;
+    width: 4.6em;
     height: auto;
     display: block;
     filter: drop-shadow(0 0 10px rgba(216, 247, 246, 0.9));
@@ -1424,8 +1424,8 @@
 }
 
 .body-left-brand-inline-logo {
-    width: 2.05em;
-    height: 2.05em;
+    width: 2.25em;
+    height: 2.25em;
     display: block;
     margin-right: 0.12em;
     transform: translateY(-0.08em);
@@ -1447,12 +1447,15 @@
     -webkit-text-stroke: 0;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.65), 0 0 16px rgba(255, 255, 255, 0.35);
     text-align: center;
-    box-sizing: border-box;
-    padding-left: clamp(1.6em, 3vw, 3.2em);
-    padding-right: 0;
-    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
+    transform: translateX(clamp(2.5em, 4.2vw, 4.4em));
     will-change: transform;
 
+}
+
+.body-left-brand-tagline-text {
+    display: inline-block;
+    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
+    will-change: transform;
 }
 
 .body-left-brand-name > span {
