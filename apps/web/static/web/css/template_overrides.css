@@ -517,6 +517,12 @@
     scrollbar-color: var(--neon-green) transparent;
 }
 
+.info-card.full-width-card.info-page-card {
+    max-width: 1080px;
+    width: min(96%, 1080px);
+    padding: clamp(42px, 5vw, 56px);
+}
+
 .full-width-card::-webkit-scrollbar {
     width: 6px;
 }

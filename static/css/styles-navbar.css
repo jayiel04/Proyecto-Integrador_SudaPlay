@@ -323,15 +323,15 @@
 
 .profile-dropdown-close {
     position: absolute;
-    top: 0.65rem;
-    right: 0.65rem;
-    width: 32px;
-    height: 32px;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.6);
     background: rgba(255, 255, 255, 0.08);
     color: #fff;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     line-height: 1;
     cursor: pointer;
     display: grid;
@@ -930,17 +930,18 @@
 }
 
 .profile-dropdown-menu.profile-dropdown-card {
-    min-width: 272px;
-    padding: 10px;
+    min-width: 340px;
+    width: min(88vw, 380px);
+    padding: 14px;
 }
 
 .profile-dropdown-card {
     background: rgb(4, 9, 30);
     border-radius: 28px;
-    padding: 14px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 9px;
+    gap: 12px;
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow:
         0 24px 60px rgba(0, 0, 0, 0.7),
@@ -961,8 +962,8 @@
 }
 
 .profile-avatar-ring {
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     border-radius: 999px;
     padding: 3px;
     background: linear-gradient(140deg, #a878ff, #f95bff, #5ba7ff);
@@ -978,7 +979,7 @@
 }
 
 .profile-username {
-    font-size: 1.05rem;
+    font-size: 1.35rem;
     font-weight: 700;
     letter-spacing: 0.1em;
     color: #f0f4ff;
@@ -986,11 +987,11 @@
 }
 
 .profile-email {
-    font-size: 0.72rem;
+    font-size: 0.92rem;
     color: #94a7cf;
     margin: 6px 0 0;
     text-transform: lowercase;
-    letter-spacing: 0.18em;
+    letter-spacing: 0.1em;
 }
 
 .profile-email[data-lowercase] {
@@ -1006,7 +1007,7 @@
 .profile-action-row {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .profile-primary-btn {
@@ -1063,13 +1064,13 @@
     color: #fff;
     border-radius: 999px;
     border: none;
-    padding: 11px 0;
+    padding: 13px 0;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    font-size: 0.95rem;
+    font-size: 1.05rem;
     box-shadow: 0 10px 26px rgba(123, 69, 255, 0.65);
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -1101,15 +1102,16 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 14px;
+    padding: 13px 16px;
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.05);
     color: #dfe6ff;
     text-decoration: none;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.14em;
     transition: transform 0.2s ease, background 0.2s ease;
+    font-size: 1.05rem;
 }
 
 .profile-menu-mygames,
@@ -1142,11 +1144,22 @@
 
 @media (max-width: 640px) {
     .profile-dropdown-card {
-        min-width: 220px;
+        min-width: 260px;
+        padding: 16px;
     }
 
     .profile-primary-btn {
-        font-size: 0.78rem;
+        font-size: 0.92rem;
+    }
+
+    .profile-menu-item {
+        font-size: 0.92rem;
+        padding: 11px 14px;
+    }
+
+    .profile-avatar-ring {
+        width: 78px;
+        height: 78px;
     }
 }
 
@@ -1655,5 +1668,28 @@
     .navbar {
         height: auto !important;
         padding-bottom: 12px;
+    }
+
+    .navbar-auth .navbar-container {
+        justify-content: center;
+        padding-inline: 12px;
+    }
+
+    .navbar-auth .nav-links {
+        width: 100%;
+        margin: 0 auto;
+        justify-content: center;
+    }
+
+    .navbar-auth .nav-links-centered {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .navbar-auth .nav-links-left,
+    .navbar-auth .nav-links-middle,
+    .navbar-auth .nav-links-right {
+        margin: 0 auto;
+        justify-content: center;
     }
 }
