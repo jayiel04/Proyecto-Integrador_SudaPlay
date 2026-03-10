@@ -75,7 +75,7 @@ def navbar_profile(request):
             'navbar_profile_completion': 0,
             'navbar_profile_bio': '',
             'navbar_avatar_variants': _avatar_variants(),
-            'sudaplay_logo_url': static('img/SudaPlay.png'),
+            'sudaplay_logo_url': static('img/logo.png'),
         }
 
     cache_key = f'navbar_profile_{request.user.id}'
@@ -95,7 +95,7 @@ def navbar_profile(request):
         'navbar_profile_completion': completion,
         'navbar_profile_bio': profile_bio,
         'navbar_avatar_variants': _avatar_variants(),
-        'sudaplay_logo_url': static('img/SudaPlay.png'),
+        'sudaplay_logo_url': static('img/logo.png'),
     }
     # Cachear por 30 segundos para evitar queries repetidas en cada request
     cache.set(cache_key, result, timeout=30)

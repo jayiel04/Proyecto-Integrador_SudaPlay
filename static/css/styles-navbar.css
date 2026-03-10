@@ -79,13 +79,13 @@
 }
 
 .navbar-brand span,
-.body-left-brand span {
+.body-left-brand-name > span {
     display: inline-block;
     animation: float 2s infinite alternate, neonGlow 1.6s ease-in-out infinite alternate;
     -webkit-text-stroke: 0.9px #000;
 }
 
-.body-left-brand span {
+.body-left-brand-name > span {
     color: #00a6a6;
     text-shadow:
         0 0 8px rgba(0, 0, 0, 1),
@@ -108,52 +108,52 @@
 
 /* Diferentes delays para el efecto ola */
 .navbar-brand span,
-.body-left-brand span {
+.body-left-brand-name > span {
     animation-delay: calc(0.1s * var(--i, 0));
 }
 
 .navbar-brand span:nth-child(1),
-.body-left-brand span:nth-child(1) {
+.body-left-brand-name > span:nth-child(1) {
     --i: 1;
 }
 
 .navbar-brand span:nth-child(2),
-.body-left-brand span:nth-child(2) {
+.body-left-brand-name > span:nth-child(2) {
     --i: 2;
 }
 
 .navbar-brand span:nth-child(3),
-.body-left-brand span:nth-child(3) {
+.body-left-brand-name > span:nth-child(3) {
     --i: 3;
 }
 
 .navbar-brand span:nth-child(4),
-.body-left-brand span:nth-child(4) {
+.body-left-brand-name > span:nth-child(4) {
     --i: 4;
 }
 
 .navbar-brand span:nth-child(5),
-.body-left-brand span:nth-child(5) {
+.body-left-brand-name > span:nth-child(5) {
     --i: 5;
 }
 
 .navbar-brand span:nth-child(6),
-.body-left-brand span:nth-child(6) {
+.body-left-brand-name > span:nth-child(6) {
     --i: 6;
 }
 
 .navbar-brand span:nth-child(7),
-.body-left-brand span:nth-child(7) {
+.body-left-brand-name > span:nth-child(7) {
     --i: 7;
 }
 
 .navbar-brand span:nth-child(8),
-.body-left-brand span:nth-child(8) {
+.body-left-brand-name > span:nth-child(8) {
     --i: 8;
 }
 
 .navbar-brand span:nth-child(9),
-.body-left-brand span:nth-child(9) {
+.body-left-brand-name > span:nth-child(9) {
     --i: 9;
 }
 
@@ -1372,13 +1372,14 @@
 
 .body-left-brand {
     position: fixed;
-    top: 50%;
+    top: 54%;
     left: clamp(10px, 2.2vw, 28px);
     transform: translateY(-50%);
-    display: inline-flex;
-    flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    column-gap: 0.32em;
+    row-gap: 0.14em;
+    padding-top: clamp(3.4em, 5.4vw, 4.4em);
     font-size: clamp(1.9rem, 4.3vw, 3.8rem);
     font-weight: 900;
     letter-spacing: 4px;
@@ -1394,37 +1395,68 @@
     cursor: pointer;
     user-select: none;
     z-index: 1;
+    white-space: normal;
+}
+
+.body-left-brand-logo-sitting {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-40%, -18%);
+    pointer-events: none;
+}
+
+.body-left-brand-logo-sitting-img {
+    width: 4.85em;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(216, 247, 246, 0.9));
+}
+
+.body-left-brand-name {
+    position: relative;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.32em;
     white-space: nowrap;
 }
 
+.body-left-brand-inline-logo {
+    width: 2.05em;
+    height: 2.05em;
+    display: block;
+    margin-right: 0.12em;
+    transform: translateY(-0.08em);
+    filter: drop-shadow(0 0 8px rgba(216, 247, 246, 0.7));
+}
 
 .body-left-brand-tagline {
     position: relative;
     display: block;
     flex-basis: 100%;
-    margin-left: clamp(3.4em, 9vw, 9em);
-    margin-top: 0.08em;
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0.06em;
     padding: 0;
     border: none;
     border-radius: 0;
-    font-size: clamp(1.58rem, 1.2vw, 2.08rem);
+    font-size: clamp(1.15rem, 1vw, 1.55rem);
     color: #d4af37;
     -webkit-text-stroke: 0;
     text-shadow: 0 0 8px rgba(255, 255, 255, 0.65), 0 0 16px rgba(255, 255, 255, 0.35);
-    animation: none;
-
-}
-
-.body-left-brand span {
+    text-align: center;
+    box-sizing: border-box;
+    padding-left: clamp(1.6em, 3vw, 3.2em);
+    padding-right: 0;
     animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
+    will-change: transform;
+
 }
 
-.body-left-brand-logo {
-    width: 3.4em;
-    height: 3.4em;
-    display: block;
-    transform: translateY(-18px);
-    filter: drop-shadow(0 0 8px rgb(216, 247, 246));
+.body-left-brand-name > span {
+    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
 }
 
 @keyframes brandGlitch {
@@ -1479,26 +1511,6 @@
     85% {
         opacity: 0.35;
         transform: translateY(-50%) translateX(1px) scaleX(0.97);
-    }
-}
-
-@keyframes taglineDrift {
-
-    0%,
-    100% {
-        transform: translateX(0) translateY(0);
-    }
-
-    25% {
-        transform: translateX(7px) translateY(-2px);
-    }
-
-    50% {
-        transform: translateX(-5px) translateY(2px);
-    }
-
-    75% {
-        transform: translateX(6px) translateY(0);
     }
 }
 
