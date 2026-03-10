@@ -61,6 +61,10 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     waitForStylesReady();
+    window.addEventListener('pageshow', () => {
+        // Al volver con historial (BFCache), desbloquea la navegacion.
+        navigationLocked = false;
+    });
 
     document.addEventListener('click', (event) => {
         if (event.defaultPrevented || event.button !== 0) {
