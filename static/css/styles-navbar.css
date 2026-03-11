@@ -81,8 +81,11 @@
 .navbar-brand span,
 .body-left-brand-name > span {
     display: inline-block;
-    animation: float 2s infinite alternate, neonGlow 1.6s ease-in-out infinite alternate;
+    --wave-amp: clamp(0.08em, 0.55vw, 0.22em);
+    animation: brandWave 1.25s ease-in-out infinite, neonGlow 1.6s ease-in-out infinite alternate;
+    animation-delay: calc(0.08s * var(--i, 0)), 0s;
     -webkit-text-stroke: 0.9px #000;
+    will-change: transform;
 }
 
 .body-left-brand-name > span {
@@ -106,64 +109,43 @@
     filter: drop-shadow(0 0 8px rgba(70, 123, 121, 0.5));
 }
 
-/* Diferentes delays para el efecto ola */
-.navbar-brand span,
-.body-left-brand-name > span {
-    animation-delay: calc(0.1s * var(--i, 0));
-}
+/* Delays letra por letra (ola/wave) */
+.navbar-brand span:nth-child(1) { --i: 0; }
+.navbar-brand span:nth-child(2) { --i: 1; }
+.navbar-brand span:nth-child(3) { --i: 2; }
+.navbar-brand span:nth-child(4) { --i: 3; }
+.navbar-brand span:nth-child(5) { --i: 4; }
+.navbar-brand span:nth-child(6) { --i: 5; }
+.navbar-brand span:nth-child(7) { --i: 6; }
+.navbar-brand span:nth-child(8) { --i: 7; }
 
-.navbar-brand span:nth-child(1),
-.body-left-brand-name > span:nth-child(1) {
-    --i: 1;
-}
+/* En el branding lateral hay un <img> antes de los spans; usamos nth-of-type. */
+.body-left-brand-name > span:nth-of-type(1) { --i: 0; }
+.body-left-brand-name > span:nth-of-type(2) { --i: 1; }
+.body-left-brand-name > span:nth-of-type(3) { --i: 2; }
+.body-left-brand-name > span:nth-of-type(4) { --i: 3; }
+.body-left-brand-name > span:nth-of-type(5) { --i: 4; }
+.body-left-brand-name > span:nth-of-type(6) { --i: 5; }
+.body-left-brand-name > span:nth-of-type(7) { --i: 6; }
+.body-left-brand-name > span:nth-of-type(8) { --i: 7; }
 
-.navbar-brand span:nth-child(2),
-.body-left-brand-name > span:nth-child(2) {
-    --i: 2;
-}
+@keyframes brandWave {
 
-.navbar-brand span:nth-child(3),
-.body-left-brand-name > span:nth-child(3) {
-    --i: 3;
-}
-
-.navbar-brand span:nth-child(4),
-.body-left-brand-name > span:nth-child(4) {
-    --i: 4;
-}
-
-.navbar-brand span:nth-child(5),
-.body-left-brand-name > span:nth-child(5) {
-    --i: 5;
-}
-
-.navbar-brand span:nth-child(6),
-.body-left-brand-name > span:nth-child(6) {
-    --i: 6;
-}
-
-.navbar-brand span:nth-child(7),
-.body-left-brand-name > span:nth-child(7) {
-    --i: 7;
-}
-
-.navbar-brand span:nth-child(8),
-.body-left-brand-name > span:nth-child(8) {
-    --i: 8;
-}
-
-.navbar-brand span:nth-child(9),
-.body-left-brand-name > span:nth-child(9) {
-    --i: 9;
-}
-
-@keyframes float {
-    from {
+    0%,
+    100% {
         transform: translateY(0);
     }
 
-    to {
-        transform: translateY(-5px);
+    25% {
+        transform: translateY(calc(var(--wave-amp) * -1));
+    }
+
+    50% {
+        transform: translateY(0);
+    }
+
+    75% {
+        transform: translateY(var(--wave-amp));
     }
 }
 
@@ -179,6 +161,32 @@
 
     50% {
         text-shadow:
+            0 0 16px rgba(190, 248, 255, 1),
+            0 0 32px rgba(57, 231, 255, 0.95),
+            0 0 52px rgba(255, 62, 165, 0.75);
+    }
+}
+
+@keyframes neonGlowTagline {
+
+    0%,
+    100% {
+        text-shadow:
+            -1px -1px 0 rgba(0, 0, 0, 0.85),
+            1px -1px 0 rgba(0, 0, 0, 0.85),
+            -1px 1px 0 rgba(0, 0, 0, 0.85),
+            1px 1px 0 rgba(0, 0, 0, 0.85),
+            0 0 12px rgba(160, 244, 255, 0.95),
+            0 0 24px rgba(57, 231, 255, 0.85),
+            0 0 40px rgba(255, 62, 165, 0.6);
+    }
+
+    50% {
+        text-shadow:
+            -1px -1px 0 rgba(0, 0, 0, 0.9),
+            1px -1px 0 rgba(0, 0, 0, 0.9),
+            -1px 1px 0 rgba(0, 0, 0, 0.9),
+            1px 1px 0 rgba(0, 0, 0, 0.9),
             0 0 16px rgba(190, 248, 255, 1),
             0 0 32px rgba(57, 231, 255, 0.95),
             0 0 52px rgba(255, 62, 165, 0.75);
@@ -1373,7 +1381,7 @@
 .body-left-brand {
     position: fixed;
     top: 54%;
-    left: clamp(10px, 2.2vw, 28px);
+    left: clamp(12px, 2vw, 26px);
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -1407,7 +1415,7 @@
 }
 
 .body-left-brand-logo-sitting-img {
-    width: 4.6em;
+    width: 5.8em;
     height: auto;
     display: block;
     filter: drop-shadow(0 0 10px rgba(216, 247, 246, 0.9));
@@ -1424,8 +1432,8 @@
 }
 
 .body-left-brand-inline-logo {
-    width: 2.25em;
-    height: 2.25em;
+    width: 2.75em;
+    height: 2.75em;
     display: block;
     margin-right: 0.12em;
     transform: translateY(-0.08em);
@@ -1437,7 +1445,7 @@
     display: block;
     flex-basis: 100%;
     width: 100%;
-    margin-left: 0;
+    margin-left: 150PX;
     margin-top: 0.06em;
     padding: 0;
     border: none;
@@ -1445,21 +1453,32 @@
     font-size: clamp(1.15rem, 1vw, 1.55rem);
     color: #d4af37;
     -webkit-text-stroke: 0;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.65), 0 0 16px rgba(255, 255, 255, 0.35);
+    text-shadow: 0 0 8px rgba(10, 10, 10, 0.65), 0 0 16px rgba(12, 12, 12, 0.35);
     text-align: center;
-    transform: translateX(clamp(2.5em, 4.2vw, 4.4em));
     will-change: transform;
 
+}
+
+/* Auth (Login/Registro/Reset): baja la frase para alinearla con la card derecha. */
+.body-auth-page .body-left-brand-tagline {
+    top: clamp(34px, 8dvh, 120px) !important;
 }
 
 .body-left-brand-tagline-text {
     display: inline-block;
-    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.78);
+    paint-order: stroke fill;
+    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlowTagline 1.7s ease-in-out infinite alternate;
     will-change: transform;
 }
 
-.body-left-brand-name > span {
-    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlow 1.7s ease-in-out infinite alternate;
+/* Baja un poquito "Suda" (S u d a) sin afectar la animación (usa top en vez de transform). */
+.body-left-brand-name > span:nth-of-type(1),
+.body-left-brand-name > span:nth-of-type(2),
+.body-left-brand-name > span:nth-of-type(3),
+.body-left-brand-name > span:nth-of-type(4) {
+    position: relative;
+    top: 0.08em;
 }
 
 @keyframes brandGlitch {

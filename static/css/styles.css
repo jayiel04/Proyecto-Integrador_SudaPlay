@@ -84,11 +84,20 @@ body.body-register-page {
     display: flex;
     gap: 8px;
     z-index: 11000;
+    /* Colapsado: solo el icono (sin borde / sin contenedor visible). */
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    align-items: center;
+    box-shadow: none;
+}
+
+/* Expandido: muestra el panel con borde y fondo. */
+.music-controls.expanded {
     background: rgba(6, 18, 24, 0.8);
     border: 1px solid rgba(143, 233, 230, 0.42);
-    border-radius: 10px;
     padding: 7px;
-    align-items: center;
     box-shadow: 0 0 18px rgba(98, 216, 255, 0.16);
 }
 
@@ -125,6 +134,27 @@ body.has-sidebar .music-controls {
     cursor: pointer;
     text-align: center;
     box-shadow: 0 0 14px rgba(176, 74, 255, 0.4), inset 0 0 10px rgba(210, 145, 255, 0.25);
+}
+
+/* Botón principal de música: más pequeño, sin borde y solo icono azul eléctrico. */
+.music-toggle-btn {
+    border: none;
+    background: transparent;
+    min-width: auto;
+    padding: 6px;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: #00e5ff;
+    box-shadow: none;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.75);
+}
+
+.music-toggle-btn:hover {
+    background: transparent;
+    border: none;
+    color: #7ff6ff;
+    box-shadow: none;
+    text-shadow: 0 0 14px rgba(0, 229, 255, 0.9);
 }
 
 .music-control-btn:hover {
@@ -227,10 +257,12 @@ body.has-sidebar .music-controls {
 
 .floating-icon {
     position: absolute;
-    color: rgba(143, 233, 230, 0.28);
+    /* Más blanco e intenso (figuras del fondo). */
+    color: rgba(255, 255, 255, 0.45);
     font-size: 4rem;
-    -webkit-text-stroke: 1.2px rgba(0, 0, 0, 0.5);
-    /* Se remueve el extenso text-shadow y multiples filtros por rendimiento */
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.35);
+    /* Glow sutil (sin afectar mucho rendimiento). */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
     animation: floatAround 20s linear infinite, iconPulse 2.7s ease-in-out infinite;
     will-change: transform, opacity;
 }

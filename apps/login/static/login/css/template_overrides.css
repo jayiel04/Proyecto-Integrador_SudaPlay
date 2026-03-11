@@ -10,25 +10,25 @@
 .floating-icons .floating-icon:nth-child(2) {
     top: 20%;
     left: 80%;
-    animation-delay: 2s;
+    animation-delay: 0s;
 }
 
 .floating-icons .floating-icon:nth-child(3) {
     top: 70%;
     left: 15%;
-    animation-delay: 4s;
+    animation-delay: 0s;
 }
 
 .floating-icons .floating-icon:nth-child(4) {
     top: 80%;
     left: 85%;
-    animation-delay: 6s;
+    animation-delay: 0s;
 }
 
 .floating-icons .floating-icon:nth-child(5) {
     top: 40%;
     left: 50%;
-    animation-delay: 8s;
+    animation-delay: 0s;
 }
 
 .remember-label-reset {
