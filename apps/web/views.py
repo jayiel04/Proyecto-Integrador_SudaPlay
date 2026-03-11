@@ -67,6 +67,41 @@ class AdvancedAudioSettingsView(TemplateView):
     """
     template_name = "web/advanced_audio_settings.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        import urllib.parse
+        from decouple import config
+        from supabase import create_client
+        try:
+            service_role_key = config('SUPABASE_SERVICE_ROLE_KEY', default=settings.SUPABASE_KEY)
+            admin_supabase = create_client(settings.SUPABASE_URL, service_role_key)
+            response = admin_supabase.storage.from_("musica").list("audio")
+            
+            audio_files = []
+            for item in response:
+                name = item.get('name', '')
+                if name and name != '.emptyFolderPlaceholder':
+                    # Ensure we don't duplicate the folder prefix if Supabase returns absolute paths
+                    if name.startswith('audio/'):
+                        name = name[len('audio/'):]
+                    
+                    if not name:
+                        continue
+
+                    # Beautify display name
+                    display_name = name.rsplit('.', 1)[0].replace('-', ' ').replace('_', ' ').title()
+                    
+                    audio_files.append({
+                        'name': name,
+                        'display_name': display_name,
+                        'url': f"{settings.SUPABASE_URL}/storage/v1/object/public/musica/audio/{urllib.parse.quote(name)}"
+                    })
+            context['audio_files'] = audio_files
+        except Exception as e:
+            print(f"Error fetching audio files from supabase: {e}")
+            context['audio_files'] = []
+        return context
+
 
 class GameCreateView(LoginRequiredMixin, CreateView):
     template_name = "web/game_form.html"

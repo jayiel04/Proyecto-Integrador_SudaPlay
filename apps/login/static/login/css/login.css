@@ -692,3 +692,20 @@
     }
 }
 
+/* --- Botón de sonido (Music Controls) en Login --- */
+.body-auth-page .music-controls {
+    z-index: 99999; /* Encima de los demás elementos */
+    pointer-events: none; /* Contenedor sin interactuar con lo que hay debajo */
+}
+
+.body-auth-page .music-controls > * {
+    pointer-events: auto; /* Elementos internos sí deben ser clickeables */
+}
+
+.body-auth-page .music-controls .music-toggle-btn {
+    font-size: 1.18rem; /* Mismo tamaño de fuente que los elementos internos */
+    padding: 8px 10px;
+    min-width: 42px;
+    text-shadow: 0 0 15px rgba(0, 229, 255, 0.9);
+}
+

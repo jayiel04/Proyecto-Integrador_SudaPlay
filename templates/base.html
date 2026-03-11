@@ -110,7 +110,9 @@
     <header class="site-header">
         <nav
             class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} navbar-auth{% endif %}">
+            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <div class="navbar-container">
+            {% endif %}
 
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
@@ -290,7 +292,9 @@
                 {% endif %}
             </div>
 
+            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
             </div>
+            {% endif %}
         </nav>
     </header>
 

@@ -1,6 +1,29 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block title %}Subir juego - SudaPlay{% endblock %}
+
+{% block extra_css %}
+<style>
+    .game-upload-card {
+        max-width: 800px !important;
+        width: 100%;
+        padding: 2.5rem !important;
+    }
+    .game-upload-form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0 1.5rem;
+    }
+    @media (min-width: 768px) {
+        .game-upload-form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+    .game-upload-actions {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
@@ -21,6 +44,7 @@
             </div>
             {% endif %}
 
+            <div class="game-upload-form-grid">
             {% for field in form %}
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
@@ -37,6 +61,7 @@
                 {% endif %}
             </div>
             {% endfor %}
+            </div>
 
             <div class="game-upload-actions">
                 <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit game-upload-submit-btn">Guardar juego</button>

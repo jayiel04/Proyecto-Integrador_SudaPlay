@@ -1,4 +1,4 @@
-﻿/* Navbar */
+/* Navbar */
 .site-header {
     height: var(--navbar-height);
 }
@@ -13,11 +13,9 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background:
-        linear-gradient(90deg, rgba(0, 128, 128, 0.98), rgba(0, 128, 128, 0.98), rgba(0, 139, 139, 0.98));
-    /* backdrop-filter: blur(10px); REMOVED FOR PERFORMANCE */
-    border-bottom: 1px solid rgba(0, 255, 255, 0.55);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 26px rgba(0, 255, 255, 0.24), 0 0 20px rgba(0, 139, 139, 0.22);
+    background: linear-gradient(90deg, rgba(5, 15, 20, 0.98), rgba(5, 25, 30, 0.98), rgba(5, 15, 20, 0.98));
+    border-bottom: 1px solid rgba(0, 255, 204, 0.6);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 255, 204, 0.4), 0 0 10px rgba(0, 255, 255, 0.3);
     overflow: visible;
 }
 
@@ -41,9 +39,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #ffffff 10%, #00ffff 35%, #fefefe 50%, #00ffff 65%, #f6f9f9 90%, transparent);
-    box-shadow: 0 0 15px rgba(200, 255, 255, 0.95), 0 0 30px rgba(0, 255, 255, 0.85), 0 0 45px rgba(0, 255, 255, 0.6);
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #00ffcc 20%, #00ffff 50%, #00ffcc 80%, transparent);
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.8), 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 204, 0.6);
     pointer-events: none;
 }
 
@@ -281,48 +279,53 @@
 }
 
 .navbar-link {
-    background: linear-gradient(145deg, rgba(0, 88, 88, 0.74), rgba(0, 128, 128, 0.7));
-    border: 1px solid rgba(0, 128, 128, 0.72);
-    border-radius: 7px;
+    background: rgba(10, 18, 28, 0.6);
+    border: 1px solid rgba(0, 255, 255, 0.5);
+    border-radius: 4px;
     box-shadow:
-        inset 0 0 12px rgba(0, 255, 255, 0.22),
-        0 0 12px rgba(0, 128, 128, 0.22);
-    color: var(--neon-green);
+        inset 0 0 8px rgba(0, 255, 255, 0.2),
+        0 0 8px rgba(0, 255, 255, 0.3);
+    color: #0ff;
     padding: 0.5rem 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 1px;
     text-decoration: none;
     transition: 0.3s;
 }
 
 .navbar-auth-link {
-    background: #000;
-    border: 1px solid rgba(0, 128, 128, 0.72);
+    background: rgba(5, 20, 25, 0.8);
+    border: 1px solid rgba(0, 255, 204, 0.7);
+    border-radius: 4px;
     font-size: 1rem;
     font-weight: 800;
-    letter-spacing: 0.02em;
-    color: var(--neon-green);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #00ffcc;
     padding: 0.64rem 1.15rem;
     box-shadow:
-        inset 0 0 12px rgba(0, 255, 255, 0.22),
-        0 0 12px rgba(0, 128, 128, 0.22);
+        inset 0 0 10px rgba(0, 255, 204, 0.3),
+        0 0 12px rgba(0, 255, 204, 0.4);
     transition: 0.3s;
 }
 
 .navbar-link:hover {
-    color: #fff;
-    border-color: #33c9c9;
-    background: linear-gradient(145deg, rgba(0, 128, 128, 0.86), rgba(0, 180, 180, 0.8));
+    color: #000;
+    border-color: #0ff;
+    background: #0ff;
     box-shadow:
-        0 0 18px rgba(0, 255, 255, 0.44),
-        0 0 18px rgba(0, 139, 139, 0.36);
+        0 0 15px rgba(0, 255, 255, 0.8),
+        0 0 25px rgba(0, 255, 255, 0.5);
 }
 
 .navbar-auth-link:hover {
-    color: #fff;
-    border-color: #33c9c9;
-    background: #111;
+    color: #000;
+    border-color: #00ffcc;
+    background: #00ffcc;
     box-shadow:
-        0 0 18px rgba(0, 255, 255, 0.44),
-        0 0 18px rgba(0, 139, 139, 0.36);
+        0 0 15px rgba(0, 255, 204, 0.8),
+        0 0 25px rgba(0, 255, 204, 0.5);
 }
 
 .profile-dropdown {
@@ -1429,6 +1432,7 @@
     justify-content: center;
     column-gap: 0.32em;
     white-space: nowrap;
+    margin-top: 0.8em; /* Baja un poco las letras y el logo */
 }
 
 .body-left-brand-inline-logo {
