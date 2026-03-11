@@ -898,7 +898,18 @@ document.addEventListener('DOMContentLoaded', function () {
             const volDownLink = soundContainer.querySelector('.secondary-nav-vol-down');
             const volUpLink = soundContainer.querySelector('.secondary-nav-vol-up');
 
-            if (soundLink && options) {
+            // Forzar que el botón principal vaya a la página de configuraciones avanzadas,
+            // incluso si algún script previo intentó abrir el dropdown.
+            if (soundLink) {
+                soundLink.dataset.forceRedirect = 'true';
+                soundLink.addEventListener('click', (ev) => {
+                    ev.stopImmediatePropagation();
+                    window.location.href = soundLink.href || '/juegos/sonido/configuraciones-avanzadas/';
+                }, true); // captura para adelantarnos a otros listeners
+            }
+
+            // Solo habilita el dropdown si el enlace principal no redirige directamente.
+            if (soundLink && options && soundLink.getAttribute('href') === '#') {
                 soundLink.addEventListener('click', (e) => {
                     e.preventDefault();
                     const isHidden = !options.style.display || options.style.display === 'none';

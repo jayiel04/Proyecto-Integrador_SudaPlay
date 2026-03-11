@@ -54,6 +54,45 @@
 
 }
 
+.register-card {
+    max-height: 90vh; /* Para que en pantallas pequeñas no ocupe más del 90% de la altura de la ventana */
+    overflow: hidden !important;
+    padding: 0 !important;
+}
+
+.register-scroll-wrap {
+    padding: 20px; /* Recuperar el padding original de .login-card */
+    overflow-y: auto;
+    max-height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 2;
+}
+
+/* Custom scrollbar para la tarjeta de registro */
+.register-scroll-wrap::-webkit-scrollbar {
+    width: 8px;
+}
+
+.register-scroll-wrap::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    margin-block: 10px; /* Separación vertical */
+}
+
+.register-scroll-wrap::-webkit-scrollbar-thumb {
+    background: rgba(57, 231, 255, 0.5); /* Usa tu color accent-cyan */
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+.register-scroll-wrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(57, 231, 255, 0.85);
+    box-shadow: 0 0 8px rgba(57, 231, 255, 0.6);
+}
+
 .login-card::before,
 .welcome-card::before {
     content: '';
@@ -256,6 +295,11 @@ input:focus {
     filter: brightness(1.28);
 }
 
+/* Reducir espacio entre el input de arriba y el botón de Crear Cuenta */
+.register-card .btn-login.login-main-submit {
+    margin-top: -3px;
+}
+
 /* Boton principal del login con tema cyberpunk teal */
 .login-main-submit {
     background: linear-gradient(150deg, #008080, #005f5f);
@@ -297,9 +341,10 @@ input:focus {
 
 .remember-forgot {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
     margin: 15px 0;
     font-size: 0.8rem;
 }
@@ -406,6 +451,31 @@ input:focus {
 
 .signup-link a:hover {
     text-decoration: underline;
+}
+
+@media (max-height: 630px) {
+    .signup-link, .login-signup-link {
+        margin-top: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+    .signup-link a {
+        margin-top: 15px;
+    }
+    .divider {
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+    .social-login {
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 610px), (max-height: 610px) {
+    .register-card .login-header {
+        display: none;
+    }
 }
 
 /* Errores */

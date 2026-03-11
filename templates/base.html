@@ -88,7 +88,7 @@
             <a href="/auth/jugadores/buscar/" class="secondary-nav-item secondary-nav-search-players"><i class="fas fa-users"></i><span>Jugadores</span></a>
             {% endif %}
             <div class="secondary-nav-sound-container mt-auto">
-                <a href="#" class="secondary-nav-item secondary-nav-sound"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
+                <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound" data-no-style-wait="true"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
                 <div class="secondary-nav-sound-options" style="display:none">
                     <a href="#" class="secondary-nav-item secondary-nav-mute"><i class="fas fa-volume-up"></i></a>
                     <a href="#" class="secondary-nav-item secondary-nav-vol-down"><i class="fas fa-minus"></i></a>
@@ -384,7 +384,7 @@
 
     {% endif %}
     <!-- defer: el navegador parsea el HTML completo antes de ejecutar el script -->
-    <script src="{% static 'js/main.js' %}" defer></script>
+    <script src="{% static 'js/main.js' %}?v=2" defer></script>
     {% if user.is_authenticated %}
     {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
     {% endif %}

@@ -1,4 +1,4 @@
-﻿* {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -156,17 +156,8 @@ body.has-sidebar .music-controls {
 
 .background::before {
     content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background:
-        radial-gradient(circle at 35% 30%, rgba(0, 128, 128, 0.24) 0%, transparent 62%),
-        radial-gradient(circle at 70% 70%, rgba(0, 255, 255, 0.14) 0%, transparent 60%);
-    animation: pulse 5s infinite alternate;
-    /* mix-blend-mode: screen; REMOVIDO POR RENDIMIENTO */
-    will-change: transform, opacity;
+    /* El pseudo-elemento generaba el cuadrado giratorio; lo ocultamos para dejar el fondo estático. */
+    display: none;
 }
 
 .background::after {
