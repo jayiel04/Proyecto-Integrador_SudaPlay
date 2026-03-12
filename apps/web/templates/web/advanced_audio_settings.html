@@ -259,7 +259,6 @@
         </div>
 
         <div class="audio-settings-actions">
-        <button type="button" id="advanced-audio-save" class="btn-login btn-save-tone">Guardar cambios</button>
         <button type="button" id="advanced-audio-reset" class="btn-login audio-settings-reset-btn">Restaurar por defecto</button>
         </div>
     </section>
@@ -282,10 +281,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const mutedInput = document.getElementById('advanced-audio-muted');
     const autoplayInput = document.getElementById('advanced-audio-autoplay');
     const trackInput = document.getElementById('advanced-audio-track');
-    const saveBtn = document.getElementById('advanced-audio-save');
     const resetBtn = document.getElementById('advanced-audio-reset');
 
-    if (!volumeInput || !volumeValue || !mutedInput || !autoplayInput || !trackInput || !saveBtn || !resetBtn) {
+    if (!volumeInput || !volumeValue || !mutedInput || !autoplayInput || !trackInput || !resetBtn) {
         return;
     }
 
@@ -346,33 +344,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
+    let applyTimer = null;
+    const scheduleApply = () => {
+        if (applyTimer) {
+            clearTimeout(applyTimer);
+        }
+        applyTimer = setTimeout(() => {
+            applyValues();
+            applyTimer = null;
+        }, 200);
+    };
+
     volumeInput.addEventListener('input', () => {
         const currentVol = volumeInput.value;
         volumeValue.textContent = formatPercent(currentVol);
         if (backgroundMusic) {
             backgroundMusic.volume = Math.min(1, Math.max(0, parseFloat(currentVol)));
         }
+        scheduleApply();
     });
 
-    trackInput.addEventListener('change', () => {
-        if (!backgroundMusic) return;
-        const track = trackInput.value;
-        if (backgroundMusic.getAttribute('src') !== track) {
-            backgroundMusic.setAttribute('src', track);
-            backgroundMusic.load();
-            if (autoplayInput.checked) {
-                backgroundMusic.play().catch(() => {});
-            }
-        }
-    });
-
-    mutedInput.addEventListener('change', () => {
-        if (backgroundMusic) {
-            backgroundMusic.muted = mutedInput.checked;
-        }
-    });
-
-    saveBtn.addEventListener('click', applyValues);
+    volumeInput.addEventListener('change', applyValues);
+    trackInput.addEventListener('change', applyValues);
+    mutedInput.addEventListener('change', applyValues);
+    autoplayInput.addEventListener('change', applyValues);
 
     resetBtn.addEventListener('click', () => {
         volumeInput.value = '0.24';
@@ -383,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     loadValues();
+    applyValues();
 });
 </script>
 {% endblock %}

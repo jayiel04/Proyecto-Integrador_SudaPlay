@@ -161,6 +161,22 @@
     /* rango estrecho: 8px-10px */
     margin: clamp(8px, 1.1dvh, 10px) 0;
     font-size: clamp(0.92rem, 1.9dvh, 1rem);
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 14px;
+}
+
+.body-auth-page .remember-forgot .checkbox-wrapper {
+    flex: 0 0 auto;
+}
+
+.body-auth-page .remember-forgot .forgot-password-link {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.82em;
+    line-height: 1.1;
+    margin-left: 18px;
+    text-align: left;
 }
 
 .body-auth-page .divider {
@@ -267,7 +283,7 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .btn-login {
-    margin-top: clamp(12px, 2.5dvh, 28px);
+    margin-top: clamp(18px, 3.2dvh, 36px);
     padding-top: clamp(13px, 2.6dvh, 26px);
     padding-bottom: clamp(13px, 2.6dvh, 26px);
     font-size: clamp(1rem, 2.2dvh, 1.6rem);
@@ -664,10 +680,19 @@
         margin: 4px 0 6px;
     }
 
+    .body-auth-page .auth-page-layout .login-page-card .remember-forgot {
+        gap: 10px;
+    }
+
+    .body-auth-page .auth-page-layout .login-page-card .remember-forgot .forgot-password-link {
+        font-size: 0.7rem;
+        margin-left: 14px;
+    }
+
     .body-auth-page .auth-page-layout .login-page-card .btn-login {
         font-size: 0.9rem;
         letter-spacing: 0.1em;
-        margin-top: 6px;
+        margin-top: 12px;
         padding-top: 10px;
         padding-bottom: 10px;
     }

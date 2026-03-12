@@ -1426,7 +1426,7 @@
 
 .body-left-brand-logo-sitting {
     position: absolute;
-    top: -1.05em;
+    top: -0.65em;
     left: 50%;
     transform: translateX(-30%);
     pointer-events: none;
@@ -1450,12 +1450,18 @@
     margin-top: 0.8em; /* Baja un poco las letras y el logo */
 }
 
+/* Solo Login: mueve "SudaPlay" un poco a la izquierda (sin mover el logo). */
+.body-auth-page:not(.body-register-page) .body-left-brand-name > span {
+    position: relative;
+    left: -0.45em;
+}
+
 .body-left-brand-inline-logo {
     width: 3.3em;
     height: 3.3em;
     display: block;
     margin-right: 0.12em;
-    transform: translateY(-0.12em);
+    transform: translate(-0.18em, -0.12em);
     filter: drop-shadow(0 0 8px rgba(216, 247, 246, 0.7));
 }
 
@@ -1480,7 +1486,7 @@
 
 /* Auth (Login/Registro/Reset): baja la frase para alinearla con la card derecha. */
 .body-auth-page .body-left-brand-tagline {
-    top: clamp(8px, 3dvh, 42px) !important;
+    top: clamp(4px, 2.5dvh, 36px) !important;
     margin-left: clamp(40px, 6vw, 90px) !important;
 }
 
