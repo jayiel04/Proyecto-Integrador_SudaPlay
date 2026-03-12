@@ -26,6 +26,9 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import JsonResponse
 from django.templatetags.static import static
 from django.urls import reverse_lazy
+from datetime import timedelta
+
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Case, When, IntegerField, Q
 
@@ -57,6 +60,15 @@ def _resolve_avatar_url(profile, available_avatars):
             pass
     default_avatar = _default_avatar_name(available_avatars)
     return AvatarStorage().url(default_avatar) if default_avatar else ''
+
+
+def _user_is_online(user, window_minutes=5):
+    if not user or not getattr(user, 'is_active', False):
+        return False
+    last_login = getattr(user, 'last_login', None)
+    if not last_login:
+        return False
+    return timezone.now() - last_login <= timedelta(minutes=window_minutes)
 
 
 class LoginView(FormView):
@@ -240,6 +252,7 @@ class ProfileView(View):
             req.avatar_url = _resolve_avatar_url(getattr(req.from_user, 'profile', None), available_avatars)
         for friend in friends:
             friend.avatar_url = _resolve_avatar_url(friend, available_avatars)
+            friend.is_online = _user_is_online(getattr(friend, 'user', None))
 
         context = {
             'profile': profile,
@@ -533,12 +546,15 @@ class PlayerProfileView(View):
             friendship_status = 'pending_received'
 
         available_avatars = _available_avatar_names()
+        target_is_online = _user_is_online(target_user)
+
         context = {
             'target_user': target_user,
             'profile': profile,
             'profile_avatar_url': _resolve_avatar_url(profile, available_avatars),
             'user_games': user_games,
             'friendship_status': friendship_status,
+            'target_is_online': target_is_online,
         }
         return render(request, self.template_name, context)
 

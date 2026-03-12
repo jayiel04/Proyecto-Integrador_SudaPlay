@@ -21,8 +21,19 @@
     .faq-header h1 {
         font-family: 'Orbitron', sans-serif;
         color: #ff3366;
-        text-shadow: 0 0 10px rgba(255,51,102,0.5);
         font-size: 2.5rem;
+        text-shadow:
+            1px 1px 0 #000,
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            0 0 12px rgba(255, 255, 255, 0.8);
+    }
+    .faq-header p {
+        margin-top: 1rem;
+        font-family: 'Orbitron', sans-serif;
+        color: #cbd2ff;
+        letter-spacing: 0.08em;
     }
     .faq-item {
         margin-bottom: 1rem;
@@ -45,9 +56,20 @@
         justify-content: space-between;
         align-items: center;
         transition: background 0.3s;
+        border-radius: 10px;
+        background: linear-gradient(145deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+        box-shadow:
+            inset 0 0 8px rgba(255,255,255,0.1),
+            0 10px 25px rgba(0,0,0,0.45),
+            0 0 18px rgba(79, 186, 255, 0.35);
+        border: 1px solid rgba(79, 186, 255, 0.25);
     }
     .faq-question:hover {
-        background: rgba(255,255,255,0.05);
+        background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.02));
+        box-shadow:
+            inset 0 0 18px rgba(255,255,255,0.35),
+            0 12px 30px rgba(0,0,0,0.55),
+            0 0 20px rgba(46, 196, 255, 0.9);
     }
     .faq-icon {
         transition: transform 0.3s ease;
@@ -95,6 +117,48 @@
     .faq-container.hidden {
         display: none;
     }
+    .faq-terms-callout {
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        text-align: center;
+    }
+    .faq-callout-text {
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        color: #2ec4ff;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        font-family: 'Orbitron', sans-serif;
+        text-shadow:
+            1px 1px 0 #000,
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            0 0 10px rgba(46, 196, 255, 0.8);
+    }
+    .faq-terms-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #fff;
+        background: linear-gradient(135deg, #9c00ff, #7f00ff, #5b00ff);
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow:
+            0 0 18px rgba(255, 0, 255, 0.45),
+            0 0 26px rgba(155, 0, 255, 0.45),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+        transition: filter 0.2s, transform 0.2s;
+    }
+    .faq-terms-btn:hover {
+        filter: brightness(1.2);
+        transform: translateY(-1px);
+    }
 </style>
 {% endblock %}
 
@@ -122,14 +186,9 @@
         {% endfor %}
     </div>
 
-    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
-        <p style="color: #888; font-size: 0.85rem; margin-bottom: 0.75rem;">¿Quieres publicar un juego?</p>
-        <a href="{% url 'support:terms' %}"
-           style="display:inline-flex; align-items:center; gap:8px; padding:9px 20px;
-                  font-family:'Orbitron',sans-serif; font-size:0.75rem; font-weight:700;
-                  color:#fff; background:linear-gradient(135deg,#008080,#8f6bff);
-                  border-radius:8px; text-decoration:none;
-                  box-shadow:0 0 14px rgba(57,231,255,0.3); transition:filter 0.2s;">
+    <div class="faq-terms-callout">
+        <p class="faq-callout-text">¿Quieres publicar un juego?</p>
+        <a class="faq-terms-btn" href="{% url 'support:terms' %}">
             <i class="fas fa-file-contract"></i> Términos y Condiciones de publicación
         </a>
     </div>

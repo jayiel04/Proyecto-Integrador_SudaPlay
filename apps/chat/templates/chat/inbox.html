@@ -5,6 +5,14 @@
 
 {% block extra_css %}
 <style>
+    :root {
+        --neon-lilac: #b049ff;
+        --neon-hyperpink: #ff2c91;
+        --neon-azure: #19d2ff;
+        --neon-cyan-dim: rgba(25, 210, 255, 0.35);
+        --neon-pink-dim: rgba(255, 44, 145, 0.25);
+    }
+
     /* WhatsApp-Style Layout */
     .chat-app-wrapper {
         padding-top: calc(var(--navbar-height) + 1rem);
@@ -13,6 +21,20 @@
         width: 100%;
         height: 100vh;
         overflow: hidden;
+        position: relative;
+        background: radial-gradient(circle at 25% -40%, rgba(255, 95, 201, 0.15), transparent 45%),
+            radial-gradient(circle at 70% 10%, rgba(25, 210, 255, 0.12), transparent 38%),
+            #01060d;
+    }
+
+    .chat-app-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(130deg, rgba(255, 44, 145, 0.08), rgba(25, 210, 255, 0.04));
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: screen;
     }
 
     .chat-app-container {
@@ -22,26 +44,63 @@
         height: calc(100vh - var(--navbar-height) - 1rem);
         display: flex;
         gap: 1rem;
+        position: relative;
+        z-index: 1;
+        isolation: isolate;
+        border-radius: 28px;
     }
 
     /* Left Panel: Conversations List */
     .chat-sidebar {
         width: 350px;
-        background: var(--color-card-bg, rgba(2, 22, 22, 0.98));
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        background:
+            radial-gradient(circle at top, rgba(145, 0, 255, 0.55), transparent 40%),
+            linear-gradient(180deg, rgba(3, 8, 20, 0.98), rgba(4, 12, 26, 0.95));
+        border: 1px solid rgba(255, 44, 145, 0.5);
         border-radius: 1.25rem;
-        /* backdrop-filter: blur(10px); REMOVED FOR PERFORMANCE */
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.05);
+        box-shadow:
+            0 35px 70px rgba(0, 0, 0, 0.75),
+            inset 0 0 28px rgba(255, 44, 145, 0.25),
+            inset 0 0 24px rgba(25, 210, 255, 0.18);
         display: flex;
         flex-direction: column;
         overflow: hidden;
         flex-shrink: 0;
+        position: relative;
+        isolation: isolate;
+    }
+
+    .chat-sidebar::before {
+        content: '';
+        position: absolute;
+        inset: 1px;
+        border-radius: 1.25rem;
+        background: linear-gradient(180deg, rgba(255, 44, 145, 0.12), rgba(25, 210, 255, 0.05));
+        pointer-events: none;
+        z-index: 0;
+        filter: blur(1px);
+    }
+
+    .chat-sidebar::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1.25rem;
+        background: radial-gradient(circle, rgba(255, 244, 255, 0.08), transparent 55%);
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: screen;
     }
 
     .chat-sidebar-header {
         padding: 1.2rem 1.5rem;
-        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 62, 165, 0.45);
+        background: linear-gradient(135deg, rgba(25, 210, 255, 0.25), rgba(255, 44, 145, 0.3));
+        box-shadow:
+            inset 0 0 18px rgba(0, 0, 0, 0.6),
+            0 0 18px rgba(255, 44, 145, 0.25);
+        position: relative;
+        z-index: 1;
     }
     
     .chat-sidebar-title {
@@ -58,6 +117,8 @@
         flex: 1;
         overflow-y: auto;
         padding: 0.5rem 0;
+        position: relative;
+        z-index: 1;
     }
 
     /* Contact Card */
@@ -67,19 +128,32 @@
         align-items: center;
         gap: 1rem;
         cursor: pointer;
-        transition: background 0.2s;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        transition: background 0.2s, box-shadow 0.2s;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
         text-decoration: none;
         color: inherit;
+        background:
+            linear-gradient(135deg, rgba(255, 44, 145, 0.05), rgba(25, 210, 255, 0.05)),
+            rgba(3, 6, 20, 0.45);
+        border-radius: 16px;
+        margin: 0 1rem 0 1rem;
     }
 
     .contact-card:hover {
-        background: rgba(255, 255, 255, 0.05);
+        background:
+            linear-gradient(135deg, rgba(68, 151, 255, 0.25), rgba(255, 62, 165, 0.25)),
+            rgba(3, 6, 20, 0.6);
+        box-shadow:
+            0 0 20px rgba(56, 225, 255, 0.35),
+            inset 0 0 12px rgba(255, 78, 213, 0.45);
     }
 
     .contact-card.active {
-        background: rgba(0, 255, 255, 0.1);
-        border-left: 3px solid var(--neon-cyan, #00ffff);
+        background: linear-gradient(135deg, rgba(68, 151, 255, 0.3), rgba(255, 62, 165, 0.5));
+        border-left: 3px solid rgba(255, 62, 165, 0.95);
+        box-shadow:
+            0 0 20px rgba(255, 62, 165, 0.55),
+            inset 0 0 18px rgba(0, 255, 255, 0.2);
     }
 
     .contact-avatar {
@@ -116,18 +190,22 @@
     }
 
     .contact-name {
-        font-weight: 600;
-        color: #fff;
+        font-weight: 700;
+        color: #9ee7ff;
         font-size: 1.1rem;
         margin-bottom: 0.2rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        letter-spacing: 0.1em;
+        text-shadow: 0 0 8px rgba(158, 231, 255, 0.65);
     }
 
     .contact-last-msg {
-        font-size: 0.85rem;
-        color: #a0aec0;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -136,15 +214,31 @@
     /* Right Panel: Active Chat Area */
     .chat-main-area {
         flex: 1;
-        background: var(--color-card-bg, rgba(2, 22, 22, 0.98));
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        background:
+            radial-gradient(circle at top right, rgba(255, 62, 165, 0.35), transparent 38%),
+            linear-gradient(180deg, rgba(4, 9, 23, 0.98), rgba(1, 8, 18, 0.95));
+        border: 1px solid rgba(255, 44, 145, 0.65);
         border-radius: 1.25rem;
-        /* backdrop-filter: blur(10px); REMOVED FOR PERFORMANCE */
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.05);
+        box-shadow:
+            0 0 30px rgba(0, 0, 0, 0.8),
+            inset 0 0 15px rgba(255, 44, 145, 0.4),
+            inset 0 0 22px rgba(25, 210, 255, 0.2);
         display: flex;
         flex-direction: column;
         overflow: hidden;
         position: relative;
+        isolation: isolate;
+    }
+
+    .chat-main-area::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 1.25rem;
+        background: linear-gradient(120deg, rgba(255, 44, 145, 0.08), transparent 45%);
+        pointer-events: none;
+        z-index: 0;
+        mix-blend-mode: screen;
     }
 
     /* Default Empty State */
@@ -155,9 +249,10 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.75);
         z-index: 10;
         background: inherit;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
     }
 
     .chat-main-empty i {
@@ -176,11 +271,14 @@
     /* Active Chat View (Reusing components from previous chat.html but adapted) */
     .chat-header {
         padding: 1rem 1.5rem;
-        border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-        background: rgba(0, 0, 0, 0.3);
+        border-bottom: 1px solid rgba(255, 62, 165, 0.5);
+        background: linear-gradient(135deg, rgba(25, 210, 255, 0.18), rgba(255, 44, 145, 0.2));
         display: flex;
         align-items: center;
         gap: 1rem;
+        box-shadow:
+            inset 0 0 25px rgba(0, 0, 0, 0.4),
+            0 0 18px rgba(255, 44, 145, 0.32);
     }
 
     .chat-header-avatar {
@@ -264,7 +362,10 @@
         display: flex;
         flex-direction: column;
         gap: 1.2rem;
-        /* Custom scrollbar */
+        background:
+            linear-gradient(180deg, rgba(4, 9, 23, 0.3), rgba(4, 9, 23, 0.95));
+        position: relative;
+        isolation: isolate;
     }
     
     .chat-messages-area::-webkit-scrollbar,
@@ -336,11 +437,14 @@
 
     .chat-input-area {
         padding: 1.2rem 1.5rem;
-        background: rgba(0, 0, 0, 0.4);
-        border-top: 1px solid rgba(0, 255, 255, 0.2);
+        background: linear-gradient(135deg, rgba(25, 210, 255, 0.12), rgba(255, 44, 145, 0.14));
+        border-top: 1px solid rgba(255, 62, 165, 0.4);
         display: flex;
         gap: 1rem;
         align-items: flex-end;
+        box-shadow:
+            inset 0 0 14px rgba(255, 62, 165, 0.28),
+            0 0 12px rgba(255, 44, 145, 0.2);
     }
 
     .chat-input-wrapper {

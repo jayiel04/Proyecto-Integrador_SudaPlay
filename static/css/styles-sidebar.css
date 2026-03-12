@@ -74,7 +74,7 @@
     box-shadow: 4px 0 24px rgb(164, 165, 165);
     /* Resplandor plateado */
     z-index: 99;
-    transition: width 0.3s ease;
+    transition: width 0.15s ease;
     overflow: visible;
 }
 
@@ -127,12 +127,13 @@ body.sidebar-open .secondary-nav {
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    padding: 16px 4px;
+    padding: 94px 4px 20px;
     overflow: visible;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     height: 100%;
     padding-bottom: 20px;
+    transform: translateY(8px);
 }
 
 .secondary-nav:hover .secondary-nav-container {
@@ -242,10 +243,12 @@ body.sidebar-open .secondary-nav-item span {
 
 /* indicador de activo en el sidebar */
 .secondary-nav-item.is-active {
-    background: rgba(0, 255, 255, 0.2);
+    background: radial-gradient(circle, rgba(255, 95, 255, 0.65) 0%, rgba(148, 0, 255, 0.85) 60%, rgba(79, 0, 255, 0.9) 100%);
     box-shadow:
-        0 0 14px rgba(255, 78, 190, 0.55),
-        0 0 24px rgba(143, 107, 255, 0.35);
+        0 0 20px rgba(148, 0, 255, 0.9),
+        0 0 30px rgba(255, 62, 165, 0.65),
+        inset 0 0 12px rgba(255, 255, 255, 0.4);
+    color: #fff;
 }
 
 /* dropdown para controles de sonido dentro del sidebar */

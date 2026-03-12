@@ -66,6 +66,35 @@
         font-size: 0.95rem;
         color: #aaa;
     }
+    .profile-online-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: #b8f6ff;
+    }
+    .profile-online-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    }
+    .profile-online-indicator.online {
+        background: #2cff52;
+        border-color: rgba(44, 255, 82, 0.8);
+        box-shadow: 0 0 14px rgba(44, 255, 82, 0.6);
+    }
+    .profile-online-indicator.offline {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    .profile-online-label {
+        font-size: 0.9rem;
+        color: #d3f5ff;
+    }
     .role-badge {
         display: inline-flex;
         align-items: center;
@@ -89,6 +118,24 @@
     @media (max-width: 768px) {
         .profile-content-grid { grid-template-columns: 1fr; }
         .profile-friend-actions { margin-left: 0 !important; width: 100%; justify-content: flex-start; margin-top: 1rem; }
+    }
+    .friend-name-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .friend-online-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .friend-online-dot.online {
+        background: #26ff8c;
+        border-color: rgba(38, 255, 140, 0.9);
+        box-shadow: 0 0 12px rgba(38, 255, 140, 0.6);
     }
     .profile-section {
         background: rgba(0,0,0,0.3);
@@ -239,6 +286,10 @@
                     {% endif %}
                 </p>
                 <p class="profile-joined"><i class="far fa-calendar-alt"></i> Miembro desde {{ target_user.date_joined|date:"M Y" }}</p>
+                <div class="profile-online-status">
+                    <span class="profile-online-indicator{% if target_is_online %} online{% else %} offline{% endif %}" title="{% if target_is_online %}En línea{% else %}Desconectado{% endif %}" aria-hidden="true"></span>
+                    <span class="profile-online-label">{% if target_is_online %}En línea{% else %}Desconectado{% endif %}</span>
+                </div>
             </div>
 
             <!-- Friend Actions -->
@@ -267,7 +318,7 @@
                     </a>
                 
                 {% elif friendship_status == 'friends' %}
-                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn" style="font-size: 0.9rem; text-decoration: none; display: inline-flex;">
+                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn profile-chat-action-btn" style="font-size: 0.9rem; text-decoration: none; display: inline-flex;">
                         <i class="fas fa-comment-dots"></i> Chatear
                     </a>
                     <button class="profile-secondary-btn btn-friends" style="font-size: 0.9rem; border-color: #00ff00; color: #00ff00; cursor: default; margin-left:10px;">

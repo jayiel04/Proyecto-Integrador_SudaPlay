@@ -367,6 +367,32 @@
     </script>
     {% endif %}
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPath = (window.location.pathname || '/').replace(/\/+$/, '') || '/';
+            document.querySelectorAll('.secondary-nav-item').forEach(function (item) {
+                const href = item.getAttribute('href');
+                if (!href) {
+                    return;
+                }
+                const cleanHref = href.split('#')[0];
+                if (!cleanHref) {
+                    return;
+                }
+                const normalizedHref = cleanHref.replace(/\/+$/, '') || '/';
+                if (normalizedHref === currentPath) {
+                    item.classList.add('is-active');
+                    if (item.closest('.secondary-nav-sound-options')) {
+                        const soundContainer = item.closest('.secondary-nav-sound-container');
+                        if (soundContainer) {
+                            soundContainer.classList.add('open');
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+
     {% if request.resolver_match.url_name != 'game_play' %}
     <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
     <!-- preload="none": el audio NO se descarga hasta que el usuario interactúe -->

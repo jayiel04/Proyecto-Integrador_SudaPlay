@@ -5,32 +5,209 @@
 {% block extra_css %}
 <style>
     .game-upload-card {
-        max-width: 800px !important;
+        max-width: 900px !important;
         width: 100%;
-        padding: 2.5rem !important;
+        padding: clamp(2.5rem, 3vw, 3.5rem) !important;
+        background:
+            radial-gradient(circle at top right, rgba(98, 255, 255, 0.35), transparent 45%),
+            linear-gradient(145deg, rgba(32, 45, 66, 0.78), rgba(12, 16, 32, 0.65)),
+            rgba(15, 22, 50, 0.45);
+        border: 1px solid rgba(255, 150, 200, 0.35);
+        box-shadow:
+            0 0 36px rgba(4, 16, 24, 0.5),
+            0 0 30px rgba(73, 133, 255, 0.25),
+            inset 0 0 24px rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        backdrop-filter: blur(14px);
     }
+
+    .game-upload-header h1 {
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        text-transform: uppercase;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        color: #00e5ff;
+        text-shadow:
+            0 0 6px rgba(0, 255, 255, 0.65),
+            0 0 18px rgba(255, 86, 255, 0.45);
+        margin-bottom: 0.5rem;
+    }
+
+    .game-upload-subtitle {
+        color: #ffffff;
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.4),
+            0 0 18px rgba(171, 26, 255, 0.9);
+    }
+
+    .game-upload-subtitle.cta-gray {
+        color: #ffffff !important;
+        text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.6),
+            0 0 18px rgba(175, 20, 255, 0.95);
+    }
+
     .game-upload-form-grid {
         display: grid;
         grid-template-columns: 1fr;
-        gap: 0 1.5rem;
+        gap: 1.25rem;
     }
+
     @media (min-width: 768px) {
         .game-upload-form-grid {
             grid-template-columns: 1fr 1fr;
         }
     }
+
     .game-upload-actions {
-        margin-top: 1rem;
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
     }
+
+    .cancel-btn {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.9), rgba(76, 148, 255, 0.95));
+        color: #ffffff;
+        text-decoration: none;
+        text-align: center;
+        padding-inline: 1.4rem;
+        box-shadow:
+            0 0 18px rgba(255, 50, 138, 0.5),
+            inset 0 0 10px rgba(255, 255, 255, 0.4);
+        font-size: 0.95rem;
+        letter-spacing: 0.2em;
+    }
+
+    .cancel-btn:hover {
+        box-shadow:
+            0 0 26px rgba(255, 50, 138, 0.7),
+            inset 0 0 14px rgba(255, 255, 255, 0.5);
+    }
+
+    .game-upload-form-grid .form-group {
+        position: relative;
+    }
+
+    .game-upload-form-grid label {
+        display: inline-block;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+        color: #b5e0ff;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        text-shadow:
+            0 0 6px rgba(0, 0, 0, 0.7),
+            0 0 12px rgba(77, 181, 255, 0.5);
+    }
+
+    .game-upload-form-grid input[type="text"],
+    .game-upload-form-grid input[type="url"],
+    .game-upload-form-grid textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(85, 255, 255, 0.45);
+        background: rgba(1, 12, 24, 0.75);
+        color: #fdfcff;
+        box-shadow:
+            inset 0 0 14px rgba(0, 255, 255, 0.15),
+            0 0 12px rgba(0, 255, 186, 0.25);
+        transition: border 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .game-upload-form-grid select {
+        appearance: none;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 86, 255, 0.7);
+        background:
+            linear-gradient(145deg, rgba(6, 12, 24, 0.9), rgba(4, 8, 16, 0.9)),
+            rgba(5, 5, 15, 0.85);
+        color: #fdfcff;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow:
+            inset 0 0 10px rgba(255, 86, 255, 0.25),
+            0 0 20px rgba(87, 255, 235, 0.2);
+        background-image:
+            linear-gradient(90deg, transparent, transparent 90%, rgba(255, 255, 255, 0.6)),
+            radial-gradient(circle at top right, rgba(255, 86, 255, 0.25), transparent 45%);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+    }
+
+    .game-upload-form-grid select::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .game-upload-form-grid select:focus {
+        outline: none;
+        border-color: rgba(0, 229, 255, 0.9);
+        box-shadow:
+            0 0 18px rgba(0, 229, 255, 0.6),
+            inset 0 0 18px rgba(255, 86, 255, 0.4);
+    }
+
+    .game-upload-form-grid select option {
+        background: rgba(0, 0, 0, 0.9);
+        color: #eef4ff;
+    }
+
+    .game-upload-form-grid select option:checked {
+        background: rgba(0, 229, 255, 0.25);
+        color: #00e5ff;
+    }
+
+    .game-upload-form-grid input[type="text"]:focus,
+    .game-upload-form-grid input[type="url"]:focus,
+    .game-upload-form-grid textarea:focus,
+    .game-upload-form-grid select:focus {
+        outline: none;
+        border-color: rgba(255, 103, 255, 0.9);
+        box-shadow:
+            0 0 16px rgba(255, 255, 255, 0.25),
+            inset 0 0 20px rgba(255, 0, 255, 0.2);
+    }
+
+    .game-upload-form-grid input::placeholder,
+    .game-upload-form-grid textarea::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .game-upload-form-grid input[type="file"] {
+        color: #fdfcff;
+        letter-spacing: 0.1em;
+    }
+
+    .game-upload-form-grid select option {
+        background: #01060f;
+        color: #f7f8ff;
+    }
+
+    .game-upload-form-grid select:focus option,
+    .game-upload-form-grid select:hover option {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00e5ff;
+    }
+
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="login-card game-upload-card">
-        <div class="login-header">
+        <div class="login-header game-upload-header">
             <h1>Subir juego</h1>
-            <p>Publicacion inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+            <p class="game-upload-subtitle cta-gray">Publicación inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
         </div>
 
         <form method="post" enctype="multipart/form-data" id="game-upload-form">
@@ -64,8 +241,8 @@
             </div>
 
             <div class="game-upload-actions">
-                <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit game-upload-submit-btn">Guardar juego</button>
-                <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login game-upload-cancel-link">Cancelar</a>
+                <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit">Guardar juego</button>
+                <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login cancel-btn">Cancelar</a>
             </div>
         </form>
     </div>

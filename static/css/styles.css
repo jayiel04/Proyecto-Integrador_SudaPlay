@@ -34,6 +34,21 @@ body {
     min-height: 100dvh;
     overflow-x: clip;
     padding-bottom: 50px;
+    scrollbar-width: none;
+}
+
+body::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+html {
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
 /* space for vertical secondary nav */
@@ -45,6 +60,12 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
+    scrollbar-width: none;
+}
+
+.main-content::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
 /* Solo aplicar margen si existe el sidebar (usuario logueado) */
