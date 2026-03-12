@@ -1,6 +1,13 @@
 /* Navbar */
 .site-header {
     height: var(--navbar-height);
+    background: #04121d;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 255, 204, 0.25);
+}
+
+.site-header::before,
+.site-header::after {
+    display: none;
 }
 
 .navbar {
@@ -13,24 +20,10 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    background: linear-gradient(90deg, rgba(5, 15, 20, 0.98), rgba(5, 25, 30, 0.98), rgba(5, 15, 20, 0.98));
+    background: #04121d;
     border-bottom: 1px solid rgba(0, 255, 204, 0.6);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 255, 204, 0.4), 0 0 10px rgba(0, 255, 255, 0.3);
     overflow: visible;
-}
-
-.navbar::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        repeating-linear-gradient(90deg,
-            rgba(255, 255, 255, 0.03) 0,
-            rgba(255, 255, 255, 0.03) 1px,
-            transparent 1px,
-            transparent 14px);
-    pointer-events: none;
-    opacity: 0.35;
 }
 
 .navbar::after {
@@ -39,9 +32,13 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #00ffcc 20%, #00ffff 50%, #00ffcc 80%, transparent);
-    box-shadow: 0 0 10px rgba(0, 255, 204, 0.8), 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 204, 0.6);
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #00ffcc, #00ffff, #00ffcc);
+    box-shadow:
+        0 0 15px rgba(0, 255, 204, 0.9),
+        0 0 30px rgba(0, 255, 255, 0.8),
+        0 0 40px rgba(0, 255, 204, 0.4);
     pointer-events: none;
 }
 
@@ -1101,6 +1098,24 @@
         0 0 12px rgba(62, 165, 255, 0.35),
         inset 0 0 6px rgba(255, 255, 255, 0.25);
     color: #fff;
+    border-radius: 999px;
+    padding: 12px 0;
+    width: 100%;
+}
+
+.profile-chat-action-btn {
+    width: auto;
+    min-width: 150px;
+    border-radius: 12px;
+    padding: 0.9rem 1.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    box-shadow:
+        0 10px 20px rgba(0, 0, 0, 0.35),
+        inset 0 0 12px rgba(255, 255, 255, 0.25);
+}
+.profile-chat-action-btn i {
+    font-size: 1rem;
 }
 
 .profile-menu {
@@ -1384,7 +1399,7 @@
 .body-left-brand {
     position: fixed;
     top: 54%;
-    left: clamp(12px, 2vw, 26px);
+    left: clamp(6px, 1.5vw, 20px);
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
@@ -1418,7 +1433,7 @@
 }
 
 .body-left-brand-logo-sitting-img {
-    width: 5.8em;
+    width: 6.4em;
     height: auto;
     display: block;
     filter: drop-shadow(0 0 10px rgba(216, 247, 246, 0.9));
@@ -1436,11 +1451,11 @@
 }
 
 .body-left-brand-inline-logo {
-    width: 2.75em;
-    height: 2.75em;
+    width: 3.3em;
+    height: 3.3em;
     display: block;
     margin-right: 0.12em;
-    transform: translateY(-0.08em);
+    transform: translateY(-0.12em);
     filter: drop-shadow(0 0 8px rgba(216, 247, 246, 0.7));
 }
 
@@ -1449,12 +1464,12 @@
     display: block;
     flex-basis: 100%;
     width: 100%;
-    margin-left: 150PX;
+    margin-left: clamp(90px, 5vw, 120px);
     margin-top: 0.06em;
     padding: 0;
     border: none;
     border-radius: 0;
-    font-size: clamp(1.15rem, 1vw, 1.55rem);
+    font-size: clamp(1.6rem, 1.95vw, 2.35rem);
     color: #d4af37;
     -webkit-text-stroke: 0;
     text-shadow: 0 0 8px rgba(10, 10, 10, 0.65), 0 0 16px rgba(12, 12, 12, 0.35);
@@ -1465,7 +1480,8 @@
 
 /* Auth (Login/Registro/Reset): baja la frase para alinearla con la card derecha. */
 .body-auth-page .body-left-brand-tagline {
-    top: clamp(34px, 8dvh, 120px) !important;
+    top: clamp(8px, 3dvh, 42px) !important;
+    margin-left: clamp(40px, 6vw, 90px) !important;
 }
 
 .body-left-brand-tagline-text {

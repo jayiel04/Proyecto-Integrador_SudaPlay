@@ -189,6 +189,24 @@
         gap: .6rem;
     }
     .profile-section-title i { color: var(--color-accent, #7f5af0); }
+    .friend-name-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .friend-online-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+    .friend-online-dot.online {
+        background: #26ff8c;
+        border-color: rgba(38, 255, 140, 0.9);
+        box-shadow: 0 0 12px rgba(38, 255, 140, 0.6);
+    }
 
     /* Game cards grid */
     .profile-games-grid {
@@ -427,7 +445,12 @@
                         </div>
                     {% endif %}
                     <div style="min-width: 0;">
-                        <span style="display: block; font-weight: 600; color: #fff; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ friend.user.username }}</span>
+                        <div class="friend-name-row">
+                            <span style="display: block; font-weight: 600; color: #fff; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ friend.user.username }}</span>
+                            <span class="friend-online-dot{% if friend.is_online %} online{% endif %}"
+                                  title="{% if friend.is_online %}En línea{% else %}Desconectado{% endif %}"
+                                  aria-hidden="true"></span>
+                        </div>
                         {% if friend.bio %}
                             <span style="font-size: 0.8rem; color: #aaa; display: block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ friend.bio }}</span>
                         {% endif %}

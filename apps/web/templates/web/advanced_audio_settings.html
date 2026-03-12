@@ -3,6 +3,216 @@
 
 {% block title %}Configuraciones avanzadas de sonido - SudaPlay{% endblock %}
 
+{% block extra_css %}
+<style>
+    .audio-settings-card {
+        background: radial-gradient(circle at top, rgba(255, 255, 255, 0.1) 0%, rgba(10, 15, 30, 0.65) 45%, rgba(2, 5, 15, 0.95) 100%);
+        border-radius: 28px;
+        border: 1px solid rgba(0, 0, 0, 0.9);
+        box-shadow:
+            0 25px 45px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(0, 255, 255, 0.2);
+        padding: 2.4rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 760px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .audio-settings-card .card-title-small {
+        font-size: 2rem;
+        letter-spacing: 0.08em;
+        text-transform: none;
+        color: #ff3e6a;
+        text-shadow:
+            0 0 3px #000,
+            0 0 8px rgba(0, 0, 0, 0.9),
+            1px 0 0 #000,
+            -1px 0 0 #000,
+            0 1px 0 #000,
+            0 -1px 0 #000,
+            0 0 10px rgba(255, 120, 150, 0.75),
+            0 0 25px rgba(255, 62, 106, 0.8);
+    }
+    .audio-settings-card .card-muted-text {
+        font-size: 1rem;
+        color: rgba(255, 255, 255, 0.65);
+        margin-top: 0.5rem;
+    }
+    .audio-settings-grid {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+    }
+    .page-stack-container {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    .page-stack-container::-webkit-scrollbar {
+        width: 0;
+        background: transparent;
+    }
+    .audio-setting-item label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #e7edff;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 0.35rem;
+    }
+    .audio-setting-item {
+        background: rgba(255, 255, 255, 0.02);
+        padding: 1rem 1.1rem;
+        border-radius: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.05);
+    }
+    .audio-setting-item .card-muted-text {
+        margin: 0.2rem 0 0;
+        font-size: 0.9rem;
+    }
+    .volume-slider {
+        width: 100%;
+        height: 12px;
+        -webkit-appearance: none;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 999px;
+        position: relative;
+        outline: none;
+        transition: background 0.2s ease;
+        box-shadow: inset 0 0 14px rgba(0, 0, 0, 0.5);
+    }
+    .volume-slider::-webkit-slider-thumb,
+    .volume-slider::-moz-range-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #ff77f5, #5be0ff);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), inset 0 0 6px rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        border: 2px solid rgba(255, 255, 255, 0.7);
+    }
+    .volume-slider::-moz-range-track {
+        height: 12px;
+        border-radius: 999px;
+        background: transparent;
+    }
+    .checkbox-grid {
+        display: flex;
+        flex-direction: row;
+        gap: 0.55rem;
+    }
+    .checkbox-tile {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.75rem;
+        border-radius: 12px;
+        border: 1px solid rgba(94, 226, 255, 0.25);
+        background: rgba(8, 12, 22, 0.85);
+        color: #f5f5ff;
+        font-size: 0.9rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        box-shadow: inset 0 0 14px rgba(0, 255, 255, 0.15);
+    }
+    .checkbox-tile input {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        accent-color: #54ffff;
+        cursor: pointer;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.05);
+    }
+    .audio-track-select {
+        width: 100%;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 255, 255, 0.25);
+        background: rgba(0, 10, 25, 0.7);
+        color: #fff;
+        padding: 0.85rem 1rem;
+        font-size: 0.95rem;
+        box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.2);
+    }
+    .audio-settings-actions {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .btn-save-tone {
+        background: linear-gradient(135deg, #a73bff, #5a00ff);
+        box-shadow:
+            0 12px 28px rgba(85, 0, 140, 0.55),
+            0 0 30px rgba(177, 44, 255, 0.45);
+        color: #fff;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.45);
+    }
+    .audio-settings-btn {
+        flex: 1;
+        min-width: 220px;
+        padding: 0.95rem 2rem;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        border-radius: 999px;
+        border: none;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.45);
+    }
+    .audio-settings-btn.primary {
+        background: linear-gradient(135deg, #55d3ff, #b13fff);
+        box-shadow:
+            0 12px 25px rgba(0, 0, 0, 0.6),
+            0 0 25px rgba(181, 63, 255, 0.65);
+        color: #fff;
+    }
+    .audio-settings-btn.secondary {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #dfe6ff;
+        box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.1);
+    }
+    .audio-settings-btn:hover {
+        transform: translateY(-2px);
+    }
+    @media (max-width: 768px) {
+        .audio-settings-card {
+            padding: 2rem 1.5rem;
+        }
+        .audio-settings-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+<style>
+    html,
+    body,
+    .audio-settings-card,
+    .page-stack-container {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar,
+    .audio-settings-card::-webkit-scrollbar,
+    .page-stack-container::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container page-stack-container">
     <section class="info-card full-width-card audio-settings-card">
@@ -12,23 +222,33 @@
         <div class="audio-settings-grid">
             <div class="audio-setting-item">
                 <label for="advanced-audio-volume">Volumen general</label>
-                <input type="range" id="advanced-audio-volume" min="0" max="1" step="0.01" value="0.24">
+                <input type="range" id="advanced-audio-volume" min="0" max="1" step="0.01" value="0.24" class="volume-slider">
                 <p id="advanced-audio-volume-value" class="card-muted-text">24%</p>
             </div>
 
             <div class="audio-setting-item">
                 <label for="advanced-audio-muted">Silenciar audio</label>
-                <input type="checkbox" id="advanced-audio-muted">
+                <div class="checkbox-grid">
+                    <label class="checkbox-tile">
+                        <input type="checkbox" id="advanced-audio-muted">
+                        <span>Activar silencio</span>
+                    </label>
+                </div>
             </div>
 
             <div class="audio-setting-item">
                 <label for="advanced-audio-autoplay">Reproducir automaticamente al entrar</label>
-                <input type="checkbox" id="advanced-audio-autoplay">
+                <div class="checkbox-grid">
+                    <label class="checkbox-tile">
+                        <input type="checkbox" id="advanced-audio-autoplay">
+                        <span>Reproducir al entrar</span>
+                    </label>
+                </div>
             </div>
 
             <div class="audio-setting-item">
                 <label for="advanced-audio-track">Canción de fondo</label>
-                <select id="advanced-audio-track" style="margin-top: 5px; padding: 5px; border-radius: 4px; background: rgba(0,0,0,0.5); color: white; border: 1px solid rgba(255,255,255,0.2); width: 100%;">
+                <select id="advanced-audio-track" class="audio-track-select">
                     {% for audio in audio_files %}
                         <option value="{{ audio.url }}">{{ audio.display_name }}</option>
                     {% empty %}
@@ -39,8 +259,8 @@
         </div>
 
         <div class="audio-settings-actions">
-            <button type="button" id="advanced-audio-save" class="btn-login">Guardar cambios</button>
-            <button type="button" id="advanced-audio-reset" class="btn-login audio-settings-reset-btn">Restaurar por defecto</button>
+        <button type="button" id="advanced-audio-save" class="btn-login btn-save-tone">Guardar cambios</button>
+        <button type="button" id="advanced-audio-reset" class="btn-login audio-settings-reset-btn">Restaurar por defecto</button>
         </div>
     </section>
 </div>
