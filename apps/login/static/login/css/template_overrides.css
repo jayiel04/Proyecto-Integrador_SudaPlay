@@ -361,7 +361,8 @@
 
 /* Profile edit */
 .profile-edit-card {
-    max-width: 520px;
+    width: 100%;
+    max-width: none;
 }
 
 .profile-edit-card .profile-divider {

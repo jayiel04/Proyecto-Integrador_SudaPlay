@@ -4,66 +4,73 @@
 {% block title %}Editar Perfil - SudaPlay{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container profile-edit-container">
     <div class="login-card profile-edit-card">
-        <div class="profile-back-row">
-            <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la pagina anterior">
-                <i class="fa fa-arrow-left" aria-hidden="true"></i>
-                <span>Volver</span>
-            </a>
-        </div>
+        <div class="profile-edit-layout">
+            <div class="profile-edit-sidebar">
+                <div class="profile-back-row">
+                    <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la pagina anterior">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        <span>Volver</span>
+                    </a>
+                </div>
 
-        <div class="login-header">
-            <h1>Editar perfil</h1>
-            <p>Actualiza la informacion de tu cuenta</p>
-        </div>
+                <div class="login-header">
+                    <h1>Editar perfil</h1>
+                    <p>Actualiza la informacion de tu cuenta</p>
+                </div>
 
-        <div class="avatar-preview-wrap">
-            <div class="avatar-preview-stack">
-                <img src="{{ current_avatar_url|default:default_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img">
-                <button type="button" id="avatar-camera-toggle" class="avatar-camera-btn" aria-label="Mostrar avatares disponibles">
-                    <i class="fa fa-camera"></i>
-                </button>
+                <div class="avatar-preview-wrap">
+                    <div class="avatar-preview-stack">
+                        <img src="{{ current_avatar_url|default:default_avatar_url }}" alt="Avatar actual" id="current-avatar-preview" class="avatar-preview-img">
+                        <button type="button" id="avatar-camera-toggle" class="avatar-camera-btn" aria-label="Mostrar avatares disponibles">
+                            <i class="fa fa-camera"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="avatar-choice-section" data-visible="false">
+                    <p class="avatar-choice-label">Selecciona uno de nuestros avatares</p>
+                    <div class="avatar-choice-grid">
+                        {% for avatar in available_avatar_data %}
+                        <button type="button" class="avatar-choice-item{% if avatar.name == current_avatar_name %} is-selected{% endif %}" data-avatar-name="{{ avatar.name }}" data-avatar-url="{{ avatar.url }}">
+                            <img src="{{ avatar.url }}" alt="Avatar {{ avatar.name }}">
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="profile-edit-security">
+                    <div class="profile-divider"></div>
+                    <div class="password-management-section">
+                        <p class="profile-section-label">Seguridad de la cuenta</p>
+                        {% if user.has_usable_password %}
+                            <a href="{% url 'login:account_change_password' %}" class="profile-secondary-btn">
+                                <i class="fas fa-key"></i> Cambiar contraseÃ±a
+                            </a>
+                        {% else %}
+                            <a href="{% url 'login:account_set_password' %}" class="profile-secondary-btn">
+                                <i class="fas fa-plus-circle"></i> Establecer contraseÃ±a
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <div class="avatar-choice-section" data-visible="false">
-            <p class="avatar-choice-label">Selecciona uno de nuestros avatares</p>
-            <div class="avatar-choice-grid">
-                {% for avatar in available_avatar_data %}
-                <button type="button" class="avatar-choice-item{% if avatar.name == current_avatar_name %} is-selected{% endif %}" data-avatar-name="{{ avatar.name }}" data-avatar-url="{{ avatar.url }}">
-                    <img src="{{ avatar.url }}" alt="Avatar {{ avatar.name }}">
-                </button>
-                {% endfor %}
+            <div class="profile-edit-form">
+                <form method="POST" class="login-form">
+                    {% csrf_token %}
+
+                    {% for field in form %}
+                    {% if field.name != 'avatar_choice' %}
+                    {% include "includes/_field.html" with field=field %}
+                    {% endif %}
+                    {% endfor %}
+                    {{ form.avatar_choice }}
+
+                    <button type="submit" class="btn-login login-main-submit">Guardar cambios</button>
+                </form>
             </div>
-        </div>
-
-        <form method="POST" class="login-form">
-            {% csrf_token %}
-
-            {% for field in form %}
-            {% if field.name != 'avatar_choice' %}
-            {% include "includes/_field.html" with field=field %}
-            {% endif %}
-            {% endfor %}
-            {{ form.avatar_choice }}
-
-            <button type="submit" class="btn-login login-main-submit">Guardar cambios</button>
-        </form>
-
-        <div class="profile-divider"></div>
-
-        <div class="password-management-section">
-            <p class="profile-section-label">Seguridad de la cuenta</p>
-            {% if user.has_usable_password %}
-                <a href="{% url 'login:account_change_password' %}" class="profile-secondary-btn">
-                    <i class="fas fa-key"></i> Cambiar contraseña
-                </a>
-            {% else %}
-                <a href="{% url 'login:account_set_password' %}" class="profile-secondary-btn">
-                    <i class="fas fa-plus-circle"></i> Establecer contraseña
-                </a>
-            {% endif %}
         </div>
     </div>
 </div>

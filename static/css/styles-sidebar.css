@@ -126,14 +126,15 @@ body.sidebar-open .secondary-nav {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 16px;
-    padding: 94px 4px 20px;
+    padding: 20px 4px 20px;
     overflow: visible;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     height: 100%;
     padding-bottom: 20px;
-    transform: translateY(8px);
+    transform: none;
 }
 
 .secondary-nav:hover .secondary-nav-container {

@@ -417,17 +417,46 @@ document.addEventListener('DOMContentLoaded', function () {
     const profileDropdown = document.querySelector('.profile-dropdown');
     const profileToggle = document.querySelector('.profile-dropdown-toggle');
 
+    const closeAllPanels = (except = '') => {
+        const dropdown = document.querySelector('.profile-dropdown');
+        const dropdownToggle = document.querySelector('.profile-dropdown-toggle');
+        if (except !== 'profile' && dropdown && dropdownToggle) {
+            dropdown.classList.remove('open');
+            dropdownToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        const chatToggle = document.querySelector('.profile-chat-toggle');
+        const chatPanel = document.querySelector('.profile-chat-panel');
+        if (except !== 'chat' && chatToggle && chatPanel) {
+            chatPanel.classList.remove('visible');
+            chatPanel.setAttribute('aria-hidden', 'true');
+            chatToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        const notifWidget = document.querySelector('.profile-notification-widget');
+        const notifToggle = notifWidget ? notifWidget.querySelector('.notification-toggle') : null;
+        const notifPanel = notifWidget ? notifWidget.querySelector('.notification-panel') : null;
+        if (except !== 'notifications' && notifWidget && notifToggle && notifPanel) {
+            notifWidget.classList.remove('open');
+            notifToggle.setAttribute('aria-expanded', 'false');
+            notifPanel.setAttribute('aria-hidden', 'true');
+        }
+    };
+
 
     if (profileDropdown && profileToggle) {
         const closeMenu = () => {
             profileDropdown.classList.remove('open');
             profileToggle.setAttribute('aria-expanded', 'false');
         };
-
         const profileCloseBtns = profileDropdown.querySelectorAll('.profile-dropdown-close');
 
         profileToggle.addEventListener('click', (event) => {
             event.stopPropagation();
+            const willOpen = !profileDropdown.classList.contains('open');
+            if (willOpen) {
+                closeAllPanels('profile');
+            }
             const isOpen = profileDropdown.classList.toggle('open');
             profileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
@@ -602,7 +631,6 @@ document.addEventListener('DOMContentLoaded', function () {
             profileChatPanel.setAttribute('aria-hidden', 'true');
             profileChatToggle.setAttribute('aria-expanded', 'false');
         };
-
         const openChat = () => {
             profileChatPanel.classList.add('visible');
             profileChatPanel.setAttribute('aria-hidden', 'false');
@@ -617,6 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 closeChat();
                 return;
             }
+            closeAllPanels('chat');
             openChat();
         });
 
@@ -733,9 +762,12 @@ document.addEventListener('DOMContentLoaded', function () {
             notificationToggle.setAttribute('aria-expanded', 'false');
             notificationPanel.setAttribute('aria-hidden', 'true');
         };
-
         notificationToggle.addEventListener('click', (event) => {
             event.stopPropagation();
+            const willOpen = !notificationWidget.classList.contains('open');
+            if (willOpen) {
+                closeAllPanels('notifications');
+            }
             const isOpen = notificationWidget.classList.toggle('open');
             notificationToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
             notificationPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');

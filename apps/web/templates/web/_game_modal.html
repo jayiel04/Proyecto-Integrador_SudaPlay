@@ -58,10 +58,11 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    const initGameDetailModal = () => {
         const modal = document.getElementById('game-detail-modal');
         const closeBtn = document.getElementById('close-game-modal');
         if (!modal || !closeBtn) return;
+        const actionsDisabled = !!document.querySelector('[data-game-actions-disabled="true"]');
 
         const openModal = (data) => {
             document.getElementById('modal-game-image').src = data.image;
@@ -79,11 +80,29 @@
 
             if (data.isProcessing === 'true') {
                 processingBanner.style.display = 'flex';
-                playBtn.style.display = 'none';
-                downloadBtn.style.display = 'none';
             } else {
                 processingBanner.style.display = 'none';
+            }
 
+            playBtn.classList.remove('is-disabled');
+            downloadBtn.classList.remove('is-disabled');
+            playBtn.removeAttribute('aria-disabled');
+            downloadBtn.removeAttribute('aria-disabled');
+            playBtn.removeAttribute('tabindex');
+            downloadBtn.removeAttribute('tabindex');
+
+            if (actionsDisabled) {
+                playBtn.style.display = 'inline-flex';
+                downloadBtn.style.display = 'inline-flex';
+                playBtn.removeAttribute('href');
+                downloadBtn.removeAttribute('href');
+                playBtn.classList.add('is-disabled');
+                downloadBtn.classList.add('is-disabled');
+                playBtn.setAttribute('aria-disabled', 'true');
+                downloadBtn.setAttribute('aria-disabled', 'true');
+                playBtn.setAttribute('tabindex', '-1');
+                downloadBtn.setAttribute('tabindex', '-1');
+            } else {
                 if (data.urlPlay && data.urlPlay !== '') {
                     playBtn.href = data.urlPlay;
                     playBtn.style.display = 'inline-flex';
@@ -104,6 +123,22 @@
             document.body.style.overflow = 'hidden';
         };
 
+        const openModalFromDataset = (dataset) => {
+            openModal({
+                id: dataset.gameId,
+                title: dataset.gameTitle,
+                description: dataset.gameDescription,
+                image: dataset.gameImage,
+                author: dataset.gameAuthor,
+                views: dataset.gameViews,
+                downloads: dataset.gameDownloads,
+                rating: dataset.gameRating,
+                urlPlay: dataset.gameUrlPlay,
+                urlDownload: dataset.gameUrlDownload,
+                isProcessing: dataset.gameIsProcessing
+            });
+        };
+
         window.closeGameModal = () => {
             modal.classList.remove('active');
             modal.setAttribute('aria-hidden', 'true');
@@ -118,26 +153,34 @@
             if (e.key === 'Escape' && modal.classList.contains('active')) window.closeGameModal();
         });
 
-        // Event delegation for game items
-        document.body.addEventListener('click', function(e) {
+        const attachCardHandlers = () => {
+            document.querySelectorAll('.game-item[data-game-id]').forEach((card) => {
+                if (card.dataset.modalBound === 'true') return;
+                card.dataset.modalBound = 'true';
+                card.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    openModalFromDataset(card.dataset);
+                });
+            });
+        };
+
+        attachCardHandlers();
+
+        // Event delegation for dynamic content (capture to avoid global interceptors)
+        document.addEventListener('click', function(e) {
             const gameItem = e.target.closest('.game-item');
             if (gameItem && gameItem.hasAttribute('data-game-id')) {
                 e.preventDefault();
-                const d = gameItem.dataset;
-                openModal({
-                    id: d.gameId,
-                    title: d.gameTitle,
-                    description: d.gameDescription,
-                    image: d.gameImage,
-                    author: d.gameAuthor,
-                    views: d.gameViews,
-                    downloads: d.gameDownloads,
-                    rating: d.gameRating,
-                    urlPlay: d.gameUrlPlay,
-                    urlDownload: d.gameUrlDownload,
-                    isProcessing: d.gameIsProcessing
-                });
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                openModalFromDataset(gameItem.dataset);
             }
-        });
-    });
+        }, true);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGameDetailModal);
+    } else {
+        initGameDetailModal();
+    }
 </script>
