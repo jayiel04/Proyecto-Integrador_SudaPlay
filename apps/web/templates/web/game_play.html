@@ -2,90 +2,259 @@
 
 {% block title %}Jugar {{ game.title }} - SudaPlay{% endblock %}
 
+{% block extra_css %}
+<style>
+    /* Página Jugar sin scroll y contenido comprimido a la altura de la ventana */
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+
+    .main-content {
+        min-height: 100vh;
+        padding: 20px 16px;
+        align-items: stretch;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .play-shell {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+        width: 100%;
+        max-width: 1200px;
+        height: calc(100vh - var(--navbar-height) - 24px);
+    }
+
+    .play-hero {
+        flex-wrap: wrap;
+        margin-bottom: 0;
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .play-grid {
+        height: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
+        gap: 14px;
+        align-items: stretch;
+        min-height: 0;
+    }
+
+    .play-stage-card,
+    .play-side {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .play-stage {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .play-frame {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .play-stage-card {
+        position: relative;
+    }
+
+    .play-fullscreen-btn {
+        position: absolute;
+        top: -16px;
+        right: -16px;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+    }
+
+    .play-fullscreen-btn i {
+        pointer-events: none;
+        font-size: 18px;
+    }
+
+    .play-rating-panel,
+    .play-side-card {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .play-side {
+        gap: 12px;
+    }
+
+    @media (max-width: 720px) {
+        .play-shell {
+            height: calc(100vh - var(--navbar-height) - 10px);
+        }
+
+        .play-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .play-frame {
+            height: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="play-shell">
-    <div class="play-meta">
-        <h1 class="play-meta-title">{{ game.title }}</h1>
-        <p class="play-meta-description">{{ game.short_description }}</p>
-    </div>
+    <section class="play-hero">
+        <div class="play-hero-text">
+            <p class="play-breadcrumb">Juegos / {{ game.title }}</p>
+            <h1 class="play-title">{{ game.title }}</h1>
+            <p class="play-description">{{ game.short_description }}</p>
+            <div class="play-hero-tags">
+                {% if play_mode == "embedded" %}
+                <span class="play-hero-pill">Modo integrado</span>
+                {% elif play_mode == "external" %}
+                <span class="play-hero-pill">Modo externo</span>
+                {% else %}
+                <span class="play-hero-pill">Solo descarga</span>
+                {% endif %}
+                <span class="play-hero-pill play-hero-pill-soft"><i class="fa fa-star"></i> {{ game.rating|floatformat:1 }}/5 ({{ game.rating_votes }} votos)</span>
+            </div>
+        </div>
+        <div class="play-hero-actions">
+            <div class="play-stat">
+                <p class="play-stat-label">Calificación</p>
+                <p class="play-stat-value">{{ game.rating|floatformat:1 }}<span>/5</span></p>
+            </div>
+            <div class="play-stat">
+                <p class="play-stat-label">Votos</p>
+                <p class="play-stat-value">{{ game.rating_votes }}</p>
+            </div>
+        </div>
+    </section>
 
     {% if messages %}
-    <div class="inline-messages">
+    <div class="inline-messages play-messages">
         {% for message in messages %}
         <p class="inline-message-text">{{ message }}</p>
         {% endfor %}
     </div>
     {% endif %}
 
-    <div class="play-rating-panel">
-        <p class="play-rating-summary">
-            Calificación actual:
-            <strong class="play-rating-score">{{ game.rating|floatformat:1 }}</strong>/5
-            ({{ game.rating_votes }} votos)
-        </p>
-        {% if user.is_authenticated %}
-        {% if user_has_rated %}
-        <p class="play-user-rated">
-            Ya calificaste este juego con <strong>{{ user_rating }}/5</strong>.
-        </p>
-        {% else %}
-        <form method="post" class="play-rating-form">
-            {% csrf_token %}
-            <label for="id_rating" class="play-rating-label">Tu calificación:</label>
-            <select name="rating" id="id_rating" required>
-                <option value="" selected disabled>Selecciona</option>
-                <option value="1">1 - Muy malo</option>
-                <option value="2">2 - Malo</option>
-                <option value="3">3 - Regular</option>
-                <option value="4">4 - Bueno</option>
-                <option value="5">5 - Excelente</option>
-            </select>
-            <button type="submit" class="btn-login play-rating-btn">
-                Calificar
-            </button>
-        </form>
-        {% endif %}
-        {% else %}
-        <p class="play-login-required">
-            Debes <a href="{% url 'login:login' %}?next={{ request.path|urlencode }}" class="play-login-link">iniciar
-                sesión</a>
-            para calificar este juego.
-        </p>
-        {% endif %}
-    </div>
-
     {% if play_mode == "embedded" or play_mode == "external" %}
-    <div class="play-toolbar">
-        <button id="fullscreen-btn" class="btn-login play-rating-btn">
-            Pantalla completa
-        </button>
-    </div>
-
-    <div class="play-stage" id="play-stage">
-        <div class="play-pause-overlay" id="play-pause-overlay" aria-live="polite">
-            <button type="button" id="play-resume-btn" class="btn-login play-resume-btn">
-                Jugar
+    <div class="play-grid">
+        <div class="play-stage-card">
+            {% if game.is_web_playable %}
+            <button id="fullscreen-btn" class="btn-login play-hero-btn play-fullscreen-btn" aria-label="Pantalla completa">
+                <i class="fas fa-expand"></i>
             </button>
+            {% endif %}
+            <div class="play-stage" id="play-stage">
+                <div class="play-pause-overlay" id="play-pause-overlay" aria-live="polite">
+                    <div class="play-cta-card">
+                        {% if play_mode == "embedded" %}
+                        <span class="play-cta-pill">Modo integrado</span>
+                        {% elif play_mode == "external" %}
+                        <span class="play-cta-pill">Modo externo</span>
+                        {% endif %}
+                        <h2 class="play-cta-title">Listo para despegar</h2>
+                        <p class="play-cta-subtitle" id="play-cta-subtitle">
+                            {% if play_mode == "external" %}
+                            Se abrirá dentro de SudaPlay.
+                            {% else %}
+                            Haz clic para cargar el juego.
+                            {% endif %}
+                        </p>
+                        <button type="button" id="play-resume-btn" class="btn-login play-resume-btn" aria-pressed="false">
+                            <span class="play-cta-spinner" aria-hidden="true"></span>
+                            <span class="play-cta-text"><i class="fas fa-play"></i> Jugar</span>
+                        </button>
+                    </div>
+                </div>
+                {% if play_mode == "embedded" %}
+                <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+                    allow="autoplay; fullscreen; gamepad *; xr-spatial-tracking"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+                    allowfullscreen></iframe>
+                {% else %}
+                <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+                    allow="autoplay; fullscreen; gamepad *"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+                    allowfullscreen></iframe>
+                {% endif %}
+            </div>
+            {% if play_mode == "external" %}
+            <p class="play-external-note">
+                Si no carga en el marco, abre el juego en
+                <a href="{{ play_url }}" target="_blank" rel="noopener">una nueva pestana</a>.
+            </p>
+            {% endif %}
         </div>
-        {% if play_mode == "embedded" %}
-        <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
-            allow="autoplay; fullscreen; gamepad *; xr-spatial-tracking"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
-            allowfullscreen></iframe>
-        {% else %}
-        <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
-            allow="autoplay; fullscreen; gamepad *"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
-            allowfullscreen></iframe>
-        {% endif %}
-    </div>
 
-    {% if play_mode == "external" %}
-    <p class="play-external-note">
-        Si no carga en el marco, abre el juego en
-        <a href="{{ play_url }}" target="_blank" rel="noopener">una nueva pestana</a>.
-    </p>
-    {% endif %}
+        <aside class="play-side">
+            <div class="play-rating-panel">
+                <p class="play-rating-summary">
+                    Calificación actual:
+                    <strong class="play-rating-score">{{ game.rating|floatformat:1 }}</strong>/5
+                    ({{ game.rating_votes }} votos)
+                </p>
+                {% if user.is_authenticated %}
+                {% if user_has_rated %}
+                <p class="play-user-rated">
+                    Ya calificaste este juego con <strong>{{ user_rating }}/5</strong>.
+                </p>
+                {% else %}
+                <form method="post" class="play-rating-form">
+                    {% csrf_token %}
+                    <label for="id_rating" class="play-rating-label">Tu calificación:</label>
+                    <select name="rating" id="id_rating" required>
+                        <option value="" selected disabled>Selecciona</option>
+                        <option value="1">1 - Muy malo</option>
+                        <option value="2">2 - Malo</option>
+                        <option value="3">3 - Regular</option>
+                        <option value="4">4 - Bueno</option>
+                        <option value="5">5 - Excelente</option>
+                    </select>
+                    <button type="submit" class="btn-login play-rating-btn">
+                        Calificar
+                    </button>
+                </form>
+                {% endif %}
+                {% else %}
+                <p class="play-login-required">
+                    Debes <a href="{% url 'login:login' %}?next={{ request.path|urlencode }}" class="play-login-link">iniciar
+                        sesión</a>
+                    para calificar este juego.
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="play-side-card">
+                <p class="play-side-title">Consejos rápidos</p>
+                <ul class="play-tips">
+                    <li><i class="fa fa-expand"></i> Usa pantalla completa para mejor inmersión.</li>
+                    <li><i class="fa fa-gamepad"></i> Conecta tu gamepad antes de iniciar.</li>
+                    <li><i class="fa fa-volume-up"></i> Ajusta el volumen en la barra lateral.</li>
+                </ul>
+                {% if play_mode == "external" %}
+                <a href="{{ play_url }}" target="_blank" rel="noopener" class="play-alt-link">
+                    Abrir en nueva pestaña <i class="fa fa-arrow-up-right-from-square"></i>
+                </a>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
     {% else %}
     <div class="login-card full-width-card">
         <h2 class="play-unavailable-title">Juego no disponible</h2>
@@ -105,6 +274,7 @@
         const fullscreenBtn = document.getElementById("fullscreen-btn");
         const pauseOverlay = document.getElementById("play-pause-overlay");
         const resumeBtn = document.getElementById("play-resume-btn");
+        const ctaSpinner = resumeBtn ? resumeBtn.querySelector(".play-cta-spinner") : null;
         let gameStarted = false;
         let wasFullscreen = false;
         if (!stage || !fullscreenBtn) return;
@@ -165,11 +335,19 @@
             }
         }
 
+        function setLoading(isLoading) {
+            if (!resumeBtn) return;
+            resumeBtn.classList.toggle("is-loading", isLoading);
+            resumeBtn.setAttribute("aria-pressed", isLoading ? "true" : "false");
+            resumeBtn.disabled = Boolean(isLoading);
+        }
+
         function startGame() {
             if (!frame) return;
             if (!gameStarted) {
                 const targetSrc = frame.dataset.src;
                 if (!targetSrc) return;
+                setLoading(true);
                 frame.src = targetSrc;
                 gameStarted = true;
             }
@@ -179,6 +357,7 @@
 
         if (resumeBtn) {
             resumeBtn.addEventListener("click", startGame);
+            resumeBtn.focus();
         }
 
         function isFullscreenActive() {
@@ -186,9 +365,12 @@
         }
 
         function updateButtonLabel() {
-            fullscreenBtn.textContent = isFullscreenActive()
+            const active = isFullscreenActive();
+            const label = active
                 ? "Pantalla completa activada (ESC para salir)"
                 : "Pantalla completa";
+            fullscreenBtn.setAttribute("aria-label", label);
+            fullscreenBtn.setAttribute("title", label);
         }
 
         async function openFullscreen() {
@@ -248,6 +430,7 @@
         // Intentar bloquear scroll incluso si el foco está dentro del iframe (mismo origen)
         if (frame) {
             frame.addEventListener("load", () => {
+                setLoading(false);
                 try {
                     frame.contentWindow.addEventListener("keydown", blockScroll, { passive: false });
                 } catch (e) {

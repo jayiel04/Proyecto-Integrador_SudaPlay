@@ -1,0 +1,30 @@
+<div class="login-card login-page-card">
+    <div class="login-header">
+        <h1>Iniciar Sesión</h1>
+    </div>
+
+    <form method="POST" class="login-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+        {% include "includes/_field.html" with field=field %}
+        {% endfor %}
+
+        <div class="remember-forgot">
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember" class="remember-label-reset">Recuérdame</label>
+            </div>
+            <a class="forgot-password-link" href="{% url 'account_reset_password' %}">¿Olvidaste tu contraseña?</a>
+        </div>
+
+        <button type="submit" class="btn-login login-main-submit">Iniciar Sesión</button>
+    </form>
+
+    {% include "includes/_social_login.html" %}
+
+    <div class="signup-link login-signup-link">
+        <span class="signup-link-text">¿No tienes cuenta?</span><a href="{% url 'login:register' %}" class="signup-link-cta">Regístrate aquí</a>
+    </div>
+</div>
+
