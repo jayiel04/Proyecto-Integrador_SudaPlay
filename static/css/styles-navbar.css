@@ -546,6 +546,62 @@
     text-decoration: none;
 }
 
+/* --- Upload progress notification --- */
+.notification-item.upload-progress {
+    display: flex;
+    gap: 0.4rem;
+    border-color: rgba(0, 255, 204, 0.2);
+    background: rgba(0, 17, 34, 0.55);
+}
+
+.upload-progress-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: center;
+    color: #e3f7ff;
+}
+
+.upload-progress-status {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #7fdfff;
+}
+
+.upload-progress-bar {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.35);
+}
+
+.upload-progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #00f0ff, #7bffb2);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.65);
+    transition: width 0.2s ease-out;
+}
+
+.upload-progress-success .upload-progress-bar-fill {
+    background: linear-gradient(90deg, #7bffb2, #a8ff4f);
+    box-shadow: 0 0 12px rgba(126, 255, 160, 0.7);
+}
+
+.upload-progress-error {
+    border-color: rgba(255, 120, 120, 0.35);
+    background: rgba(36, 0, 0, 0.55);
+}
+
+.upload-progress-error .upload-progress-bar-fill {
+    background: linear-gradient(90deg, #ff7b7b, #ff3c5f);
+    box-shadow: 0 0 12px rgba(255, 100, 120, 0.7);
+}
+
 .profile-chat-toggle {
     width: 52px;
     height: 52px;

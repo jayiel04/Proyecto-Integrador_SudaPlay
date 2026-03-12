@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Juegos - SudaPlay{% endblock %}
+
+{% block content %}
+<div class="my-games-stack">
+    <section class="my-games-hero">
+        <div class="my-games-hero__title">
+            <p class="eyebrow">Panel creador</p>
+            <h1>Resumen</h1>
+            <p class="subtitle">Gestiona y revisa todos los juegos que has publicado o tienes en revisión.</p>
+        </div>
+        <div class="my-games-hero__meta">
+            <div class="chip-row">
+                <span class="status-chip status-chip--total" aria-label="Total de juegos">{{ stats.total }} total</span>
+                <span class="status-chip status-chip--ok" aria-label="Juegos publicados">{{ stats.published }} publicados</span>
+                <span class="status-chip status-chip--pending" aria-label="Juegos en revisión">{{ stats.pending }} revisión</span>
+                <span class="status-chip status-chip--processing" aria-label="Juegos procesando">{{ stats.processing }} procesando</span>
+                <span class="status-chip status-chip--error" aria-label="Juegos con error">{{ stats.errored }} con error</span>
+                <span class="status-chip status-chip--rejected" aria-label="Juegos rechazados">{{ stats.rejected }} rechazados</span>
+            </div>
+            <a class="btn-primary-glow" href="{% url 'web:game_create' %}">
+                <i class="fas fa-cloud-upload-alt"></i>
+                Subir nuevo juego
+            </a>
+        </div>
+    </section>
+
+    <section class="status-card status-card--all">
+        <div class="status-card__header">
+            <div>
+                <p class="eyebrow">Mis juegos</p>
+                <h3>Publicados y en revisión</h3>
+            </div>
+            <span class="status-chip status-chip--total">{{ stats.total }}</span>
+        </div>
+        <div class="status-card__section">
+            <p class="status-card__subtitle">Publicados ({{ published_games|length }})</p>
+            {% if published_games %}
+            <div class="game-grid game-grid--compact">
+                {% for game in published_games %}
+                <article class="game-item" aria-label="Juego {{ game.title }}" id="game-{{ game.pk }}">
+                    {% if game.cover_image %}
+                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img">
+                    {% else %}
+                    <div class="game-img game-img--fallback" aria-hidden="true"></div>
+                    {% endif %}
+
+                    <div class="game-info">
+                        <div class="game-info__top">
+                            <p class="game-title">{{ game.title }}</p>
+                            <span class="badge badge-hot">Publicado</span>
+                        </div>
+                        <div class="game-stats">
+                            <span><i class="fas fa-eye"></i>{{ game.views }}</span>
+                            <span><i class="fas fa-download"></i>{{ game.downloads }}</span>
+                            <span><i class="fas fa-star"></i>{{ game.rating }} ({{ game.rating_votes }})</span>
+                        </div>
+                        <div class="game-actions">
+                            {% if game.is_web_playable or game.external_url %}
+                            <a class="btn-chip" href="{% if game.is_web_playable %}{% url 'web:game_play' game.pk %}{% else %}{{ game.external_url }}{% endif %}" {% if not game.is_web_playable %}target="_blank" rel="noopener"{% endif %}>Jugar</a>
+                            {% else %}
+                            <a class="btn-chip" href="{% url 'web:game_play' game.pk %}">Ver</a>
+                            {% endif %}
+                            {% if game.game_file %}
+                            <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_download' game.pk %}">Descargar</a>
+                            {% endif %}
+                            <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_edit' game.pk %}">Editar</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="status-card__empty">Aún no publicas juegos.</p>
+            {% endif %}
+        </div>
+
+        <div class="status-card__section">
+            <p class="status-card__subtitle">En revisión ({{ review_games|length }})</p>
+            {% if review_games %}
+            <div class="game-grid game-grid--compact">
+                {% for game in review_games %}
+                <article class="game-item" aria-label="Juego {{ game.title }}" id="game-{{ game.pk }}">
+                    {% if game.cover_image %}
+                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img">
+                    {% else %}
+                    <div class="game-img game-img--fallback" aria-hidden="true"></div>
+                    {% endif %}
+
+                    <div class="game-info">
+                        <div class="game-info__top">
+                            <p class="game-title">{{ game.title }}</p>
+                            <span class="badge badge-pending">En revisión</span>
+                        </div>
+                        <div class="game-stats">
+                            <span><i class="fas fa-eye"></i>{{ game.views }}</span>
+                            <span><i class="fas fa-download"></i>{{ game.downloads }}</span>
+                            <span><i class="fas fa-star"></i>{{ game.rating }} ({{ game.rating_votes }})</span>
+                        </div>
+                        <div class="game-actions">
+                            <span class="btn-chip btn-chip--ghost" aria-disabled="true">En revisión</span>
+                            {% if game.game_file %}
+                            <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_download' game.pk %}">Descargar</a>
+                            {% endif %}
+                            <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_edit' game.pk %}">Editar</a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="status-card__empty">Sin envíos en revisión.</p>
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+{% endblock %}

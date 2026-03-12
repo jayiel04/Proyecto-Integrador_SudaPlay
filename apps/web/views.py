@@ -13,7 +13,7 @@ from django.http import FileResponse, Http404, HttpResponse
 from django.views import View
 from django.views.generic import TemplateView
 from django.views.generic import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import F, Q
@@ -180,8 +180,84 @@ class MyGamesView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["games"] = Game.objects.filter(uploaded_by=self.request.user)
+        games = Game.objects.filter(uploaded_by=self.request.user)
+
+        processing_games = games.filter(is_processing=True)
+        errored_games = games.filter(processing_error__gt="", is_processing=False)
+        review_games = games.filter(is_approved=False, is_rejected=False)
+        published_games = games.filter(is_approved=True, is_rejected=False)
+
+        context["games"] = games
+        context["processing_games"] = processing_games
+        context["errored_games"] = errored_games
+        context["review_games"] = review_games
+        context["published_games"] = published_games
+        context["stats"] = {
+            "total": games.count(),
+            "published": games.filter(is_approved=True, is_rejected=False).count(),
+            "pending": games.filter(is_approved=False, is_rejected=False, is_processing=False, processing_error="").count(),
+            "rejected": games.filter(is_rejected=True).count(),
+            "processing": processing_games.count(),
+            "errored": errored_games.count(),
+        }
         return context
+
+
+class GameUpdateView(LoginRequiredMixin, UpdateView):
+    template_name = "web/game_form.html"
+    form_class = GameForm
+    login_url = "login:login"
+
+    def get_queryset(self):
+        return Game.objects.filter(uploaded_by=self.request.user)
+
+    def get_success_url(self):
+        return reverse_lazy("web:my_games")
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.is_approved = False
+        self.object.is_rejected = False
+        self.object.processing_error = ""
+        success_msg = "Cambios enviados a revisión. Se publicará tras la aprobación."
+
+        admins_mods = User.objects.filter(profile__role__in=['admin', 'moderator'])
+        for am in admins_mods:
+            Notification.objects.create(
+                user=am,
+                message=f"Actualización de juego '{self.object.title}' pendiente de revisión.",
+                url=str(reverse_lazy('web:review_games'))
+            )
+            cache.delete(f'notifications_{am.id}')
+
+        temp_path = None
+        uploaded_file = form.cleaned_data.get("game_file")
+        if uploaded_file:
+            from .storage_backends import GameTempFilesStorage
+            temp_storage = GameTempFilesStorage()
+            temp_name = temp_storage.save(uploaded_file.name, uploaded_file)
+            temp_path = temp_storage.path(temp_name)
+            # Evitar guardar el archivo final aún
+            self.object.game_file = None
+            self.object.save()
+            try:
+                self.object.__class__.objects.filter(pk=self.object.pk).update(is_processing=True)
+            except Exception:
+                pass
+        else:
+            self.object.is_processing = False
+            self.object.save()
+
+        if temp_path:
+            process_uploaded_web_build_async(self.object.pk, temp_path=temp_path)
+            messages.success(
+                self.request,
+                "Actualización recibida. Procesamos el ZIP y pasará a revisión en minutos."
+            )
+        else:
+            messages.success(self.request, success_msg)
+
+        return redirect(self.get_success_url())
 
 
 from django.contrib.auth.mixins import UserPassesTestMixin
