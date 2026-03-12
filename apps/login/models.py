@@ -61,3 +61,22 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f"{self.from_user.username} -> {self.to_user.username}"
+
+
+class Notification(models.Model):
+    """
+    Modelo genérico para notificaciones persistentes a usuarios.
+    """
+    user = models.ForeignKey(User, related_name='notifications', on_delete=models.CASCADE)
+    message = models.CharField(max_length=255)
+    url = models.CharField(max_length=255, blank=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Notificación"
+        verbose_name_plural = "Notificaciones"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Notificación para {self.user.username}: {self.message}"

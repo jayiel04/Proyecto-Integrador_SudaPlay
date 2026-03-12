@@ -4,7 +4,7 @@ Configuración del admin para la aplicación login.
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Notification
 
 
 class UserProfileInline(admin.TabularInline):
@@ -42,6 +42,15 @@ class UserProfileAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    """Admin para Notificaciones."""
+    list_display = ['user', 'message', 'is_read', 'created_at']
+    list_filter = ['is_read', 'created_at']
+    search_fields = ['user__username', 'message']
+    readonly_fields = ['created_at']
 
 
 # Reemplazar el admin de User con el personalizado

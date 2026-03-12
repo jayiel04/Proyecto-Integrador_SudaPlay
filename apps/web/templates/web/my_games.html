@@ -29,8 +29,8 @@
     {% endif %}
 
     <div class="my-games-upload-wrap">
-        <a href="{% url 'web:game_create' %}" class="btn-login my-games-upload-btn">
-            Subir nuevo juego
+        <a href="{% url 'web:game_create' %}" class="my-games-upload-btn">
+            <i class="fa fa-upload"></i> Subir nuevo juego
         </a>
     </div>
 
@@ -57,6 +57,8 @@
                 <span class="badge badge-processing">Procesando…</span>
                 {% elif game.is_approved %}
                 <span class="badge badge-new">Publicado</span>
+                {% elif game.is_rejected %}
+                <span class="badge badge-error" style="background: rgba(220, 53, 69, 0.15); color: #dc3545; border: 1px solid rgba(220, 53, 69, 0.3);">Rechazado</span>
                 {% else %}
                 <span class="badge badge-pending">Pendiente</span>
                 {% endif %}
@@ -73,6 +75,12 @@
                     <span><i class="fa fa-eye"></i> {{ game.views }} Vistas</span>
                     <span><i class="fa fa-download"></i> {{ game.downloads }}</span>
                 </div>
+
+                {% if game.is_rejected and game.rejection_reason %}
+                <div class="rejection-reason" style="font-size: 0.75rem; color: #ff6b6b; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <strong>Motivo:</strong> {{ game.rejection_reason }}
+                </div>
+                {% endif %}
 
                 <span class="navbar-link game-detail-link">Ver detalles</span>
             </div>

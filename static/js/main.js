@@ -1,5 +1,21 @@
 // Funcionalidad para cerrar mensajes
 document.addEventListener('DOMContentLoaded', function () {
+    // Utility for CSRF tokens
+    const getCookie = (name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    };
+
     // Espera la carga de estilos antes de permitir navegacion/recarga.
     const styleLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
     let stylesReadyPromise = null;
@@ -665,9 +681,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 <span class="notification-timestamp">${notif.created_at ? new Date(notif.created_at).toLocaleString() : 'Ahora'}</span>
                 ${dot}
             `;
-            if (notif.url) {
+            if (notif.url || notif.id.startsWith('db-')) {
                 li.addEventListener('click', () => {
-                    window.location.href = notif.url;
+                    if (notif.id.startsWith('db-')) {
+                        fetch('/auth/api/notifications/read/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRFToken': getCookie('csrftoken')
+                            },
+                            body: JSON.stringify({ notification_id: notif.id })
+                        }).finally(() => {
+                            if (notif.url) {
+                                window.location.href = notif.url;
+                            }
+                        });
+                    } else if (notif.url) {
+                        window.location.href = notif.url;
+                    }
                 });
             }
             notificationList.appendChild(li);
@@ -729,6 +760,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 closeNotifications();
             }
         });
+
+        // Actualizar notificaciones al cambiar de página (carga inicial) y cada 5 minutos
+        loadNotifications();
+        setInterval(loadNotifications, 300000); // 5 * 60 * 1000 = 300000 ms
     }
 
     const centeredNavLinks = Array.from(document.querySelectorAll('.nav-links-centered .nav-item'));

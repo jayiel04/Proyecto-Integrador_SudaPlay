@@ -184,8 +184,77 @@
     }
 
     .game-upload-form-grid input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px;
+        background: rgba(1, 12, 24, 0.75);
+        border: 1px dashed rgba(85, 255, 255, 0.45);
+        border-radius: 10px;
         color: #fdfcff;
-        letter-spacing: 0.1em;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: inset 0 0 14px rgba(0, 255, 255, 0.05);
+        margin-top: 4px;
+    }
+
+    .custom-file-upload:hover {
+        border-color: rgba(0, 229, 255, 0.9);
+        background: rgba(0, 229, 255, 0.1);
+        box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2), 0 0 12px rgba(0, 229, 255, 0.3);
+        color: #00e5ff;
+    }
+
+    .file-name-display {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #00e5ff;
+        word-break: break-all;
+    }
+
+    .col-span-2 {
+        grid-column: span 1;
+    }
+
+    @media (min-width: 768px) {
+        .col-span-2 {
+            grid-column: span 2;
+        }
+    }
+
+    .form-section-title {
+        grid-column: 1 / -1;
+        font-size: 1.1rem;
+        color: rgba(255, 86, 255, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 86, 255, 0.3);
+        padding-bottom: 0.5rem;
+        text-shadow: 0 0 8px rgba(255, 86, 255, 0.5);
+    }
+
+    .game-upload-help-text {
+        font-size: 0.75rem;
+        color: #a0c4ff;
+        margin-top: 6px;
+        opacity: 0.8;
     }
 
     .game-upload-form-grid select option {
@@ -204,47 +273,207 @@
 
 {% block content %}
 <div class="container">
-    <div class="login-card game-upload-card">
-        <div class="login-header game-upload-header">
-            <h1>Subir juego</h1>
-            <p class="game-upload-subtitle cta-gray">Publicación inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+    <style>
+        .upload-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        .upload-form-column {
+            flex: 1 1 500px;
+            max-width: 900px;
+        }
+        .upload-preview-column {
+            flex: 0 0 300px;
+            position: sticky;
+            top: 6rem;
+            width: 100%;
+        }
+
+        .preview-title-neon {
+            color: #00e5ff;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .profile-game-card {
+            background: rgba(255,255,255,.05);
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: .9rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 8px 24px rgba(0,0,0,.35);
+        }
+        .profile-game-cover {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+            display: block;
+        }
+        .profile-game-cover-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: linear-gradient(135deg, rgba(127,90,240,.25), rgba(98,70,234,.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: rgba(127,90,240,.5);
+        }
+        .profile-game-body {
+            padding: .75rem 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+            min-height: 90px;
+        }
+        .profile-game-title {
+            font-size: .95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #fff;
+        }
+        .profile-game-meta {
+            font-size: .75rem;
+            color: #a0aec0;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+        }
+        .profile-game-badge.pending {
+            background: rgba(237, 179, 72, .15);
+            color: #edb348;
+            border: 1px solid rgba(237,179,72,.3);
+            display: inline-block;
+            padding: .2rem .6rem;
+            border-radius: 50px;
+            font-size: .7rem;
+            font-weight: 600;
+            margin-top: auto;
+            align-self: flex-start;
+        }
+    </style>
+
+    <div class="upload-layout">
+        <div class="upload-form-column">
+            <div class="login-card game-upload-card">
+                <div class="login-header game-upload-header">
+                    <h1>Subir juego</h1>
+                    <p class="game-upload-subtitle cta-gray">Publicación inmediata: sube un ZIP web con index.html para jugar dentro de SudaPlay</p>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" id="game-upload-form">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="form-error game-upload-non-field-error">
+                        {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="game-upload-form-grid">
+                        <div class="form-section-title">Detalles del Juego</div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                            {{ form.title }}
+                            {% if form.title.help_text %}<p class="game-upload-help-text">{{ form.title.help_text }}</p>{% endif %}
+                            {% for error in form.title.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.genre.id_for_label }}">{{ form.genre.label }}</label>
+                            {{ form.genre }}
+                            {% if form.genre.help_text %}<p class="game-upload-help-text">{{ form.genre.help_text }}</p>{% endif %}
+                            {% for error in form.genre.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label for="{{ form.short_description.id_for_label }}">{{ form.short_description.label }}</label>
+                            {{ form.short_description }}
+                            {% if form.short_description.help_text %}<p class="game-upload-help-text">{{ form.short_description.help_text }}</p>{% endif %}
+                            {% for error in form.short_description.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            {% if form.description.help_text %}<p class="game-upload-help-text">{{ form.description.help_text }}</p>{% endif %}
+                            {% for error in form.description.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-section-title">Archivos y Multimedia</div>
+
+                        <div class="form-group">
+                            <label for="{{ form.cover_image.id_for_label }}">{{ form.cover_image.label }}</label>
+                            <label for="{{ form.cover_image.id_for_label }}" class="custom-file-upload">
+                                📁 Seleccionar Imagen
+                            </label>
+                            {{ form.cover_image }}
+                            <span class="file-name-display" id="cover_image_display">Ningún archivo seleccionado</span>
+                            {% if form.cover_image.help_text %}<p class="game-upload-help-text">{{ form.cover_image.help_text }}</p>{% endif %}
+                            {% for error in form.cover_image.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.external_url.id_for_label }}">{{ form.external_url.label }}</label>
+                            {{ form.external_url }}
+                            {% if form.external_url.help_text %}<p class="game-upload-help-text">{{ form.external_url.help_text }}</p>{% endif %}
+                            {% for error in form.external_url.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+
+                        <div class="form-group col-span-2">
+                            <label for="{{ form.game_file.id_for_label }}">{{ form.game_file.label }}</label>
+                            <label for="{{ form.game_file.id_for_label }}" class="custom-file-upload" style="padding: 20px;">
+                                📦 Seleccionar Archivo ZIP
+                            </label>
+                            {{ form.game_file }}
+                            <span class="file-name-display" id="game_file_display">Ningún archivo seleccionado</span>
+                            {% if form.game_file.help_text %}<p class="game-upload-help-text">{{ form.game_file.help_text }}</p>{% endif %}
+                            {% for error in form.game_file.errors %}<div class="form-error"><p>{{ error }}</p></div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="game-upload-actions">
+                        <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit">Guardar juego</button>
+                        <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login cancel-btn">Cancelar</a>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <form method="post" enctype="multipart/form-data" id="game-upload-form">
-            {% csrf_token %}
-
-            {% if form.non_field_errors %}
-            <div class="form-error game-upload-non-field-error">
-                {% for error in form.non_field_errors %}
-                <p>{{ error }}</p>
-                {% endfor %}
-            </div>
-            {% endif %}
-
-            <div class="game-upload-form-grid">
-            {% for field in form %}
-            <div class="form-group">
-                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                <p class="game-upload-help-text">{{ field.help_text }}</p>
-                {% endif %}
-                {% if field.errors %}
-                <div class="form-error">
-                    {% for error in field.errors %}
-                    <p>{{ error }}</p>
-                    {% endfor %}
+        <div class="upload-preview-column">
+            <h3 class="preview-title-neon">Vista Previa</h3>
+            <div class="profile-game-card" id="preview-card" style="pointer-events: none;">
+                <div id="preview-image-container" class="profile-game-cover-placeholder">
+                    <i class="fa fa-gamepad"></i>
                 </div>
-                {% endif %}
+                <img id="preview-image" src="" alt="Portada" class="profile-game-cover" style="display: none;">
+                
+                <div class="profile-game-body">
+                    <span id="preview-title" class="profile-game-title">Título del Juego</span>
+                    <span class="profile-game-meta">
+                        <i class="fa fa-tag" aria-hidden="true"></i>
+                        <span id="preview-genre">Categoría</span>
+                    </span>
+                    <span class="profile-game-badge pending">
+                        <i class="fa fa-clock"></i> Pendiente
+                    </span>
+                </div>
             </div>
-            {% endfor %}
-            </div>
-
-            <div class="game-upload-actions">
-                <button type="button" id="open-tc-modal-btn" class="btn-login login-main-submit">Guardar juego</button>
-                <a href="{% url 'web:home' %}#catalogo-juegos" class="btn-login cancel-btn">Cancelar</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -406,6 +635,84 @@
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && !overlay.hidden) closeModal();
     });
+
+    // Custom file input displays
+    function setupFileInput(inputId, displayId) {
+        const input = document.getElementById(inputId);
+        const display = document.getElementById(displayId);
+        // Find the label that acts as the button (it should be right before the display span)
+        const mainLabel = input ? document.querySelector(`label[for="${inputId}"].custom-file-upload`) : null;
+        const originalLabelText = mainLabel ? mainLabel.textContent.trim() : '';
+
+        if (input && display) {
+            input.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    display.textContent = fileName;
+                    if (mainLabel) {
+                        mainLabel.innerHTML = `✅ ${fileName}`;
+                    }
+                } else {
+                    display.textContent = 'Ningún archivo seleccionado';
+                    if (mainLabel) {
+                        mainLabel.textContent = originalLabelText;
+                    }
+                }
+            });
+        }
+    }
+
+    // Call the setup function for each file input
+    setupFileInput('id_cover_image', 'cover_image_display');
+    setupFileInput('id_game_file', 'game_file_display');
+
+    // Live Preview functionality
+    const titleInput = document.getElementById('id_title');
+    const genreSelect = document.getElementById('id_genre');
+    const coverImageInput = document.getElementById('id_cover_image');
+    
+    const previewTitle = document.getElementById('preview-title');
+    const previewGenre = document.getElementById('preview-genre');
+    const previewImage = document.getElementById('preview-image');
+    const previewImagePlaceholder = document.getElementById('preview-image-container');
+
+    if (titleInput && previewTitle) {
+        titleInput.addEventListener('input', function() {
+            previewTitle.textContent = this.value || 'Título del Juego';
+        });
+        // Initial set if editing
+        if(titleInput.value) previewTitle.textContent = titleInput.value;
+    }
+
+    if (genreSelect && previewGenre) {
+        genreSelect.addEventListener('change', function() {
+            const selectedText = this.options[this.selectedIndex].text;
+            previewGenre.textContent = selectedText !== '---------' ? selectedText : 'Categoría';
+        });
+        // Initial set
+        if(genreSelect.selectedIndex > 0) {
+            previewGenre.textContent = genreSelect.options[genreSelect.selectedIndex].text;
+        }
+    }
+
+    if (coverImageInput) {
+        coverImageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    previewImagePlaceholder.style.display = 'none';
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+                previewImagePlaceholder.style.display = 'flex';
+            }
+        });
+    }
+
 })();
 </script>
 {% endblock %}

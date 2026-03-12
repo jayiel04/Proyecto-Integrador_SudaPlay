@@ -35,7 +35,7 @@ from django.db.models import Count, Case, When, IntegerField, Q
 from allauth.account.views import PasswordChangeView, PasswordSetView
 
 from .forms import RegisterForm, ProfileUpdateForm
-from .models import UserProfile, FriendRequest
+from .models import UserProfile, FriendRequest, Notification
 from apps.chat.models import ChatMessage
 
 
@@ -436,7 +436,22 @@ class NotificationsAPIView(View):
                 'url': str(reverse_lazy('chat:chat', args=[msg.sender.username]))
             })
 
-        unread_count = unread_requests + len(unread_messages) + len(sys_notifs)
+        # Notificaciones persistentes (Modelo Notification)
+        db_notifs = list(Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).order_by('-created_at')[:5])
+
+        for n in db_notifs:
+            notifications.append({
+                'id': f"db-{n.id}",
+                'type': 'system',
+                'text': n.message,
+                'created_at': n.created_at.isoformat(),
+                'url': n.url
+            })
+
+        unread_count = unread_requests + len(unread_messages) + len(sys_notifs) + len(db_notifs)
 
         if not notifications:
             notifications.append({
@@ -453,6 +468,27 @@ class NotificationsAPIView(View):
         }
         cache.set(cache_key, result, timeout=20)  # Cachear 20s por usuario
         return JsonResponse(result)
+
+class MarkNotificationReadAPIView(View):
+    """
+    API para marcar una notificación como leída.
+    """
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        try:
+            data = json.loads(request.body)
+            notif_id_str = data.get('notification_id', '')
+            
+            if notif_id_str.startswith('db-'):
+                notif_id = notif_id_str.replace('db-', '')
+                Notification.objects.filter(id=notif_id, user=request.user).update(is_read=True)
+                cache.delete(f'notifications_{request.user.id}')
+                return JsonResponse({'success': True})
+            
+            return JsonResponse({'success': False, 'error': 'Tipo de notificación no soportado para persistencia.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
 
 class SearchPlayersView(View):
     """

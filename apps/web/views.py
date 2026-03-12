@@ -17,11 +17,14 @@ from django.views.generic.edit import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.db.models import F, Q
+from django.contrib.auth.models import User
 from decimal import Decimal, ROUND_HALF_UP
+from django.core.cache import cache
 
 from .forms import GameForm
 from .models import Game, GameRating
 from .services import process_uploaded_web_build_async
+from apps.login.models import Notification
 
 
 class HomeView(TemplateView):
@@ -111,7 +114,27 @@ class GameCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.uploaded_by = self.request.user
-        form.instance.is_approved = True
+        
+        # Solo aprueba automáticamente si es admin o moderador
+        user_role = getattr(self.request.user.profile, 'role', 'user') if hasattr(self.request.user, 'profile') else 'user'
+        if user_role in ['admin', 'moderator']:
+            form.instance.is_approved = True
+            success_msg = "Juego publicado y disponible."
+        else:
+            form.instance.is_approved = False
+            success_msg = "Juego subido para revisión. Será publicado cuando un moderador lo apruebe."
+            
+            # Notificar a los administradores/moderadores
+            admins_mods = User.objects.filter(profile__role__in=['admin', 'moderator'])
+            for am in admins_mods:
+                Notification.objects.create(
+                    user=am,
+                    message=f"Nuevo juego '{form.instance.title}' pendiente de revisión.",
+                    url=str(reverse_lazy('web:review_games'))
+                )
+                cache.delete(f'notifications_{am.id}')
+
+
 
         # Si hay un ZIP, intercepción: guardarlo localmente (instantáneo)
         # en vez de subir a Supabase S3 durante el request (10+ seg).
@@ -140,10 +163,10 @@ class GameCreateView(LoginRequiredMixin, CreateView):
             process_uploaded_web_build_async(self.object.pk, temp_path=temp_path)
             messages.success(
                 self.request,
-                "¡Juego recibido! Estamos procesando el archivo ZIP, en unos momentos estará listo para jugar."
+                "¡Juego recibido! Estamos procesando el archivo ZIP, en unos momentos se completará." if form.instance.is_approved else success_msg
             )
         else:
-            messages.success(self.request, "Juego publicado y disponible.")
+            messages.success(self.request, success_msg)
 
         return redirect("web:home")
 
@@ -161,9 +184,94 @@ class MyGamesView(LoginRequiredMixin, TemplateView):
         return context
 
 
+from django.contrib.auth.mixins import UserPassesTestMixin
+import os
+
+class RoleRequiredMixin(UserPassesTestMixin):
+    """Mixin que permite la entrada solo a usuarios con rol admin o moderator."""
+    def test_func(self):
+        user = self.request.user
+        if not user.is_authenticated:
+            return False
+        role = getattr(user.profile, 'role', 'user') if hasattr(user, 'profile') else 'user'
+        return role in ['admin', 'moderator']
 
 
+class ReviewGamesView(LoginRequiredMixin, RoleRequiredMixin, TemplateView):
+    """
+    Vista para listar los juegos pendientes de revisión (is_approved=False).
+    """
+    template_name = "web/review_games.html"
+    login_url = "login:login"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Mostrar juegos que no están aprobados Y no están rechazados
+        context["games"] = Game.objects.filter(is_approved=False, is_rejected=False).select_related('uploaded_by')
+        return context
+
+
+class ApproveGameView(LoginRequiredMixin, RoleRequiredMixin, View):
+    """
+    Vista para aprobar un juego (POST).
+    """
+    login_url = "login:login"
+
+    def post(self, request, pk):
+        game = Game.objects.filter(pk=pk, is_approved=False).first()
+        if not game:
+            messages.error(request, "El juego no existe o ya ha sido aprobado.")
+        else:
+            game.is_approved = True
+            game.save(update_fields=["is_approved"])
+            
+            # Notificar al autor
+            Notification.objects.create(
+                user=game.uploaded_by,
+                message=f"¡Tu juego '{game.title}' ha sido aprobado y ya está disponible!",
+                url=str(reverse_lazy('web:game_play', kwargs={'pk': game.pk}))
+            )
+            cache.delete(f'notifications_{game.uploaded_by_id}')
+            
+            messages.success(request, f"¡El juego '{game.title}' ha sido aprobado y publicado!")
+            
+        return redirect("web:review_games")
+
+
+class RejectGameView(LoginRequiredMixin, RoleRequiredMixin, View):
+    """
+    Vista para rechazar (eliminar) un juego (POST).
+    """
+    login_url = "login:login"
+
+    def post(self, request, pk):
+        game = Game.objects.filter(pk=pk, is_approved=False, is_rejected=False).first()
+        if not game:
+            messages.error(request, "El juego no existe, ya ha sido aprobado o ya fue rechazado.")
+        else:
+            title = game.title
+            uploader = game.uploaded_by
+            reason = request.POST.get("rejection_reason", "").strip()
+            
+            if not reason:
+                messages.error(request, "Debes proporcionar un motivo para rechazar el juego.")
+                return redirect("web:review_games")
+
+            game.is_rejected = True
+            game.rejection_reason = reason
+            game.save(update_fields=["is_rejected", "rejection_reason"])
+            
+            # Notificar al autor
+            Notification.objects.create(
+                user=uploader,
+                message=f"Tu juego '{title}' ha sido rechazado. Motivo: {reason}",
+                url=str(reverse_lazy('web:my_games'))
+            )
+            cache.delete(f'notifications_{uploader.id}')
+            
+            messages.success(request, f"El juego '{title}' ha sido rechazado.")
+            
+        return redirect("web:review_games")
 class GamePlayView(DetailView):
     model = Game
     template_name = "web/game_play.html"

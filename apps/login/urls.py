@@ -19,6 +19,7 @@ urlpatterns = [
     path('password/set/', views.CustomPasswordSetView.as_view(), name='account_set_password'),
     path('api/auto_messages/', views.AutoMessagesAPIView.as_view(), name='auto_messages_api'),
     path('api/notifications/', views.NotificationsAPIView.as_view(), name='notifications_api'),
+    path('api/notifications/read/', views.MarkNotificationReadAPIView.as_view(), name='mark_notification_read'),
     
     # Friend System & Player Search
     path('jugadores/buscar/', views.SearchPlayersView.as_view(), name='search_players'),

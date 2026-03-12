@@ -18,4 +18,9 @@ urlpatterns = [
     path('juegos/<int:pk>/descargar/', views.GameDownloadView.as_view(), name='game_download'),
     path('juegos/<int:pk>/jugar/', views.GamePlayView.as_view(), name='game_play'),
     path('juegos/<int:pk>/asset/<path:asset_path>', views.GameAssetProxyView.as_view(), name='game_asset'),
+    
+    # Revisión de juegos (Admins/Moderadores)
+    path('juegos/revision/', views.ReviewGamesView.as_view(), name='review_games'),
+    path('juegos/revision/<int:pk>/aprobar/', views.ApproveGameView.as_view(), name='approve_game'),
+    path('juegos/revision/<int:pk>/rechazar/', views.RejectGameView.as_view(), name='reject_game'),
 ]

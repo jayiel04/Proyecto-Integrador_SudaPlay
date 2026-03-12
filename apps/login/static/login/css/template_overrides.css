@@ -1,4 +1,4 @@
-﻿/* Login app template overrides */
+/* Login app template overrides */
 
 /* Base template inline cleanup */
 .floating-icons .floating-icon:nth-child(1) {
@@ -565,4 +565,3 @@
 .avatar-choice-item.is-selected img {
     border-color: #86a6ff;
 }
-

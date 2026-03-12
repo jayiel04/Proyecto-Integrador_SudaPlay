@@ -69,6 +69,16 @@ class Game(models.Model):
         verbose_name="Aprobado",
         help_text="Solo juegos aprobados son visibles públicamente",
     )
+    is_rejected = models.BooleanField(
+        default=False,
+        verbose_name="Rechazado",
+        help_text="True si el juego fue rechazado por un moderador",
+    )
+    rejection_reason = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Motivo de rechazo"
+    )
     is_featured = models.BooleanField(default=False, verbose_name="Destacado")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de creación")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Última actualización")
