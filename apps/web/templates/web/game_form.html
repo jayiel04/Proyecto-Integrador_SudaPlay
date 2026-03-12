@@ -302,65 +302,134 @@
             text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 0 0 20px rgba(0, 229, 255, 0.3);
         }
 
-        .profile-game-card {
-            background: rgba(255,255,255,.05);
-            border: 1px solid rgba(255,255,255,.1);
-            border-radius: .9rem;
+        .catalogo-preview {
+            width: 100%;
+        }
+
+        .catalogo-preview .game-item {
+            border: 1px solid rgba(0, 255, 255, 0.45);
+            background: rgba(10, 25, 41, 0.6);
+            backdrop-filter: blur(14px);
+            border-radius: 20px;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow:
+                0 15px 35px rgba(0, 0, 0, 0.45),
+                inset 0 0 15px rgba(0, 255, 255, 0.08);
             display: flex;
             flex-direction: column;
-            box-shadow: 0 8px 24px rgba(0,0,0,.35);
+            position: relative;
+            text-decoration: none;
+            height: 100%;
+            cursor: pointer;
         }
-        .profile-game-cover {
+
+        .catalogo-preview .game-item::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(125deg, rgba(0, 255, 255, 0.15), transparent 45%),
+                linear-gradient(330deg, rgba(255, 0, 190, 0.12), transparent 55%);
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            opacity: 0.6;
+            z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .catalogo-preview .game-img,
+        .catalogo-preview .game-img-placeholder {
             width: 100%;
             aspect-ratio: 16/9;
             object-fit: cover;
-            display: block;
         }
-        .profile-game-cover-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: linear-gradient(135deg, rgba(127,90,240,.25), rgba(98,70,234,.1));
+
+        .catalogo-preview .game-img {
+            transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+
+        .catalogo-preview .game-img-placeholder {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
-            color: rgba(127,90,240,.5);
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.22), transparent 45%),
+                linear-gradient(145deg, rgba(10, 20, 35, 0.95), rgba(6, 12, 24, 0.95));
+            color: rgba(0, 247, 255, 0.65);
+            font-size: 2.2rem;
         }
-        .profile-game-body {
-            padding: .75rem 1rem;
-            flex: 1;
+
+        .catalogo-preview .game-info {
+            padding: 18px;
+            background: linear-gradient(180deg,
+                rgba(5, 15, 25, 0) 0%,
+                rgba(5, 15, 25, 0.95) 25%,
+                rgba(5, 15, 25, 1) 100%);
+            position: relative;
+            z-index: 2;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: .3rem;
-            min-height: 90px;
+            gap: 10px;
         }
-        .profile-game-title {
-            font-size: .95rem;
+
+        .catalogo-preview .game-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.35rem;
             font-weight: 700;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            color: #fff;
+            letter-spacing: 0.05em;
+            color: #00f7ff;
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.45);
+            margin: 0;
         }
-        .profile-game-meta {
-            font-size: .75rem;
-            color: #a0aec0;
+
+        .catalogo-preview .game-short-description {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #a8d7e6;
+            opacity: 0.85;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .catalogo-preview .game-stats {
             display: flex;
-            align-items: center;
-            gap: .35rem;
+            gap: 12px;
+            margin-bottom: 5px;
         }
-        .profile-game-badge.pending {
-            background: rgba(237, 179, 72, .15);
-            color: #edb348;
-            border: 1px solid rgba(237,179,72,.3);
-            display: inline-block;
-            padding: .2rem .6rem;
-            border-radius: 50px;
-            font-size: .7rem;
-            font-weight: 600;
+
+        .catalogo-preview .game-stats span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            color: #e0ffff;
+            font-size: 0.75rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .catalogo-preview .game-detail-link {
+            display: block;
+            width: 100%;
+            padding: 10px;
             margin-top: auto;
-            align-self: flex-start;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            background: linear-gradient(90deg, #00f7ff, #0099ff);
+            color: #030f19;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 247, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.85;
         }
     </style>
 
@@ -456,26 +525,49 @@
 
         <div class="upload-preview-column">
             <h3 class="preview-title-neon">Vista Previa</h3>
-            <div class="profile-game-card" id="preview-card" style="pointer-events: none;">
-                <div id="preview-image-container" class="profile-game-cover-placeholder">
-                    <i class="fa fa-gamepad"></i>
-                </div>
-                <img id="preview-image" src="" alt="Portada" class="profile-game-cover" style="display: none;">
-                
-                <div class="profile-game-body">
-                    <span id="preview-title" class="profile-game-title">Título del Juego</span>
-                    <span class="profile-game-meta">
-                        <i class="fa fa-tag" aria-hidden="true"></i>
-                        <span id="preview-genre">Categoría</span>
-                    </span>
-                    <span class="profile-game-badge pending">
-                        <i class="fa fa-clock"></i> Pendiente
-                    </span>
+            <div class="catalogo-preview">
+                <div class="game-item" id="preview-card"
+                    data-game-id="preview"
+                    data-game-title="Titulo del Juego"
+                    data-game-description="Descripcion completa del juego."
+                    data-game-image="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 360'><rect width='640' height='360' fill='%23081523'/><circle cx='120' cy='100' r='80' fill='%2300e5ff' fill-opacity='0.22'/><circle cx='520' cy='220' r='110' fill='%23ff4fd8' fill-opacity='0.16'/><text x='50%' y='54%' dominant-baseline='middle' text-anchor='middle' fill='%23bfefff' font-family='Arial' font-size='28'>Vista previa</text></svg>"
+                    data-game-author="{{ user.username|default:'Invitado' }}"
+                    data-game-views="0"
+                    data-game-downloads="0"
+                    data-game-rating="0.0"
+                    data-game-url-play=""
+                    data-game-url-download=""
+                    data-game-is-processing="false">
+                    <div class="game-badge-wrap">
+                        <span class="badge badge-pending">Pendiente</span>
+                    </div>
+
+                    <div id="preview-image-container" class="game-img-placeholder">
+                        <i class="fa fa-gamepad"></i>
+                    </div>
+                    <img id="preview-image" src="" alt="Portada" class="game-img" style="display: none;">
+
+                    <div class="game-info">
+                        <div id="preview-title" class="game-title">Título del Juego</div>
+                        <div id="preview-short-description" class="game-short-description">
+                            Descripción corta del juego.
+                        </div>
+                        <div class="game-stats">
+                            <span><i class="fa fa-download"></i> <span id="preview-downloads">0</span> Descargas</span>
+                            <span><i class="fa fa-star star-gold"></i> <span id="preview-rating">0.0</span></span>
+                        </div>
+
+                        <span class="navbar-link game-detail-link">Ver detalles</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<div data-game-actions-disabled="true" hidden></div>
+
+{% include "web/_game_modal.html" %}
 
 <!-- ===== MODAL TÉRMINOS Y CONDICIONES ===== -->
 <div class="tc-modal-overlay" id="tc-modal-overlay" aria-modal="true" role="dialog" aria-labelledby="tc-modal-title" hidden>
@@ -668,31 +760,53 @@
 
     // Live Preview functionality
     const titleInput = document.getElementById('id_title');
-    const genreSelect = document.getElementById('id_genre');
+    const shortDescriptionInput = document.getElementById('id_short_description');
+    const descriptionInput = document.getElementById('id_description');
     const coverImageInput = document.getElementById('id_cover_image');
+    const previewCard = document.getElementById('preview-card');
+    const defaultPreviewImage = previewCard ? previewCard.dataset.gameImage : '';
     
     const previewTitle = document.getElementById('preview-title');
-    const previewGenre = document.getElementById('preview-genre');
+    const previewShortDescription = document.getElementById('preview-short-description');
     const previewImage = document.getElementById('preview-image');
     const previewImagePlaceholder = document.getElementById('preview-image-container');
 
     if (titleInput && previewTitle) {
         titleInput.addEventListener('input', function() {
             previewTitle.textContent = this.value || 'Título del Juego';
+            if (previewCard) {
+                previewCard.dataset.gameTitle = previewTitle.textContent;
+            }
         });
         // Initial set if editing
-        if(titleInput.value) previewTitle.textContent = titleInput.value;
+        if (titleInput.value) {
+            previewTitle.textContent = titleInput.value;
+        }
+        if (previewCard) {
+            previewCard.dataset.gameTitle = previewTitle.textContent;
+        }
     }
 
-    if (genreSelect && previewGenre) {
-        genreSelect.addEventListener('change', function() {
-            const selectedText = this.options[this.selectedIndex].text;
-            previewGenre.textContent = selectedText !== '---------' ? selectedText : 'Categoría';
+    if (shortDescriptionInput && previewShortDescription) {
+        shortDescriptionInput.addEventListener('input', function() {
+            previewShortDescription.textContent = this.value || 'Descripción corta del juego.';
+            if (previewCard && (!descriptionInput || !descriptionInput.value)) {
+                previewCard.dataset.gameDescription = previewShortDescription.textContent;
+            }
         });
-        // Initial set
-        if(genreSelect.selectedIndex > 0) {
-            previewGenre.textContent = genreSelect.options[genreSelect.selectedIndex].text;
+        if (shortDescriptionInput.value) {
+            previewShortDescription.textContent = shortDescriptionInput.value;
         }
+    }
+
+    if (descriptionInput) {
+        const updateDescription = () => {
+            if (!previewCard) return;
+            const descriptionValue = descriptionInput.value || previewShortDescription?.textContent || 'Descripción completa del juego.';
+            previewCard.dataset.gameDescription = descriptionValue;
+        };
+        descriptionInput.addEventListener('input', updateDescription);
+        updateDescription();
     }
 
     if (coverImageInput) {
@@ -703,12 +817,18 @@
                     previewImage.src = e.target.result;
                     previewImage.style.display = 'block';
                     previewImagePlaceholder.style.display = 'none';
+                    if (previewCard) {
+                        previewCard.dataset.gameImage = e.target.result;
+                    }
                 }
                 reader.readAsDataURL(this.files[0]);
             } else {
                 previewImage.src = '';
                 previewImage.style.display = 'none';
                 previewImagePlaceholder.style.display = 'flex';
+                if (previewCard) {
+                    previewCard.dataset.gameImage = defaultPreviewImage;
+                }
             }
         });
     }
@@ -716,3 +836,5 @@
 })();
 </script>
 {% endblock %}
+
+
