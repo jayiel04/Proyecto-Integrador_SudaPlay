@@ -1428,7 +1428,7 @@
     position: absolute;
     top: -0.65em;
     left: 50%;
-    transform: translateX(-30%);
+    transform: translateX(-42%);
     pointer-events: none;
 }
 
@@ -1470,7 +1470,7 @@
     display: block;
     flex-basis: 100%;
     width: 100%;
-    margin-left: clamp(90px, 5vw, 120px);
+    margin-left: clamp(35px, 2.5vw, 70px);
     margin-top: 0.06em;
     padding: 0;
     border: none;
@@ -1487,7 +1487,7 @@
 /* Auth (Login/Registro/Reset): baja la frase para alinearla con la card derecha. */
 .body-auth-page .body-left-brand-tagline {
     top: clamp(4px, 2.5dvh, 36px) !important;
-    margin-left: clamp(40px, 6vw, 90px) !important;
+    margin-left: clamp(5px, 3vw, 45px) !important;
 }
 
 .body-left-brand-tagline-text {

@@ -278,7 +278,8 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .remember-forgot {
-    margin: clamp(8px, 1.2dvh, 14px) 0;
+    margin-top: clamp(26px, 3.3dvh, 44px);
+    margin-bottom: clamp(8px, 1.2dvh, 14px);
     font-size: clamp(1.05rem, 2dvh, 1.2rem);
 }
 
@@ -287,6 +288,10 @@
     padding-top: clamp(13px, 2.6dvh, 26px);
     padding-bottom: clamp(13px, 2.6dvh, 26px);
     font-size: clamp(1rem, 2.2dvh, 1.6rem);
+}
+
+.body-auth-page .auth-page-layout .login-page-card .btn-login.login-main-submit {
+    margin-top: clamp(24px, 3.8dvh, 48px);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .divider {
@@ -302,13 +307,13 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .google-btn-icon {
-    width: clamp(64px, 8.5dvh, 110px);
-    height: clamp(64px, 8.5dvh, 110px);
-    font-size: clamp(1.9rem, 4.5dvh, 4rem);
+    width: clamp(54px, 7.2dvh, 92px);
+    height: clamp(54px, 7.2dvh, 92px);
+    font-size: clamp(1.65rem, 3.8dvh, 3.3rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .signup-link {
-    margin-top: clamp(12px, 1.8dvh, 20px);
+    margin-top: clamp(16px, 2.4dvh, 28px);
     font-size: clamp(1.15rem, 2.15dvh, 1.35rem);
 }
 
