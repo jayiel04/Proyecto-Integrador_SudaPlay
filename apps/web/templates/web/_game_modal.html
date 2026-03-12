@@ -1,23 +1,39 @@
 <!-- Game Detail Modal Fragment -->
 <div id="game-detail-modal" class="game-modal-overlay" aria-hidden="true">
-    <div class="game-modal-content login-card">
+    <div class="game-modal-card">
         <button id="close-game-modal" class="game-modal-close" aria-label="Cerrar">&times;</button>
-        
-        <div class="game-modal-grid">
-            <div class="game-modal-image-container">
-                <img id="modal-game-image" src="" alt="" class="game-detail-cover">
+
+        <div class="game-modal-body">
+            <!-- Panel izquierdo: imagen de portada -->
+            <div class="game-modal-image-panel">
+                <img id="modal-game-image" src="" alt="" class="game-modal-cover">
             </div>
-            <div class="game-modal-info">
-                <h1 id="modal-game-title" class="game-detail-title"></h1>
-                <p class="game-detail-author">
-                    Creador: <strong id="modal-game-author" class="game-detail-author-name"></strong>
+
+            <!-- Panel derecho: información -->
+            <div class="game-modal-info-panel">
+                <h2 id="modal-game-title" class="game-modal-title"></h2>
+
+                <p class="game-modal-author">
+                    <i class="fa fa-user-circle"></i>
+                    <span id="modal-game-author" class="game-modal-author-name"></span>
                 </p>
 
-                <div class="game-detail-stats">
-                    <span><i class="fa fa-eye"></i> <span id="modal-game-views"></span> vistas</span>
-                    <span><i class="fa fa-download"></i> <span id="modal-game-downloads"></span> descargas</span>
-                    <span><i class="fa fa-star star-gold"></i> <span id="modal-game-rating"></span></span>
+                <div class="game-modal-stats">
+                    <span class="game-modal-stat game-modal-stat-views">
+                        <i class="fa fa-eye"></i>
+                        <span id="modal-game-views"></span> vistas
+                    </span>
+                    <span class="game-modal-stat game-modal-stat-downloads">
+                        <i class="fa fa-download"></i>
+                        <span id="modal-game-downloads"></span> descargas
+                    </span>
+                    <span class="game-modal-stat game-modal-stat-rating">
+                        <i class="fa fa-star"></i>
+                        <span id="modal-game-rating"></span>
+                    </span>
                 </div>
+
+                <hr class="game-modal-divider">
 
                 <div id="modal-game-processing" class="processing-banner" style="display: none;">
                     <span class="processing-spinner"></span>
@@ -26,14 +42,14 @@
                     </div>
                 </div>
 
-                <p id="modal-game-description" class="game-detail-description"></p>
+                <p id="modal-game-description" class="game-modal-description"></p>
 
-                <div class="game-detail-actions">
-                    <a id="modal-play-btn" href="#" class="btn-login game-detail-action-btn" style="display: none;">
-                        Jugar ahora
+                <div class="game-modal-actions">
+                    <a id="modal-play-btn" href="#" class="game-modal-btn game-modal-btn-play" style="display: none;">
+                        <i class="fa fa-play"></i> Jugar ahora
                     </a>
-                    <a id="modal-download-btn" href="#" class="btn-login game-detail-action-btn" style="display: none;">
-                        Descargar
+                    <a id="modal-download-btn" href="#" class="game-modal-btn game-modal-btn-download" style="display: none;">
+                        <i class="fa fa-download"></i> Descargar
                     </a>
                 </div>
             </div>
@@ -49,13 +65,14 @@
 
         const openModal = (data) => {
             document.getElementById('modal-game-image').src = data.image;
+            document.getElementById('modal-game-image').alt = data.title;
             document.getElementById('modal-game-title').textContent = data.title;
             document.getElementById('modal-game-author').textContent = data.author;
             document.getElementById('modal-game-views').textContent = data.views;
             document.getElementById('modal-game-downloads').textContent = data.downloads;
             document.getElementById('modal-game-rating').textContent = data.rating;
             document.getElementById('modal-game-description').textContent = data.description;
-            
+
             const playBtn = document.getElementById('modal-play-btn');
             const downloadBtn = document.getElementById('modal-download-btn');
             const processingBanner = document.getElementById('modal-game-processing');
@@ -66,34 +83,39 @@
                 downloadBtn.style.display = 'none';
             } else {
                 processingBanner.style.display = 'none';
-                
+
                 if (data.urlPlay && data.urlPlay !== '') {
                     playBtn.href = data.urlPlay;
-                    playBtn.style.display = 'inline-block';
+                    playBtn.style.display = 'inline-flex';
                 } else {
                     playBtn.style.display = 'none';
                 }
 
                 if (data.urlDownload && data.urlDownload !== '') {
                     downloadBtn.href = data.urlDownload;
-                    downloadBtn.style.display = 'inline-block';
+                    downloadBtn.style.display = 'inline-flex';
                 } else {
                     downloadBtn.style.display = 'none';
                 }
             }
 
+            modal.setAttribute('aria-hidden', 'false');
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
         };
 
         window.closeGameModal = () => {
             modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
             document.body.style.overflow = '';
         };
 
         closeBtn.addEventListener('click', window.closeGameModal);
         modal.addEventListener('click', (e) => {
             if (e.target === modal) window.closeGameModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) window.closeGameModal();
         });
 
         // Event delegation for game items
