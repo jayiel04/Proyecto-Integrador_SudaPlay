@@ -687,6 +687,14 @@
     const confirmBtn= document.getElementById('tc-confirm-btn');
     const checkbox  = document.getElementById('tc-accept-checkbox');
     const form      = document.getElementById('game-upload-form');
+    const successUrl= "{% url 'web:home' %}";
+
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return '';
+    };
 
     function openModal() {
         overlay.hidden = false;
@@ -713,14 +721,70 @@
         confirmBtn.disabled = !this.checked;
     });
 
-    // Submit the real form
+    const submitWithProgress = () => {
+        if (!form) return;
+        const fileInput = document.getElementById('id_game_file');
+        const supportsAjax = !!window.XMLHttpRequest && !!window.FormData;
+        const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+
+        // Fallback: no file or no AJAX support.
+        if (!supportsAjax || !hasFile) {
+            form.submit();
+            return;
+        }
+
+        const notifier = window.sudaplayUploadNotifier || null;
+        notifier?.start('Preparando subida…');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open(form.method || 'POST', form.action);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+        }
+
+        xhr.upload.onprogress = (event) => {
+            if (!event.lengthComputable) return;
+            const percent = (event.loaded / event.total) * 100;
+            notifier?.update(percent, `Subiendo ${Math.round(percent)}%`);
+        };
+
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                notifier?.success('Procesando archivo…');
+                setTimeout(() => {
+                    window.location.href = xhr.responseURL || successUrl;
+                }, 500);
+            } else {
+                notifier?.error('Error al subir');
+                confirmBtn.disabled = false;
+                openBtn.disabled = false;
+                confirmBtn.textContent = 'Intentar de nuevo';
+                openBtn.textContent = 'Guardar juego';
+            }
+        };
+
+        xhr.onerror = () => {
+            notifier?.error('Error de red');
+            confirmBtn.disabled = false;
+            openBtn.disabled = false;
+            confirmBtn.textContent = 'Intentar de nuevo';
+            openBtn.textContent = 'Guardar juego';
+        };
+
+        const formData = new FormData(form);
+        xhr.send(formData);
+    };
+
+    // Submit the real form (AJAX con progreso)
     confirmBtn.addEventListener('click', function () {
         confirmBtn.disabled = true;
         confirmBtn.textContent = 'Publicando…';
         openBtn.disabled = true;
         openBtn.textContent = 'Publicando…';
         closeModal();
-        form.submit();
+        submitWithProgress();
     });
 
     // Keyboard accessibility: close on Escape

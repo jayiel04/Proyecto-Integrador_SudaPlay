@@ -690,6 +690,84 @@ document.addEventListener('DOMContentLoaded', function () {
     const notificationList = notificationPanel ? notificationPanel.querySelector('.notification-list') : null;
     const notificationBadge = notificationToggle ? notificationToggle.querySelector('.notification-badge') : null;
 
+    // Upload progress helper (keeps a transient item inside notifications)
+    const uploadProgressId = 'notification-upload-progress';
+    const getUploadItem = () => {
+        if (!notificationList) return null;
+        let item = document.getElementById(uploadProgressId);
+        if (!item) {
+            item = document.createElement('li');
+            item.id = uploadProgressId;
+            item.className = 'notification-item upload-progress';
+            item.innerHTML = `
+                <div class="upload-progress-header">
+                    <strong>Subiendo juego…</strong>
+                    <span class="upload-progress-status" data-status-text>Preparando</span>
+                </div>
+                <div class="upload-progress-bar">
+                    <div class="upload-progress-bar-fill" style="width:0%"></div>
+                </div>
+            `;
+            notificationList.prepend(item);
+        }
+        return item;
+    };
+
+    const updateUploadProgress = (percent, statusText) => {
+        const item = getUploadItem();
+        if (!item) return;
+        if (typeof percent === 'number' && Number.isFinite(percent)) {
+            const clamped = Math.max(0, Math.min(100, Math.round(percent)));
+            const bar = item.querySelector('.upload-progress-bar-fill');
+            if (bar) {
+                bar.style.width = `${clamped}%`;
+            }
+        }
+        if (statusText) {
+            const statusEl = item.querySelector('[data-status-text]');
+            if (statusEl) {
+                statusEl.textContent = statusText;
+            }
+        }
+    };
+
+    const markUploadState = (state, statusText) => {
+        const item = getUploadItem();
+        if (!item) return;
+        item.classList.remove('upload-progress-error', 'upload-progress-success');
+        if (state === 'success') {
+            item.classList.add('upload-progress-success');
+            updateUploadProgress(100, statusText || 'Procesando archivo…');
+        } else if (state === 'error') {
+            item.classList.add('upload-progress-error');
+            updateUploadProgress(undefined, statusText || 'Error al subir');
+        } else if (statusText) {
+            updateUploadProgress(undefined, statusText);
+        }
+    };
+
+    const removeUploadProgress = (delayMs = 5000) => {
+        const item = document.getElementById(uploadProgressId);
+        if (!item) return;
+        setTimeout(() => {
+            item.remove();
+        }, delayMs);
+    };
+
+    window.sudaplayUploadNotifier = {
+        start: (text) => updateUploadProgress(0, text || 'Preparando'),
+        update: (percent, text) => updateUploadProgress(percent, text || 'Subiendo…'),
+        success: (text) => {
+            markUploadState('success', text || 'Procesando archivo…');
+            removeUploadProgress(6500);
+        },
+        error: (text) => {
+            markUploadState('error', text || 'Error al subir');
+            removeUploadProgress(8000);
+        },
+        clear: () => removeUploadProgress(0),
+    };
+
     const renderNotifications = (items) => {
         if (!notificationList) return;
         notificationList.innerHTML = '';
