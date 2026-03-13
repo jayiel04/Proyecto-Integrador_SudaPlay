@@ -52,6 +52,14 @@
     padding: 40px 20px;
 }
 
+.page-stack-container-wide {
+    max-width: 1600px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+}
+
 .page-stack-container-left {
     margin-left: 0;
     margin-right: auto;
@@ -594,8 +602,8 @@
 }
 
 .info-card.full-width-card.info-page-card {
-    max-width: 1080px;
-    width: min(96%, 1080px);
+    max-width: 100%;
+    width: 100%;
     padding: clamp(42px, 5vw, 56px);
 }
 

@@ -1777,14 +1777,6 @@
         display: none !important;
     }
 
-    .site-header {
-        height: auto !important;
-    }
-
-    .navbar {
-        height: auto !important;
-        padding-bottom: 12px;
-    }
 
     .navbar-auth .navbar-container {
         justify-content: center;

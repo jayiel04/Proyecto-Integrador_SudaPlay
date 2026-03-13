@@ -283,9 +283,6 @@
     border-radius: 20px;
 }
 
-.main-content:has(.profile-edit-container) {
-    padding-inline: clamp(10px, 2vw, 24px);
-}
 
 .profile-edit-layout {
     display: grid;

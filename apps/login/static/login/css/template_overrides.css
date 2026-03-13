@@ -471,8 +471,8 @@
 }
 
 .avatar-preview-img {
-    width: 96px;
-    height: 96px;
+    width: 200px;
+    height: 200px;
     object-fit: cover;
     border-radius: 999px;
     border: 2px solid rgba(70, 123, 121, 0.5);
@@ -482,16 +482,16 @@
 
 .avatar-preview-stack {
     position: relative;
-    width: 96px;
-    height: 96px;
+    width: 200px;
+    height: 200px;
 }
 
 .avatar-camera-btn {
     position: absolute;
-    bottom: -6px;
-    right: -6px;
-    width: 34px;
-    height: 34px;
+    bottom: 8px;
+    right: 8px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     border: 2px solid #fff;
     background: linear-gradient(145deg, rgba(107, 50, 255, 0.9), rgba(255, 96, 183, 0.9));
