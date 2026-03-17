@@ -1,4 +1,4 @@
-﻿/* ========== NAV SECUNDARIO VERTICAL EN LADO IZQUIERDO ========== */
+/* ========== NAV SECUNDARIO VERTICAL EN LADO IZQUIERDO ========== */
 
 /* Icono tipo CrazyGames junto al logo */
 
@@ -94,6 +94,13 @@ body.sidebar-open .secondary-nav {
         border-right: none;
     }
 
+    .secondary-nav-container {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
     .secondary-nav:hover {
         width: 0;
         /* Desactivar hover en táctil */
@@ -104,6 +111,12 @@ body.sidebar-open .secondary-nav {
         border-right: 1px solid rgba(210, 220, 230, 0.65);
         box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
         /* Sombra para resaltar sobre el contenido */
+    }
+
+    body.sidebar-open .secondary-nav-container {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
     }
 
     .main-content {

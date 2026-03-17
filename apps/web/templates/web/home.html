@@ -39,18 +39,11 @@
 </div>
 {% endif %}
 
-<div class="container page-stack-container">
+<div class="container page-stack-container-wide">
 
 
     {% include "web/home/_catalogo.html" %}
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.location.hash) return;
-        const catalogo = document.getElementById('catalogo-juegos');
-        if (!catalogo) return;
-        catalogo.scrollIntoView({ behavior: 'auto', block: 'start' });
-    });
-</script>
+
 {% endblock %}
