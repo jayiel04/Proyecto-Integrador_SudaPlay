@@ -718,6 +718,379 @@
     }
 }
 
+/* ── Login split layout (PandaSection + LoginForm) ── */
+.body-auth-page .auth-page-layout.login-split-layout {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr minmax(440px, 920px);
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 4vw, 72px);
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-card {
+    margin: 0;
+    justify-self: end;
+    width: min(920px, 100%);
+    max-width: 920px;
+    justify-content: flex-start;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .login-header h1 {
+    letter-spacing: 0.06em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card label {
+    letter-spacing: 0.12em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .remember-forgot {
+    margin-top: clamp(20px, 3.0dvh, 32px);
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 14px;
+    font-size: 0.9em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .remember-forgot .checkbox-wrapper {
+    flex: 0 0 auto;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .remember-forgot .remember-label-reset {
+    font-size: 0.92em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .remember-forgot .forgot-password-link {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .login-main-submit {
+    letter-spacing: 0.22em;
+    /* Baja un poco el botón principal */
+    margin-top: clamp(26px, 4.2dvh, 44px);
+}
+
+/* Baja el bloque inferior (divider + social + signup) sin mover la tarjeta */
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .divider {
+    margin-top: clamp(22px, 4dvh, 64px);
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .social-login {
+    margin-top: clamp(10px, 1.8dvh, 18px);
+    margin-bottom: clamp(14px, 2.4dvh, 26px);
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .google-btn-icon {
+    width: clamp(52px, 6.5dvh, 68px);
+    height: clamp(52px, 6.5dvh, 68px);
+    font-size: clamp(1.45rem, 3.2dvh, 1.85rem);
+    margin-top: clamp(6px, 1.2dvh, 12px);
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .signup-link {
+    margin-top: clamp(10px, 1.8dvh, 18px);
+    margin-bottom: 0;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .signup-link {
+    font-size: clamp(0.82rem, 1.65dvh, 0.94rem);
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-signup-link {
+    white-space: nowrap;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-signup-link .signup-link-cta {
+    display: inline-block;
+    margin-left: 26px;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .signup-link-text,
+.body-auth-page .auth-page-layout.login-split-layout .login-page-card .signup-link-cta {
+    position: relative;
+    top: -10px;
+}
+
+@media (min-width: 981px) {
+    /* Desktop: mueve un poco la card hacia la izquierda (login + register). */
+    .body-auth-page .auth-page-layout.login-split-layout .login-card {
+        margin-right: 12px;
+    }
+
+    /* Registro: igualar padding superior/inferior al look del Login */
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-scroll-wrap {
+        justify-content: flex-start;
+        padding-top: clamp(14px, 1.8dvh, 22px);
+        padding-left: clamp(28px, 3.2vw, 58px);
+        padding-right: clamp(28px, 3.2vw, 58px);
+        padding-bottom: clamp(18px, 2.6dvh, 34px);
+        /* El alto lo controla la card; el contenido interno scrollea si hace falta. */
+        height: 100%;
+        max-height: 100%;
+    }
+
+    /* Override: pages.css pone margin-top:-3px para el botón de registro */
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-card .btn-login.login-main-submit {
+        margin-top: clamp(12px, 2.2dvh, 24px);
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-scroll-wrap .signup-link {
+        margin-top: clamp(10px, 1.6dvh, 16px);
+        position: static;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-scroll-wrap .signup-link-text,
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-scroll-wrap .signup-link-cta {
+        position: relative;
+        top: -10px;
+    }
+
+}
+
+@media (min-width: 981px) {
+    /* Desktop: Login y Register deben tener exactamente la misma altura y quedar alineados arriba/abajo */
+    .body-auth-page .auth-page-layout.login-split-layout {
+        height: 100%;
+        min-height: 0;
+        /* Ancla las tarjetas arriba para que el top/bottom queden determinísticos. */
+        align-items: start;
+    }
+
+    /* Login: hacer la tarjeta más alta (solo desktop). */
+    .body-auth-page .auth-page-layout.login-split-layout.login-page-layout {
+        height: calc(100dvh - var(--navbar-height) - 24px);
+    }
+
+    /* Register: asegura altura del layout (sin esto, el 100% de la card puede no “existir” y no se nota el cambio). */
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout {
+        height: calc(100dvh - var(--navbar-height) - 24px);
+    }
+
+    /* Mantiene el PandaSection visualmente centrado en el panel izquierdo */
+    .body-auth-page .auth-page-layout.login-split-layout .panda-section {
+        align-self: center;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .login-card {
+        --auth-card-gap-top: clamp(8px, 1.4dvh, 18px);
+        /* El espacio inferior ya lo da el padding-bottom del main-content (16px). */
+        --auth-card-gap-bottom: 0px;
+        height: calc(100% - var(--auth-card-gap-top) - var(--auth-card-gap-bottom));
+        max-height: none; /* override pages.css (.register-card { max-height: 90vh }) so both cards can match */
+        margin-top: var(--auth-card-gap-top);
+        margin-bottom: var(--auth-card-gap-bottom);
+    }
+
+    /* Login: baja un poco el borde inferior de la tarjeta (solo desktop). */
+    .body-auth-page .auth-page-layout.login-split-layout.login-page-layout .login-card {
+        --auth-card-gap-top: clamp(2px, 0.55dvh, 8px);
+        --auth-card-gap-bottom: -14px;
+    }
+
+    /* Register: un poco más arriba y un poco más abajo (solo desktop) */
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .login-card {
+        --auth-card-gap-top: clamp(4px, 0.9dvh, 10px);
+        --auth-card-gap-bottom: -6px;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .login-page-card {
+        /* Más alto: espacio arriba/abajo dentro de la tarjeta */
+        padding: clamp(14px, 1.8dvh, 22px) clamp(28px, 3.2vw, 58px) clamp(34px, 4.2dvh, 70px);
+        padding-bottom: clamp(6px, 1dvh, 12px);
+    }
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    row-gap: 0.14em;
+    padding-top: clamp(3.4em, 5.4vw, 4.4em);
+    font-size: clamp(1.9rem, 3.3vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.92);
+    -webkit-text-stroke: 1px rgba(57, 231, 255, 0.55);
+    text-shadow:
+        0 0 14px rgba(57, 231, 255, 0.55),
+        0 0 24px rgba(57, 231, 255, 0.35),
+        0 0 36px rgba(255, 62, 165, 0.28);
+    text-align: center;
+    user-select: none;
+    white-space: normal;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-logo-sitting {
+    position: absolute;
+    top: -1.5em;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-logo-sitting-img {
+    width: 7.9em;
+    height: auto;
+    display: block;
+    filter: drop-shadow(0 0 10px rgba(216, 247, 246, 0.9));
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name {
+    position: relative;
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    column-gap: 0.32em;
+    white-space: nowrap;
+    margin-top: 0.8em;
+    margin-inline: auto;
+    font-size: 1.28em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-inline-logo {
+    width: 3.3em;
+    height: 3.3em;
+    display: block;
+    margin-right: 0.12em;
+    transform: translate(-85px, -0.12em);
+    filter: drop-shadow(0 0 8px rgba(216, 247, 246, 0.7));
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span {
+    display: inline-block;
+    --wave-amp: clamp(0.08em, 0.55vw, 0.22em);
+    animation: brandWave 1.25s ease-in-out infinite, neonGlow 1.6s ease-in-out infinite alternate;
+    animation-delay: calc(0.08s * var(--i, 0)), 0s;
+    -webkit-text-stroke: 0.9px #000;
+    will-change: transform;
+    color: #00a6a6;
+    text-shadow:
+        0 0 8px rgba(0, 0, 0, 1),
+        0 0 14px rgba(0, 128, 128, 0.72),
+        0 0 28px rgba(0, 0, 0, 0.9);
+    position: relative;
+    left: -75px;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(1) { --i: 0; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(2) { --i: 1; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(3) { --i: 2; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(4) { --i: 3; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(5) { --i: 4; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(6) { --i: 5; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(7) { --i: 6; }
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(8) { --i: 7; }
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(1),
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(2),
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(3),
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-name > span:nth-of-type(4) {
+    position: relative;
+    top: 0.08em;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-tagline {
+    position: relative;
+    display: block;
+    width: 100%;
+    margin-inline: auto;
+    margin-top: 0.06em;
+    left: -45px;
+    white-space: nowrap;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    font-size: clamp(1.25rem, 1.95vw, 1.95rem);
+    color: #d4af37;
+    -webkit-text-stroke: 0;
+    text-shadow: 0 0 8px rgba(10, 10, 10, 0.65), 0 0 16px rgba(12, 12, 12, 0.35);
+    text-align: center;
+    will-change: transform;
+}
+
+.body-auth-page .auth-page-layout.login-split-layout .panda-section-tagline-text {
+    display: inline-block;
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.78);
+    paint-order: stroke fill;
+    animation: brandMoveIntense 1.3s ease-in-out infinite, neonGlowTagline 1.7s ease-in-out infinite alternate;
+    will-change: transform;
+}
+
+/* Registro: baja un poco la tarjeta (sin depender del layout del grid) */
+@media (min-width: 981px) {
+    .body-auth-page.body-register-page .auth-page-layout.login-split-layout.register-page-layout {
+        /* Se maneja en el bloque general desktop para igualar alturas/alineación */
+        align-items: start;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout.register-page-layout .register-card {
+        transform: none;
+        /* Igual que login para que top/bottom queden alineados */
+        align-self: start;
+    }
+}
+
+@media (max-width: 980px) {
+    .body-auth-page .auth-page-layout.login-split-layout {
+        grid-template-columns: 1fr;
+        max-width: min(560px, calc(100vw - 24px));
+        gap: 18px;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .login-card {
+        justify-self: center;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .login-page-card {
+        min-height: 0;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .panda-section {
+        font-size: clamp(1.55rem, 7vw, 2.35rem);
+        padding-top: 3.2em;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .panda-section-logo-sitting-img {
+        width: 6.2em;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .panda-section-tagline {
+        font-size: clamp(1.0rem, 4.1vw, 1.3rem);
+        left: 0;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 767px) {
+    /* Mobile: ocultar PandaSection y dejar solo login/register a ancho completo */
+    .body-auth-page .auth-page-layout.login-split-layout .panda-section {
+        display: none;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout {
+        max-width: calc(100vw - 24px);
+        width: calc(100vw - 24px);
+        margin: 0 auto;
+    }
+
+    .body-auth-page .auth-page-layout.login-split-layout .login-card {
+        width: 100%;
+        max-width: 100%;
+        justify-self: center;
+    }
+}
+
 /* --- Botón de sonido (Music Controls) en Login --- */
 .body-auth-page .music-controls {
     z-index: 99999; /* Encima de los demás elementos */

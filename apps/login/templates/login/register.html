@@ -2,55 +2,12 @@
 
 {% block title %}Crear Cuenta - SudaPlay{% endblock title %}
 
+{% block auth_branding %}{% endblock auth_branding %}
+
 {% block content %}
-<div class="container auth-page-layout">
-    <div class="login-card register-card">
-        <div class="register-scroll-wrap">
-            <div class="login-header">
-                <h1>Crear Cuenta</h1>
-            </div>
-
-            <form method="POST" class="login-form" id="register-form">
-                {% csrf_token %}
-
-                {% for field in form %}
-                <div class="form-group">
-                    <label for="{{ field.id_for_label }}">
-                        {% if field.name == 'username' %}Apodo
-                        {% elif field.name == 'email' %}Correo Electrónico
-                        {% elif field.name == 'password1' %}Contraseña
-                        {% elif field.name == 'password2' %}Confirmar Contraseña
-                        {% else %}{{ field.label }}{% endif %}
-                    </label>
-                    <div class="input-wrapper" id="wrapper-{{ field.auto_id }}">
-                        {% if field.name == 'username' %}
-                        <i class="fa fa-user input-icon"></i>
-                        {% elif field.name == 'email' %}
-                        <i class="fa fa-envelope input-icon"></i>
-                        {% elif 'password' in field.name %}
-                        <i class="fa fa-lock input-icon"></i>
-                        {% endif %}
-                        {{ field }}
-                    </div>
-                    <div class="validation-msg" id="msg-{{ field.auto_id }}"></div>
-                    {% if field.errors %}
-                    <div class="form-error">
-                        {% for error in field.errors %}
-                        <p>✗ {{ error }}</p>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-                {% endfor %}
-
-                <button type="submit" class="btn-login login-main-submit" id="submit-btn">Crea tu Cuenta</button>
-            </form>
-
-            <div class="signup-link login-signup-link">
-                <span class="signup-link-text">¿Ya tienes cuenta?</span><a href="{% url 'login:login' %}" class="signup-link-cta">Inicia sesión aquí</a>
-            </div>
-        </div>
-    </div>
+<div class="container auth-page-layout login-split-layout register-page-layout">
+    {% include "login/components/_panda_section.html" %}
+    {% include "login/components/_register_form.html" %}
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {

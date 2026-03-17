@@ -4,6 +4,32 @@
 
 {% block extra_css %}
 <style>
+    /* Página Jugar sin scroll y contenido comprimido a la altura de la ventana */
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+
+    .main-content {
+        min-height: 100vh;
+        padding: 20px 16px;
+        align-items: stretch;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .play-shell {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        gap: 12px;
+        width: 100%;
+        max-width: 1200px;
+        height: calc(100vh - var(--navbar-height) - 24px);
     /* Página Jugar con scroll y contenido apilado verticalmente */
     .play-shell {
         display: flex;
@@ -23,25 +49,33 @@
     }
 
     .play-grid {
-        display: flex;
-        flex-direction: column;
+        height: 100%;
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
         gap: 14px;
+        align-items: stretch;
+        min-height: 0;
     }
 
-    .play-stage-card {
-        position: relative;
+    .play-stage-card,
+    .play-side {
         display: flex;
         flex-direction: column;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        max-height: 85vh;
-        background-color: #000;
-        border-radius: 12px;
-        overflow: hidden;
+        min-height: 0;
     }
 
     .play-stage {
         flex: 1;
+        min-height: 0;
+    }
+
+    .play-frame {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .play-stage-card {
+        position: relative;
         width: 100%;
         height: 100%;
     }
@@ -63,6 +97,7 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         z-index: 10;
         background-color: rgba(255, 255, 255, 0.1);
@@ -74,25 +109,27 @@
         font-size: 18px;
     }
 
-    .play-side {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-    }
-
     .play-rating-panel,
     .play-side-card {
-        display: flex;
-        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .play-side {
+        gap: 12px;
     }
 
     @media (max-width: 720px) {
-        .play-side {
+        .play-shell {
+            height: calc(100vh - var(--navbar-height) - 10px);
+        }
+
+        .play-grid {
             grid-template-columns: 1fr;
         }
 
-        .play-stage-card {
-            height: 50vh;
+        .play-frame {
+            height: 100%;
         }
     }
 </style>
