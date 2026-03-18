@@ -66,6 +66,7 @@ AUTHENTICATION_BACKENDS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # Sirve estáticos comprimidos (gzip/brotli)
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -211,12 +212,12 @@ SUPABASE_CHAT_TABLE = config('SUPABASE_CHAT_TABLE', default='auto_messages')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Cache (memoria local — sin dependencias externas)
-# Para producción, considera django-redis para caché compartida entre workers.
+# Cache compartida entre workers via tabla de base de datos.
+# Ejecutar una vez: python manage.py createcachetable
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'sudaplay-cache',
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache',
     }
 }
 
@@ -256,6 +257,8 @@ STORAGES = {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        # WhiteNoise: comprime y versiona los archivos estáticos automáticamente.
+        # Requiere: python manage.py collectstatic
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }

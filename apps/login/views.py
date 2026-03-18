@@ -334,7 +334,16 @@ def _normalize_auto_message(record):
     }
 
 
+_SUPABASE_MESSAGES_CACHE_KEY = 'supabase_auto_messages'
+_SUPABASE_MESSAGES_CACHE_TTL = 300  # 5 minutos — los mensajes del chat cambian raramente
+
+
 def _fetch_supabase_messages():
+    # Devolver desde caché si está disponible (evita el request HTTP de hasta 5s)
+    cached = cache.get(_SUPABASE_MESSAGES_CACHE_KEY)
+    if cached is not None:
+        return cached
+
     endpoint_url = (settings.SUPABASE_URL or '').rstrip('/')
     api_key = settings.SUPABASE_ANON_KEY
     table_name = settings.SUPABASE_CHAT_TABLE or 'auto_messages'
@@ -358,7 +367,9 @@ def _fetch_supabase_messages():
         response = requests.get(url, headers=headers, params=params, timeout=5)
         if response.ok:
             records = response.json()
-            return [_normalize_auto_message(record) for record in records]
+            result = [_normalize_auto_message(record) for record in records]
+            cache.set(_SUPABASE_MESSAGES_CACHE_KEY, result, timeout=_SUPABASE_MESSAGES_CACHE_TTL)
+            return result
     except requests.RequestException:
         pass
 

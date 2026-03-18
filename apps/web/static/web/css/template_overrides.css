@@ -1046,17 +1046,7 @@
     box-shadow: 0 0 28px rgba(57, 231, 255, 0.08), 0 0 36px rgba(255, 62, 165, 0.06);
 }
 
-.play-stage::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(circle at 20% 20%, rgba(255, 62, 165, 0.14), transparent 32%),
-        radial-gradient(circle at 80% 35%, rgba(57, 231, 255, 0.18), transparent 34%),
-        linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0));
-    mix-blend-mode: screen;
-    pointer-events: none;
-}
+
 
 .play-pause-overlay {
     position: absolute;
