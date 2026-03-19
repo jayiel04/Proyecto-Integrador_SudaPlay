@@ -19,4 +19,4 @@ supabase
 django-storages
 boto3
 whitenoise
-
+gunicorn
