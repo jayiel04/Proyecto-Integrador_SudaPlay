@@ -42,7 +42,7 @@
                 {% for game in published_games %}
                 <article class="game-item" aria-label="Juego {{ game.title }}" id="game-{{ game.pk }}">
                     {% if game.cover_image %}
-                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img">
+                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img" loading="lazy" decoding="async">
                     {% else %}
                     <div class="game-img game-img--fallback" aria-hidden="true"></div>
                     {% endif %}
@@ -84,7 +84,7 @@
                 {% for game in review_games %}
                 <article class="game-item" aria-label="Juego {{ game.title }}" id="game-{{ game.pk }}">
                     {% if game.cover_image %}
-                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img">
+                    <img src="{{ game.cover_image.url }}" alt="Portada de {{ game.title }}" class="game-img" loading="lazy" decoding="async">
                     {% else %}
                     <div class="game-img game-img--fallback" aria-hidden="true"></div>
                     {% endif %}

@@ -214,12 +214,6 @@ body.has-sidebar .music-controls {
     filter: saturate(1.1);
 }
 
-.background::before {
-    content: '';
-    /* El pseudo-elemento generaba el cuadrado giratorio; lo ocultamos para dejar el fondo estático. */
-    display: none;
-}
-
 .background::after {
     content: '';
     position: absolute;
