@@ -45,15 +45,15 @@
     </noscript>
     <script>
         // Fallback de seguridad: si por algun motivo los estilos o el JS fallan, 
-        // mostramos la pagina tras 2.5 segundos de todos modos.
+        // mostramos la pagina tras 1 segundo de todos modos (reducido de 2.5s).
         setTimeout(function() {
             document.documentElement.classList.add('is-ready');
-        }, 2500);
+        }, 1000);
     </script>
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %} body-register-page{% endif %}"{% endif %}>
+<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %} body-register-page{% endif %}"{% else %} class="has-sidebar{% if request.user.is_authenticated and request.session.sudaplay_sidebar_state == 'open' %} sidebar-open{% endif %}"{% endif %}>
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon"></i>

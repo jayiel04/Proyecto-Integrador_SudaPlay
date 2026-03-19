@@ -44,6 +44,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (stylesReadyPromise) {
             return stylesReadyPromise;
         }
+        // Verificar si todos los estilos ya están listos de forma síncrona
+        const allReady = styleLinks.every(isStylesheetReady);
+        if (allReady) {
+            styleLinks.forEach(l => { l.dataset.stylesheetReady = '1'; });
+            stylesReadyPromise = Promise.resolve();
+            return stylesReadyPromise;
+        }
         stylesReadyPromise = Promise.all(
             styleLinks.map((linkEl) => new Promise((resolve) => {
                 if (isStylesheetReady(linkEl)) {
@@ -59,8 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 linkEl.addEventListener('load', done, { once: true });
                 linkEl.addEventListener('error', done, { once: true });
-                // Evita bloquear navegacion si una hoja falla silenciosamente.
-                setTimeout(done, 2500);
+                // Reducido de 2500ms a 1000ms para no bloquear demasiado.
+                setTimeout(done, 1000);
             }))
         );
         return stylesReadyPromise;
@@ -75,8 +82,13 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
         navigationLocked = true;
-        // Respaldo: si la navegacion no ocurre por algun motivo, liberamos el bloqueo en 3s.
-        setTimeout(() => { navigationLocked = false; }, 3000);
+        setTimeout(() => { navigationLocked = false; }, 2000);
+
+        // Si los estilos ya están listos, navegar inmediatamente sin esperar la Promise.
+        if (styleLinks.every(l => l.dataset.stylesheetReady === '1')) {
+            callback();
+            return;
+        }
 
         waitForStylesReady().finally(() => {
             callback();
@@ -280,17 +292,29 @@ document.addEventListener('DOMContentLoaded', function () {
         oscillator.stop(now + 0.075);
     };
 
+    // INTERACTIVE_TAGS: tags que deben producir click-tone (mejora rendimiento).
+    const INTERACTIVE_TAGS = new Set(['A', 'BUTTON', 'INPUT', 'SELECT', 'LABEL', 'TEXTAREA']);
+
     // El navegador bloquea autoplay: se reanuda el audio al primer gesto
-    // y se reproduce el click en cada pointerdown.
-    const activateAudioFromGesture = () => {
+    // y se reproduce el click SOLO en elementos interactivos.
+    const activateAudioFromGesture = (event) => {
         if (!audioContext) {
             return;
         }
+        // Solo emitir tono si el pointerdown es sobre un elemento interactivo.
+        const target = event.target;
+        const isInteractive = target && (
+            INTERACTIVE_TAGS.has(target.tagName) ||
+            target.closest('a, button, [role="button"], [tabindex]')
+        );
+
         audioContext.resume().then(() => {
-            playClickTone();
+            if (isInteractive) {
+                playClickTone();
+            }
         }).catch(() => { });
 
-        // Inicia el MP3 de fondo .
+        // Inicia el MP3 de fondo.
         if (backgroundMusic && !backgroundMusicStarted) {
             if (!localStorage.getItem(MUSIC_STATE_KEYS.volume)) {
                 backgroundMusic.volume = 0.24;
@@ -1019,8 +1043,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const isAuthPage = document.body.classList.contains('body-auth-page');
 
     if (!isAuthPage) {
-        // Marca el body para ajustar margenes CSS
-        document.body.classList.add('has-sidebar');
+        // has-sidebar ya viene en el HTML del servidor (base.html) — no añadir aqui para evitar CLS.
 
         // Restaurar estado del sidebar y conectar toggle
         const toggleBtn = document.getElementById('sidebar-toggle');

@@ -614,6 +614,8 @@ input:focus {
     box-shadow: 0 0 22px rgba(57, 231, 255, 0.32), 0 0 18px rgba(255, 62, 165, 0.24);
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
     animation: cyberFlicker 2.4s infinite;
+    will-change: opacity, transform;
+    transform: translateZ(0);
 }
 
 .btn-login:hover {

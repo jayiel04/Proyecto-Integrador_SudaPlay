@@ -16,7 +16,7 @@ from django.views.generic import DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from django.db.models import F, Q
+from django.db.models import F, Q, Count, Case, When, IntegerField
 from django.contrib.auth.models import User
 from decimal import Decimal, ROUND_HALF_UP
 from django.core.cache import cache
@@ -69,12 +69,21 @@ class AdvancedAudioSettingsView(TemplateView):
     Vista para configuraciones avanzadas de sonido.
     """
     template_name = "web/advanced_audio_settings.html"
+    _AUDIO_CACHE_KEY = 'supabase_audio_list'
+    _AUDIO_CACHE_TTL = 600  # 10 minutos — el listado cambia rara vez
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         import urllib.parse
         from decouple import config
         from supabase import create_client
+
+        # Intentar devolver desde caché primero
+        cached_audio = cache.get(self._AUDIO_CACHE_KEY)
+        if cached_audio is not None:
+            context['audio_files'] = cached_audio
+            return context
+
         try:
             service_role_key = config('SUPABASE_SERVICE_ROLE_KEY', default=settings.SUPABASE_KEY)
             admin_supabase = create_client(settings.SUPABASE_URL, service_role_key)
@@ -99,6 +108,7 @@ class AdvancedAudioSettingsView(TemplateView):
                         'display_name': display_name,
                         'url': f"{settings.SUPABASE_URL}/storage/v1/object/public/musica/audio/{urllib.parse.quote(name)}"
                     })
+            cache.set(self._AUDIO_CACHE_KEY, audio_files, timeout=self._AUDIO_CACHE_TTL)
             context['audio_files'] = audio_files
         except Exception as e:
             print(f"Error fetching audio files from supabase: {e}")
@@ -182,6 +192,17 @@ class MyGamesView(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         games = Game.objects.filter(uploaded_by=self.request.user)
 
+        # Una sola query con aggregate en vez de 6 queries separadas
+        stats_agg = games.aggregate(
+            total=Count('pk'),
+            published=Count(Case(When(is_approved=True, is_rejected=False, then=1), output_field=IntegerField())),
+            pending=Count(Case(When(is_approved=False, is_rejected=False, is_processing=False, processing_error='', then=1), output_field=IntegerField())),
+            rejected=Count(Case(When(is_rejected=True, then=1), output_field=IntegerField())),
+            processing=Count(Case(When(is_processing=True, then=1), output_field=IntegerField())),
+            errored=Count(Case(When(is_processing=False, processing_error__gt='', then=1), output_field=IntegerField())),
+        )
+
+        # Querysets de visualización (evaluados en el template, no en Python)
         processing_games = games.filter(is_processing=True)
         errored_games = games.filter(processing_error__gt="", is_processing=False)
         review_games = games.filter(is_approved=False, is_rejected=False)
@@ -192,14 +213,7 @@ class MyGamesView(LoginRequiredMixin, TemplateView):
         context["errored_games"] = errored_games
         context["review_games"] = review_games
         context["published_games"] = published_games
-        context["stats"] = {
-            "total": games.count(),
-            "published": games.filter(is_approved=True, is_rejected=False).count(),
-            "pending": games.filter(is_approved=False, is_rejected=False, is_processing=False, processing_error="").count(),
-            "rejected": games.filter(is_rejected=True).count(),
-            "processing": processing_games.count(),
-            "errored": errored_games.count(),
-        }
+        context["stats"] = stats_agg
         return context
 
 
@@ -393,7 +407,6 @@ class GamePlayView(DetailView):
         self.object.rating_votes = votes_after
         self.object.save(update_fields=["rating", "rating_votes"])
 
-        messages.success(request, "Gracias por calificar este juego.")
         return redirect("web:game_play", pk=self.object.pk)
 
     def get_context_data(self, **kwargs):
@@ -483,10 +496,30 @@ class GameAssetProxyView(View):
         ".mp4":  "video/mp4",
     }
 
+    # TTL de caché por tipo de asset (segundos)
+    _CACHE_TTL_DEFAULT = 300          # 5 min para HTML/JS/CSS del build
+    _CACHE_TTL_IMMUTABLE = 3600       # 1 hora para imágenes, audio, wasm
+    _IMMUTABLE_EXTS = {'.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico',
+                       '.mp3', '.ogg', '.wav', '.mp4', '.wasm'}
+
     def get(self, request, pk, asset_path):
         import requests as req
         import mimetypes
         from pathlib import PurePosixPath
+
+        # --- Caché de asset ---
+        safe_path = asset_path.replace('/', '_').replace('..', '')
+        cache_key = f'game_asset_{pk}_{safe_path}'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            content, content_type = cached
+            response = HttpResponse(content, content_type=content_type)
+            ext = PurePosixPath(asset_path).suffix.lower()
+            if ext in self._IMMUTABLE_EXTS:
+                response['Cache-Control'] = f'public, max-age={self._CACHE_TTL_IMMUTABLE}, immutable'
+            else:
+                response['Cache-Control'] = f'public, max-age={self._CACHE_TTL_DEFAULT}'
+            return response
 
         game = Game.objects.filter(pk=pk).first()
         if not game or not game.web_build_path:
@@ -512,4 +545,14 @@ class GameAssetProxyView(View):
         if not content_type:
             content_type = "application/octet-stream"
 
-        return HttpResponse(resp.content, content_type=content_type)
+        # Guardar en caché (TTL mayor para assets binarios inmutables)
+        ttl = self._CACHE_TTL_IMMUTABLE if ext in self._IMMUTABLE_EXTS else self._CACHE_TTL_DEFAULT
+        cache.set(cache_key, (resp.content, content_type), timeout=ttl)
+
+        response = HttpResponse(resp.content, content_type=content_type)
+        # Cache-Control HTTP: el navegador guarda el asset localmente entre visitas
+        if ext in self._IMMUTABLE_EXTS:
+            response['Cache-Control'] = f'public, max-age={self._CACHE_TTL_IMMUTABLE}, immutable'
+        else:
+            response['Cache-Control'] = f'public, max-age={self._CACHE_TTL_DEFAULT}'
+        return response

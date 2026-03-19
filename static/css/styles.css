@@ -53,14 +53,21 @@ html::-webkit-scrollbar {
 
 /* space for vertical secondary nav */
 .main-content {
+    /* NO usar margin-left aquí: cambia el layout flow y dispara CLS.
+       En su lugar, usamos transform: translateX() que solo afecta composición (GPU, sin layout shift). */
     margin-left: 0;
-    transition: margin-left 0.3s ease;
     min-height: calc(100vh - 160px);
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 32px 20px 40px;
+    width: calc(100% - var(--sidebar-width));
+    max-width: calc(100vw - var(--sidebar-width));
     scrollbar-width: none;
+    /* transform es composited-only: no mueve otros elementos y no genera CLS */
+    transform: translateX(var(--sidebar-width));
+    transition: transform 0.35s ease;
+    will-change: transform;
 }
 
 .main-content::-webkit-scrollbar {
@@ -68,25 +75,29 @@ html::-webkit-scrollbar {
     background: transparent;
 }
 
-/* Solo aplicar margen si existe el sidebar (usuario logueado) */
+/* El sidebar está siempre presente en páginas no-auth; aplicar offset por defecto */
 body.has-sidebar .main-content {
-    margin-left: var(--sidebar-width);
+    transform: translateX(var(--sidebar-width));
 }
 
-body:has(.secondary-nav:hover) .main-content {
-    margin-left: var(--sidebar-width-expanded);
+/* Al hacer hover sobre el sidebar: expandir contenido */
+.secondary-nav:hover ~ main.main-content {
+    transform: translateX(var(--sidebar-width-expanded));
 }
 
+/* Sidebar abierto por toggle */
 body.sidebar-open .main-content {
-    margin-left: var(--sidebar-width-expanded);
+    transform: translateX(var(--sidebar-width-expanded));
 }
 
-/* En móviles el contenido siempre ocupa todo el ancho y el menú flota */
+/* En móviles el sidebar flota sobre el contenido (no empuja nada) */
 @media (max-width: 768px) {
+    .main-content,
     body.has-sidebar .main-content,
-    body:has(.secondary-nav:hover) .main-content,
     body.sidebar-open .main-content {
-        margin-left: 0 !important;
+        transform: translateX(0) !important;
+        width: 100%;
+        max-width: 100vw;
     }
 }
 
@@ -288,6 +299,7 @@ body.has-sidebar .music-controls {
     /* Glow sutil (sin afectar mucho rendimiento). */
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.22);
     animation: floatAround 20s linear infinite, iconPulse 2.7s ease-in-out infinite;
+    /* translate3d y opacity son las únicas propiedades animadas => GPU acelera */
     will-change: transform, opacity;
 }
 

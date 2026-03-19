@@ -48,9 +48,8 @@
     background:
         linear-gradient(135deg, rgba(0, 255, 255, 0.18), rgba(255, 80, 196, 0.2));
     box-shadow:
-        0 0 18px rgba(0, 255, 255, 0.55),
-        0 0 30px rgba(255, 80, 196, 0.35),
-        inset 0 0 14px rgba(0, 255, 255, 0.26);
+        0 0 16px rgba(0, 255, 255, 0.45),
+        0 0 24px rgba(255, 80, 196, 0.28);
     text-shadow: 0 0 10px #00ffff, 0 0 18px rgba(255, 120, 215, 0.8);
     transform: translateY(-50%) scale(1.08);
 }
@@ -74,8 +73,10 @@
     box-shadow: 4px 0 24px rgb(164, 165, 165);
     /* Resplandor plateado */
     z-index: 99;
-    transition: width 0.15s ease;
+    transition: width 0.35s ease;
     overflow: visible;
+    /* Hint al navegador: solo animamos el ancho, compositar en capa propia */
+    will-change: width;
 }
 
 .secondary-nav:hover {
@@ -496,14 +497,15 @@ body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
 }
 
 
-/* Control global del brillo del navbar y sus botones.
-   Ajusta solo esta variable: --navbar-glow-level (0.25 sobrio, 0.85 intenso). */
-.navbar,
+/* Filtro global de brillo/saturacion REMOVIDO - era costoso al repintar el navbar en cada frame.
+   Si se necesita ajustar brillo, hacer clic en .navbar directamente con propiedades individuales. */
+/* .navbar,
 .navbar-link,
 .profile-dropdown-toggle,
 .nav-item {
-    filter: saturate(calc(0.9 + (var(--navbar-glow-level) * 0.55))) brightness(calc(0.9 + (var(--navbar-glow-level) * 0.22)));
-}
+    filter: saturate(...) brightness(...);
+} */
+
 
 .navbar::after,
 .navbar.navbar-auth::after {
