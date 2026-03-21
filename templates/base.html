@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{% static 'css/styles-sidebar.css' %}?v=3">
     <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=4">
     {% if request.resolver_match.app_name == 'login' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
-    <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=7">
     <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}?v=6">
     {% endif %}
     {% if request.resolver_match.app_name == 'web' %}
@@ -94,12 +94,6 @@
             {% endif %}
             <div class="secondary-nav-sound-container mt-auto">
                 <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound" data-no-style-wait="true"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
-                <div class="secondary-nav-sound-options" style="display:none">
-                    <a href="#" class="secondary-nav-item secondary-nav-mute"><i class="fas fa-volume-up"></i></a>
-                    <a href="#" class="secondary-nav-item secondary-nav-vol-down"><i class="fas fa-minus"></i></a>
-                    <a href="#" class="secondary-nav-item secondary-nav-vol-up"><i class="fas fa-plus"></i></a>
-                    <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound-advanced" title="Configuraciones avanzadas" data-no-style-wait="true"><i class="fas fa-sliders-h"></i></a>
-                </div>
             </div>
             <a href="/soporte/faq/" class="secondary-nav-item secondary-nav-support"><i class="fas fa-headset"></i><span>Soporte</span></a>
             {% if user.is_authenticated %}
@@ -172,8 +166,8 @@
                         <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de perfil">
                             {% if navbar_avatar_url %}
                             <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar"
-                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                            <i class="fa fa-user-circle navbar-avatar-fallback" style="display:none;"></i>
+                                 onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
+                            <i class="fa fa-user-circle navbar-avatar-fallback is-hidden"></i>
                             {% else %}
                             <i class="fa fa-user-circle navbar-avatar-fallback"></i>
                             {% endif %}
@@ -184,10 +178,10 @@
                                 <div class="profile-avatar-ring" aria-hidden="true">
                                     {% if navbar_avatar_url %}
                                     <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar"
-                                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback" style="display:none; font-size:5rem; align-items:center; justify-content:center; color:#7f5af0;"></i>
+                                         onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
+                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback is-hidden"></i>
                                     {% else %}
-                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback" style="font-size:5rem; display:flex; align-items:center; justify-content:center; color:#7f5af0;"></i>
+                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback"></i>
                                     {% endif %}
                                 </div>
                                 <div class="profile-hero-meta">
@@ -214,7 +208,7 @@
                                     <span>Editar perfil</span>
                                 </a>
                                 <div class="profile-divider"></div>
-                                <a href="{% url 'login:logout' %}" class="profile-menu-item profile-logout-btn" role="menuitem" style="color: #ff5e5e;">
+                                <a href="{% url 'login:logout' %}" class="profile-menu-item profile-logout-btn" role="menuitem">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <span>Cerrar sesión</span>
                                 </a>
@@ -387,12 +381,6 @@
                 const normalizedHref = cleanHref.replace(/\/+$/, '') || '/';
                 if (normalizedHref === currentPath) {
                     item.classList.add('is-active');
-                    if (item.closest('.secondary-nav-sound-options')) {
-                        const soundContainer = item.closest('.secondary-nav-sound-container');
-                        if (soundContainer) {
-                            soundContainer.classList.add('open');
-                        }
-                    }
                 }
             });
         });

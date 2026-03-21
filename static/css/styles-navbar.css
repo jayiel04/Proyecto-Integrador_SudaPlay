@@ -97,7 +97,7 @@
 }
 
 .navbar-brand-letter-logo {
-    /* Icono principal del navbar mÃ¡s grande. */
+    /* Icono principal del navbar mas grande. */
     width: 2.1em;
     height: 2.1em;
     display: block;
@@ -254,7 +254,6 @@
 
 .navbar-catalog-search {
     width: min(360px, 44vw);
-    position: relative;
     position: absolute;
     left: 50%;
     top: 50%;
@@ -960,6 +959,22 @@
     color: #d0d3dc;
 }
 
+.navbar-avatar-fallback.is-hidden {
+    display: none !important;
+}
+
+.profile-avatar-icon-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+    color: #7f5af0;
+}
+
+.profile-avatar-icon-fallback.is-hidden {
+    display: none !important;
+}
+
 .profile-dropdown-toggle:hover,
 .profile-dropdown.open .profile-dropdown-toggle {
     transform: translateY(-1px);
@@ -1076,54 +1091,6 @@
 
 .profile-primary-btn {
     width: 100%;
-    background: linear-gradient(135deg, #7b45ff, #c084ff);
-    color: #fff;
-    border-radius: 999px;
-    border: 1px solid rgba(18, 237, 214, 0.6);
-    padding: 8px 0;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.45rem;
-    font-size: 0.8rem;
-    box-shadow: 0 14px 20px rgba(18, 237, 214, 0.35);
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    text-decoration: none;
-}
-
-.profile-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 7px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #dfe6ff;
-    text-decoration: none;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.profile-menu-mygames {
-    background: linear-gradient(135deg, rgba(98, 255, 203, 0.2), rgba(15, 135, 255, 0.25));
-    border: 1px solid #000;
-    box-shadow: 0 0 12px rgba(18, 237, 214, 0.35);
-}
-
-.profile-menu-edit {
-    background: linear-gradient(135deg, rgba(255, 132, 213, 0.25), rgba(187, 80, 255, 0.25));
-    border: 1px solid #000;
-    box-shadow: 0 0 12px rgba(255, 132, 213, 0.35);
-}
-
-.profile-primary-btn {
-    width: 100%;
     background: linear-gradient(135deg, #7b45ff, #ff54c3);
     color: #fff;
     border-radius: 999px;
@@ -1224,6 +1191,10 @@
     text-align: center;
 }
 
+.profile-logout-btn {
+    color: #ff5e5e;
+}
+
 @media (max-width: 640px) {
     .profile-dropdown-card {
         min-width: 260px;
@@ -1309,7 +1280,7 @@
     gap: 16px;
 }
 
-/* ocultar contenedores vac�os para evitar espacios en blanco en el navbar */
+/* ocultar contenedores vacios para evitar espacios en blanco en el navbar */
 .nav-links-left:empty,
 .nav-links-middle:not(.nav-links-middle-auth):empty,
 .nav-links-right:empty {
@@ -1384,7 +1355,7 @@
     flex: 1;
 }
 
-/* En pantallas de auth el navbar mantendrá su tamaño global y sticky */
+/* En pantallas de auth el navbar mantendra su tamano global y sticky */
 .navbar.navbar-auth {
     background:
         linear-gradient(100deg, rgba(255, 255, 255, 0.18), rgba(0, 128, 128, 0.2), rgba(220, 220, 220, 0.18)),
@@ -1554,7 +1525,7 @@
     will-change: transform;
 }
 
-/* Baja un poquito "Suda" (S u d a) sin afectar la animación (usa top en vez de transform). */
+/* Baja un poquito "Suda" (S u d a) sin afectar la animacion (usa top en vez de transform). */
 .body-left-brand-name > span:nth-of-type(1),
 .body-left-brand-name > span:nth-of-type(2),
 .body-left-brand-name > span:nth-of-type(3),

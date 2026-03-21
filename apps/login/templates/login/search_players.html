@@ -3,228 +3,9 @@
 
 {% block title %}Buscar Jugadores - SudaPlay{% endblock %}
 
-{% block extra_css %}
-<style>
-    .search-tabs {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-    }
-
-    .search-tabs a {
-        flex: 1;
-        min-width: 160px;
-        max-width: 220px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        padding: 0.9rem;
-        border-radius: 16px;
-        text-decoration: none;
-        font-weight: 700;
-        letter-spacing: 0.18em;
-        border: 1px solid transparent;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        text-transform: uppercase;
-        background: linear-gradient(145deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5));
-        box-shadow:
-            0 0 18px rgba(0, 0, 0, 0.2),
-            inset 0 0 12px rgba(255, 255, 255, 0.08);
-        color: #a3c1ff;
-    }
-    .search-tabs .search-tab-active {
-        background: linear-gradient(135deg, rgba(0, 229, 255, 0.9), rgba(79, 143, 255, 0.95));
-        box-shadow:
-            0 0 30px rgba(0, 229, 255, 0.7),
-            inset 0 0 24px rgba(255, 255, 255, 0.25);
-        color: #fff;
-        transform: translateY(-2px);
-    }
-    .search-tabs .search-tab-secondary {
-        background: linear-gradient(145deg, rgba(45, 12, 86, 0.9), rgba(10, 129, 255, 0.15));
-        border-color: rgba(255, 255, 255, 0.2);
-        box-shadow:
-            0 0 18px rgba(0, 0, 0, 0.5),
-            inset 0 0 12px rgba(255, 255, 255, 0.05);
-    }
-
-    .friends-tab {
-        background: linear-gradient(145deg, rgba(0, 229, 255, 0.95), rgba(92, 86, 255, 0.95));
-        border: 2px solid #000;
-        color: #fff;
-        box-shadow:
-            0 0 15px rgba(0, 229, 255, 0.6);
-    }
-
-    .friends-tab.search-tab-active {
-        background: linear-gradient(145deg, rgba(143, 107, 255, 0.95), rgba(133, 96, 255, 0.95));
-        border-color: #000;
-        box-shadow:
-            0 0 18px rgba(143, 107, 255, 0.7);
-    }
-
-    .search-form {
-        display: flex;
-        gap: 16px;
-        margin-bottom: 2rem;
-        align-items: stretch;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .search-input {
-        flex: 1;
-        max-width: 600px;
-        padding: 0.95rem 1.4rem;
-        border-radius: 999px;
-        border: 2px solid rgba(0, 255, 255, 0.45);
-        background: rgba(0, 0, 0, 0.6);
-        color: #f3fbff;
-        font-size: 1.1rem;
-        letter-spacing: 0.05em;
-        box-shadow:
-            inset 0 0 16px rgba(0, 0, 0, 0.5),
-            0 0 12px rgba(0, 229, 255, 0.3);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-    .search-input:focus {
-        outline: none;
-        border-color: rgba(255, 33, 150, 0.9);
-        box-shadow:
-            inset 0 0 18px rgba(0, 0, 0, 0.6),
-            0 0 18px rgba(255, 33, 150, 0.45);
-    }
-
-    .search-submit {
-        border-radius: 14px;
-        border: none;
-        background: linear-gradient(145deg, rgba(255, 33, 150, 0.95), rgba(255, 96, 200, 0.9));
-        color: #fff;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        padding: 0 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow:
-            0 0 24px rgba(255, 33, 150, 0.6),
-            inset 0 0 16px rgba(255, 255, 255, 0.25);
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-    .search-submit:hover {
-        transform: translateY(-1px) scale(1.02);
-        box-shadow:
-            0 0 30px rgba(255, 33, 150, 0.8),
-            inset 0 0 18px rgba(255, 255, 255, 0.4);
-    }
-
-    .player-result-item {
-        padding: 1.2rem;
-        border-radius: 18px;
-        background: radial-gradient(circle at top left, rgba(0, 229, 255, 0.15), transparent 45%);
-        border: 1px solid rgba(0, 255, 214, 0.3);
-        box-shadow:
-            0 0 18px rgba(0, 0, 0, 0.6),
-            inset 0 0 20px rgba(0, 229, 255, 0.08);
-        transition: box-shadow 0.25s ease, transform 0.25s ease;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .player-result-item:hover {
-        transform: translateY(-2px);
-        box-shadow:
-            0 0 30px rgba(0, 229, 255, 0.45),
-            inset 0 0 16px rgba(255, 255, 255, 0.1);
-    }
-
-    .player-result-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-    }
-
-    .player-result-info h3 {
-        margin: 0;
-        font-size: 1.2rem;
-        color: #fff;
-    }
-
-    .player-result-info p {
-        margin: 0;
-        font-size: 0.85rem;
-        color: #aaa;
-        max-width: 280px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .player-avatar,
-    .avatar-placeholder {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid rgba(0, 229, 255, 0.7);
-        background: rgba(0, 0, 0, 0.4);
-        color: #fff;
-        object-fit: cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
-    }
-
-    .player-result-footer a {
-        text-decoration: none;
-        font-size: 0.9rem;
-        padding: 0.55rem 1rem;
-        border-radius: 999px;
-        background: linear-gradient(135deg, rgba(255, 33, 150, 0.9), rgba(255, 96, 200, 0.95));
-        color: #fff;
-        box-shadow:
-            0 0 18px rgba(255, 33, 150, 0.5),
-            inset 0 0 10px rgba(255, 255, 255, 0.3);
-    }
-
-    .player-avatar,
-    .avatar-placeholder {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: 2px solid rgba(0, 229, 255, 0.7);
-        object-fit: cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.3rem;
-        background: rgba(0, 0, 0, 0.4);
-        color: #fff;
-        box-shadow: 0 0 12px rgba(0, 229, 255, 0.5);
-    }
-
-    .player-result-footer a {
-        text-decoration: none;
-        font-size: 0.9rem;
-        padding: 0.55rem 1rem;
-        border-radius: 999px;
-        background: linear-gradient(135deg, rgba(58, 189, 255, 0.9), rgba(133, 96, 255, 0.95));
-        color: #fff;
-        box-shadow:
-            0 0 18px rgba(58, 189, 255, 0.5),
-            inset 0 0 10px rgba(255, 255, 255, 0.25);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div style="align-self: flex-start; margin-bottom: auto; width: 100%; padding-top: 0; margin-top: -1.5rem;">
-    <div class="profile-card" style="width: 100%; max-width: 800px; margin: 0 auto; padding: 2rem;">
+<div class="search-players-page">
+    <div class="profile-card search-players-card">
         <div class="search-tabs">
             <a href="?tab=players&q={{ query }}"
                class="search-tab-btn {% if tab != 'friends' %}search-tab-active{% else %}search-tab-secondary{% endif %}">
@@ -241,47 +22,47 @@
             <input type="text" name="q" value="{{ query }}" placeholder="Nombre del {% if tab == 'friends' %}amigo{% else %}jugador{% endif %}..."
                    class="search-input">
             <button type="submit" class="search-submit">
-                <i class="fas fa-search" style="margin-right: 8px;"></i> Buscar
+                <i class="fas fa-search search-submit-icon"></i> Buscar
             </button>
         </form>
 
-        <div class="search-results-list" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="search-results-list">
             {% if results %}
                 {% for p_user in results %}
-                        <div class="player-result-item">
-                            <div class="player-result-info">
-                                {% if p_user.avatar_url %}
-                                    <img src="{{ p_user.avatar_url }}" alt="Avatar de {{ p_user.username }}" class="player-avatar">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                {% endif %}
-                                <div>
-                                    <h3>{{ p_user.username }}</h3>
-                                    {% if p_user.profile.bio %}
-                                        <p>{{ p_user.profile.bio }}</p>
-                                    {% endif %}
+                    <div class="player-result-item">
+                        <div class="player-result-info">
+                            {% if p_user.avatar_url %}
+                                <img src="{{ p_user.avatar_url }}" alt="Avatar de {{ p_user.username }}" class="player-avatar">
+                            {% else %}
+                                <div class="avatar-placeholder">
+                                    <i class="fas fa-user"></i>
                                 </div>
-                            </div>
-                            <div class="player-result-footer">
-                                <a href="{% url 'login:player_profile' p_user.username %}">Ver Perfil</a>
+                            {% endif %}
+                            <div>
+                                <h3>{{ p_user.username }}</h3>
+                                {% if p_user.profile.bio %}
+                                    <p>{{ p_user.profile.bio }}</p>
+                                {% endif %}
                             </div>
                         </div>
-                    {% endfor %}
+                        <div class="player-result-footer">
+                            <a href="{% url 'login:player_profile' p_user.username %}">Ver Perfil</a>
+                        </div>
+                    </div>
+                {% endfor %}
             {% elif query %}
-                <div style="text-align: center; padding: 2rem; color: #aaa;">
-                    <i class="fas fa-ghost" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <div class="search-empty-state">
+                    <i class="fas fa-ghost search-empty-icon"></i>
                     <p>No se encontraron {% if tab == 'friends' %}amigos{% else %}jugadores{% endif %} con el nombre "{{ query }}".</p>
                 </div>
             {% elif tab == 'friends' %}
-                <div style="text-align: center; padding: 2rem; color: #aaa;">
-                    <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <div class="search-empty-state">
+                    <i class="fas fa-user-friends search-empty-icon"></i>
                     <p>Aún no tienes amigos. ¡Busca jugadores y añádelos!</p>
                 </div>
             {% else %}
-                <div style="text-align: center; padding: 2rem; color: #aaa;">
-                    <i class="fas fa-keyboard" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                <div class="search-empty-state">
+                    <i class="fas fa-keyboard search-empty-icon"></i>
                     <p>Ingresa un nombre para empezar a buscar jugadores.</p>
                 </div>
             {% endif %}

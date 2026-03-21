@@ -266,7 +266,7 @@ body.sidebar-open .secondary-nav-item span {
     color: #fff;
 }
 
-/* dropdown para controles de sonido dentro del sidebar */
+/* Boton de sonido dentro del sidebar (sin opciones desplegables) */
 .secondary-nav-sound-container {
     display: flex;
     flex-direction: column;
@@ -288,99 +288,6 @@ body.sidebar-open .secondary-nav-sound-container {
 .secondary-nav:hover .secondary-nav-sound-container .secondary-nav-item,
 body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
     align-self: flex-start;
-}
-
-.secondary-nav-sound-options {
-    display: none;
-    flex-direction: row;
-    align-items: center;
-    position: absolute;
-    left: 100%;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-left: 10px;
-    padding: 8px;
-    gap: 8px;
-    background: rgba(4, 15, 25, 0.98);
-    /* Opaque color */
-    border-radius: 8px;
-    border: 1px solid rgba(0, 255, 255, 0.25);
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.15);
-    z-index: 1000;
-}
-
-.secondary-nav-sound-container.open .secondary-nav-sound-options {
-    display: flex;
-}
-
-/* estilo específico para el enlace de mute dentro del dropdown */
-.secondary-nav-mute {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border-radius: 50%;
-    font-size: 1.2rem;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    background: rgba(0, 20, 20, 0.4);
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
-    color: var(--accent-cyan);
-}
-
-.secondary-nav-mute:hover {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 255, 255, 0.15);
-    box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
-    color: #fff;
-}
-
-/* Estilos específicos para botones de volumen */
-.secondary-nav-vol-down,
-.secondary-nav-vol-up {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    /* Anillo de energía */
-    background: rgba(0, 20, 20, 0.4);
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.15);
-    font-size: 1.2rem;
-    color: var(--accent-cyan);
-}
-
-.secondary-nav-vol-down:hover,
-.secondary-nav-vol-up:hover {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 255, 255, 0.15);
-    box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
-    color: #fff;
-}
-
-.secondary-nav-sound-advanced {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 38px;
-    height: 38px;
-    padding: 0;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 255, 255, 0.25);
-    background: rgba(0, 20, 20, 0.36);
-    font-size: 1.2rem;
-    color: var(--accent-cyan);
-}
-
-.secondary-nav-sound-advanced:hover {
-    border-color: var(--accent-cyan);
-    background: rgba(0, 255, 255, 0.15);
-    box-shadow: 0 0 15px var(--accent-cyan), inset 0 0 10px rgba(0, 255, 255, 0.2);
-    color: #fff;
 }
 
 /* Utilidad para empujar items al fondo (como el de soporte) */

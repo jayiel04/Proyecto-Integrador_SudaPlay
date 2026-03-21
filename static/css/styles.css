@@ -51,6 +51,10 @@ html::-webkit-scrollbar {
     background: transparent;
 }
 
+.is-hidden {
+    display: none !important;
+}
+
 /* space for vertical secondary nav */
 .main-content {
     /* NO usar margin-left aquí: cambia el layout flow y dispara CLS.

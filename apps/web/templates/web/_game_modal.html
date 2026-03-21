@@ -35,7 +35,7 @@
 
                 <hr class="game-modal-divider">
 
-                <div id="modal-game-processing" class="processing-banner" style="display: none;">
+                <div id="modal-game-processing" class="processing-banner" hidden>
                     <span class="processing-spinner"></span>
                     <div>
                         <strong>⏳ Procesando tu juego…</strong>
@@ -45,10 +45,10 @@
                 <p id="modal-game-description" class="game-modal-description"></p>
 
                 <div class="game-modal-actions">
-                    <a id="modal-play-btn" href="#" class="game-modal-btn game-modal-btn-play" style="display: none;">
+                    <a id="modal-play-btn" href="#" class="game-modal-btn game-modal-btn-play" hidden>
                         <i class="fa fa-play"></i> Jugar ahora
                     </a>
-                    <a id="modal-download-btn" href="#" class="game-modal-btn game-modal-btn-download" style="display: none;">
+                    <a id="modal-download-btn" href="#" class="game-modal-btn game-modal-btn-download" hidden>
                         <i class="fa fa-download"></i> Descargar
                     </a>
                 </div>
@@ -78,11 +78,7 @@
             const downloadBtn = document.getElementById('modal-download-btn');
             const processingBanner = document.getElementById('modal-game-processing');
 
-            if (data.isProcessing === 'true') {
-                processingBanner.style.display = 'flex';
-            } else {
-                processingBanner.style.display = 'none';
-            }
+            processingBanner.hidden = data.isProcessing !== 'true';
 
             playBtn.classList.remove('is-disabled');
             downloadBtn.classList.remove('is-disabled');
@@ -92,8 +88,8 @@
             downloadBtn.removeAttribute('tabindex');
 
             if (actionsDisabled) {
-                playBtn.style.display = 'inline-flex';
-                downloadBtn.style.display = 'inline-flex';
+                playBtn.hidden = false;
+                downloadBtn.hidden = false;
                 playBtn.removeAttribute('href');
                 downloadBtn.removeAttribute('href');
                 playBtn.classList.add('is-disabled');
@@ -105,16 +101,16 @@
             } else {
                 if (data.urlPlay && data.urlPlay !== '') {
                     playBtn.href = data.urlPlay;
-                    playBtn.style.display = 'inline-flex';
+                    playBtn.hidden = false;
                 } else {
-                    playBtn.style.display = 'none';
+                    playBtn.hidden = true;
                 }
 
                 if (data.urlDownload && data.urlDownload !== '') {
                     downloadBtn.href = data.urlDownload;
-                    downloadBtn.style.display = 'inline-flex';
+                    downloadBtn.hidden = false;
                 } else {
-                    downloadBtn.style.display = 'none';
+                    downloadBtn.hidden = true;
                 }
             }
 
