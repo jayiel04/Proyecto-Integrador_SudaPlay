@@ -108,11 +108,11 @@ WSGI_APPLICATION = 'mi_proyecto.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.uqontjetlobocgmfoojd',
-        'PASSWORD': 'Sudaplay2026',
-        'HOST':'aws-1-us-east-1.pooler.supabase.com',
-        'PORT':'6543',
+        'NAME': config('DB_NAME', default='postgres'),
+        'USER': config('DB_USER'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT', default='6543'),
         'CONN_MAX_AGE': 60,   # Reutiliza conexiones hasta 60s — evita abrir/cerrar por cada request
         'OPTIONS': {
             'sslmode': 'require',
