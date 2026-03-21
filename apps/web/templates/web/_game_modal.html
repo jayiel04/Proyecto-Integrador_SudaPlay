@@ -78,7 +78,7 @@
             const downloadBtn = document.getElementById('modal-download-btn');
             const processingBanner = document.getElementById('modal-game-processing');
 
-            processingBanner.hidden = data.isProcessing !== 'true';
+            processingBanner.style.display = data.isProcessing === 'true' ? 'flex' : 'none';
 
             playBtn.classList.remove('is-disabled');
             downloadBtn.classList.remove('is-disabled');
@@ -88,8 +88,8 @@
             downloadBtn.removeAttribute('tabindex');
 
             if (actionsDisabled) {
-                playBtn.hidden = false;
-                downloadBtn.hidden = false;
+                playBtn.style.display = 'inline-flex';
+                downloadBtn.style.display = 'inline-flex';
                 playBtn.removeAttribute('href');
                 downloadBtn.removeAttribute('href');
                 playBtn.classList.add('is-disabled');
@@ -101,16 +101,16 @@
             } else {
                 if (data.urlPlay && data.urlPlay !== '') {
                     playBtn.href = data.urlPlay;
-                    playBtn.hidden = false;
+                    playBtn.style.display = 'inline-flex';
                 } else {
-                    playBtn.hidden = true;
+                    playBtn.style.display = 'none';
                 }
 
                 if (data.urlDownload && data.urlDownload !== '') {
                     downloadBtn.href = data.urlDownload;
-                    downloadBtn.hidden = false;
+                    downloadBtn.style.display = 'inline-flex';
                 } else {
-                    downloadBtn.hidden = true;
+                    downloadBtn.style.display = 'none';
                 }
             }
 

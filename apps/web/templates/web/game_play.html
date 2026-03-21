@@ -2,126 +2,6 @@
 
 {% block title %}Jugar {{ game.title }} - SudaPlay{% endblock %}
 
-{% block extra_css %}
-<style>
-    /* Pagina Jugar sin scroll y con layout fijo a la ventana */
-    html,
-    body {
-        height: 100%;
-        overflow: hidden;
-    }
-
-    body {
-        padding-bottom: 0;
-    }
-
-    .main-content {
-        min-height: 100vh;
-        padding: 20px 16px;
-        align-items: stretch;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-    .play-shell {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        height: calc(100vh - var(--navbar-height) - 24px);
-        min-height: 0;
-    }
-
-    .play-hero {
-        flex-wrap: wrap;
-        margin-bottom: 0;
-        padding: 10px 14px;
-        gap: 10px;
-    }
-
-    .play-grid {
-        height: 100%;
-        display: grid;
-        grid-template-columns: minmax(0, 1.8fr) minmax(280px, 1fr);
-        gap: 14px;
-        align-items: stretch;
-        min-height: 0;
-    }
-
-    .play-stage-card,
-    .play-side {
-        display: flex;
-        flex-direction: column;
-        min-height: 0;
-    }
-
-    .play-stage {
-        flex: 1;
-        min-height: 0;
-    }
-
-    .play-frame {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        border: none;
-    }
-
-    .play-stage-card {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .play-fullscreen-btn {
-        position: absolute;
-        bottom: 16px;
-        right: 16px;
-        width: 46px;
-        height: 46px;
-        border-radius: 50%;
-        padding: 0;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-        z-index: 10;
-        background-color: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(4px);
-    }
-
-    .play-fullscreen-btn i {
-        pointer-events: none;
-        font-size: 18px;
-    }
-
-    .play-rating-panel,
-    .play-side-card {
-        flex: 1;
-        min-height: 0;
-    }
-
-    .play-side {
-        gap: 12px;
-    }
-
-    @media (max-width: 720px) {
-        .play-shell {
-            height: calc(100vh - var(--navbar-height) - 10px);
-        }
-
-        .play-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .play-frame {
-            height: 100%;
-        }
-    }
-</style>
-{% endblock %}
 
 {% block content %}
 <div class="play-shell">
@@ -143,7 +23,7 @@
         </div>
         <div class="play-hero-actions">
             <div class="play-stat">
-                <p class="play-stat-label">CalificaciÃ³n</p>
+                <p class="play-stat-label">Calificación</p>
                 <p class="play-stat-value">{{ game.rating|floatformat:1 }}<span>/5</span></p>
             </div>
             <div class="play-stat">
@@ -180,7 +60,7 @@
                         <h2 class="play-cta-title">Listo para despegar</h2>
                         <p class="play-cta-subtitle" id="play-cta-subtitle">
                             {% if play_mode == "external" %}
-                            Se abrirÃ¡ dentro de SudaPlay.
+                            Se abrirá dentro de SudaPlay.
                             {% else %}
                             Haz clic para cargar el juego.
                             {% endif %}
@@ -214,7 +94,7 @@
         <aside class="play-side">
             <div class="play-rating-panel">
                 <p class="play-rating-summary">
-                    CalificaciÃ³n actual:
+                    Calificación actual:
                     <strong class="play-rating-score">{{ game.rating|floatformat:1 }}</strong>/5
                     ({{ game.rating_votes }} votos)
                 </p>
@@ -226,7 +106,7 @@
                 {% else %}
                 <form method="post" class="play-rating-form">
                     {% csrf_token %}
-                    <label for="id_rating" class="play-rating-label">Tu calificaciÃ³n:</label>
+                    <label for="id_rating" class="play-rating-label">Tu calificación:</label>
                     <select name="rating" id="id_rating" required>
                         <option value="" selected disabled>Selecciona</option>
                         <option value="1">1 - Muy malo</option>
@@ -243,22 +123,22 @@
                 {% else %}
                 <p class="play-login-required">
                     Debes <a href="{% url 'login:login' %}?next={{ request.path|urlencode }}" class="play-login-link">iniciar
-                        sesiÃ³n</a>
+                        sesión</a>
                     para calificar este juego.
                 </p>
                 {% endif %}
             </div>
 
             <div class="play-side-card">
-                <p class="play-side-title">Consejos rÃ¡pidos</p>
+                <p class="play-side-title">Consejos rápidos</p>
                 <ul class="play-tips">
-                    <li><i class="fa fa-expand"></i> Usa pantalla completa para mejor inmersiÃ³n.</li>
+                    <li><i class="fa fa-expand"></i> Usa pantalla completa para mejor inmersión.</li>
                     <li><i class="fa fa-gamepad"></i> Conecta tu gamepad antes de iniciar.</li>
                     <li><i class="fa fa-volume-up"></i> Ajusta el volumen en la barra lateral.</li>
                 </ul>
                 {% if play_mode == "external" %}
                 <a href="{{ play_url }}" target="_blank" rel="noopener" class="play-alt-link">
-                    Abrir en nueva pestaÃ±a <i class="fa fa-arrow-up-right-from-square"></i>
+                    Abrir en nueva pestaña <i class="fa fa-arrow-up-right-from-square"></i>
                 </a>
                 {% endif %}
             </div>
@@ -322,11 +202,11 @@
                 try {
                     const win = frame.contentWindow;
                     if (win) {
-                        // Enviar seÃ±al de postMessage por si el juego tiene un receptor
+                        // Enviar señal de postMessage por si el juego tiene un receptor
                         win.postMessage({ type: isPaused ? 'sudaplay_pause' : 'sudaplay_resume' }, "*");
 
                         if (isPaused) {
-                            // Simular pÃ©rdida de foco para que motores como Phaser/Unity se pausen
+                            // Simular pérdida de foco para que motores como Phaser/Unity se pausen
                             win.dispatchEvent(new Event('blur'));
 
                             // Pausar elementos multimedia si es mismo origen
@@ -408,7 +288,7 @@
         });
         function handleFullscreenChange() {
             const active = isFullscreenActive();
-            // Eliminamos la pausa automÃ¡tica al salir de pantalla completa (Escape)
+            // Eliminamos la pausa automática al salir de pantalla completa (Escape)
             // para evitar que aparezca el icono de "Jugar".
             wasFullscreen = Boolean(active);
             updateButtonLabel();
@@ -421,7 +301,7 @@
         wasFullscreen = Boolean(isFullscreenActive());
         updateButtonLabel();
 
-        // Evitar scroll cuando el juego estÃ¡ iniciado
+        // Evitar scroll cuando el juego está iniciado
         const blockScroll = (e) => {
             if (!gameStarted) return;
 
@@ -436,7 +316,7 @@
 
         window.addEventListener("keydown", blockScroll, { passive: false });
 
-        // Intentar bloquear scroll incluso si el foco estÃ¡ dentro del iframe (mismo origen)
+        // Intentar bloquear scroll incluso si el foco está dentro del iframe (mismo origen)
         if (frame) {
             frame.addEventListener("load", () => {
                 setLoading(false);
@@ -448,7 +328,7 @@
             });
         }
 
-        // Si el usuario hace clic en el Ã¡rea de juego, forzar foco al iframe
+        // Si el usuario hace clic en el área de juego, forzar foco al iframe
         if (stage) {
             stage.addEventListener("mousedown", () => {
                 if (gameStarted && frame) {

@@ -4,260 +4,7 @@
 {% block title %}Perfil de {{ target_user.username }} - SudaPlay{% endblock %}
 
 {% block extra_css %}
-<style>
-    .profile-container {
-        max-width: 860px;
-        margin: calc(var(--navbar-height) + 2rem) auto 2rem;
-        padding: 0 1.25rem;
-    }
-    .profile-card {
-        background: rgb(2, 22, 22);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-        border-radius: 1.25rem;
-        padding: 2.25rem;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.05);
-    }
-    .profile-hero {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-        margin-bottom: 2rem;
-        flex-wrap: wrap;
-    }
-    .profile-avatar-wrapper {
-        position: relative;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background: linear-gradient(140deg, #a878ff, #f95bff, #5ba7ff);
-        padding: 4px;
-        border: 3px solid var(--neon-cyan, #00ffff);
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .profile-avatar-img, .profile-avatar-fallback {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-    .profile-avatar-fallback {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #222;
-        font-size: 3.5rem;
-        color: var(--neon-cyan, #00ffff);
-    }
-    .profile-info-primary {
-        flex: 1;
-        min-width: 250px;
-    }
-    .profile-hero-title {
-        font-size: 2.2rem;
-        margin: 0 0 0.5rem;
-        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-    }
-    .profile-role, .profile-joined {
-        margin: 0 0 0.5rem;
-        font-size: 0.95rem;
-        color: #aaa;
-    }
-    .profile-online-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 0.2em;
-        color: #b8f6ff;
-    }
-    .profile-online-indicator {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-    }
-    .profile-online-indicator.online {
-        background: #2cff52;
-        border-color: rgba(44, 255, 82, 0.8);
-        box-shadow: 0 0 14px rgba(44, 255, 82, 0.6);
-    }
-    .profile-online-indicator.offline {
-        background: rgba(255, 255, 255, 0.2);
-    }
-    .profile-online-label {
-        font-size: 0.9rem;
-        color: #d3f5ff;
-    }
-    .role-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .role-admin { background: rgba(255, 59, 59, 0.2); color: #ff3b3b; border: 1px solid rgba(255, 59, 59, 0.5); }
-    .role-mod { background: rgba(255, 165, 0, 0.2); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.5); }
-    .role-user { background: rgba(0, 255, 255, 0.1); color: var(--neon-cyan, #00ffff); border: 1px solid rgba(0, 255, 255, 0.3); }
-    
-    .profile-content-grid {
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        gap: 2rem;
-    }
-    @media (max-width: 768px) {
-        .profile-content-grid { grid-template-columns: 1fr; }
-        .profile-friend-actions { margin-left: 0 !important; width: 100%; justify-content: flex-start; margin-top: 1rem; }
-    }
-    .friend-name-row {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-    .friend-online-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        border: 1px solid rgba(255, 255, 255, 0.35);
-        background: rgba(255, 255, 255, 0.2);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    }
-    .friend-online-dot.online {
-        background: #26ff8c;
-        border-color: rgba(38, 255, 140, 0.9);
-        box-shadow: 0 0 12px rgba(38, 255, 140, 0.6);
-    }
-    .profile-section {
-        background: rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 12px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    .profile-section-title {
-        font-size: 1.2rem;
-        margin-top: 0;
-        margin-bottom: 1.2rem;
-        color: var(--neon-cyan, #00ffff);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .profile-bio-text {
-        font-size: 0.95rem;
-        line-height: 1.6;
-        color: #ddd;
-        margin: 0;
-    }
-    .profile-stats-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-    .stat-card {
-        background: rgba(255,255,255,0.05);
-        padding: 1rem;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
-    .stat-icon {
-        font-size: 1.5rem;
-        color: var(--neon-cyan, #00ffff);
-    }
-    .stat-value {
-        font-size: 1.3rem;
-        font-weight: bold;
-    }
-    .stat-label {
-        font-size: 0.85rem;
-        color: #aaa;
-        text-transform: uppercase;
-        flex: 1;
-    }
-    .user-games-showcase {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 1rem;
-    }
-    .game-mini-card {
-        background: rgba(255,255,255,0.05);
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .game-mini-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
-        border-color: rgba(0, 255, 255, 0.4);
-    }
-    .game-mini-thumb {
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-    }
-    .game-mini-thumb.fallback {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #222;
-        font-size: 2rem;
-        color: #555;
-    }
-    .game-mini-info {
-        padding: 1rem;
-    }
-    .game-mini-info h4 {
-        margin: 0 0 0.5rem;
-        font-size: 1rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .game-mini-meta {
-        font-size: 0.8rem;
-        color: #aaa;
-        margin-bottom: 1rem;
-    }
-    .game-mini-link {
-        display: inline-block;
-        padding: 5px 10px;
-        background: rgba(0, 255, 255, 0.1);
-        color: var(--neon-cyan, #00ffff);
-        text-decoration: none;
-        border-radius: 5px;
-        font-size: 0.85rem;
-        border: 1px solid rgba(0, 255, 255, 0.3);
-        transition: background 0.2s;
-    }
-    .game-mini-link:hover {
-        background: rgba(0, 255, 255, 0.3);
-    }
-    .empty-state-card {
-        text-align: center;
-        padding: 3rem 1rem;
-        color: #888;
-    }
-    .empty-state-icon {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        opacity: 0.5;
-    }
-</style>
+
 {% endblock %}
 
 {% block content %}
@@ -293,7 +40,7 @@
             </div>
 
             <!-- Friend Actions -->
-            <div class="profile-friend-actions" style="margin-left: auto; display: flex; align-items: center;" 
+            <div class="profile-friend-actions gen-style-e3127c"  
                  data-target-id="{{ target_user.id }}" 
                  data-request-url="{% url 'login:send_friend_request' %}"
                  data-remove-url="{% url 'login:remove_friend' %}">
@@ -301,30 +48,30 @@
                 {% csrf_token %}
                 
                 {% if friendship_status == 'none' %}
-                    <button class="profile-primary-btn btn-send-request" style="font-size: 0.9rem;">
+                    <button class="profile-primary-btn btn-send-request gen-style-33dd45" >
                         <i class="fas fa-user-plus"></i> Añadir amigo
                     </button>
-                    <span class="action-feedback" style="display:none; color: #00ff00; font-size: 0.85rem; margin-left: 10px;"></span>
+                    <span class="action-feedback gen-style-485bbb" ></span>
                 
                 {% elif friendship_status == 'pending_sent' %}
-                    <button class="profile-secondary-btn" disabled style="opacity: 0.7; cursor: default; font-size: 0.9rem;">
+                    <button class="profile-secondary-btn gen-style-601027" disabled >
                         <i class="fas fa-clock"></i> Solicitud enviada
                     </button>
                 
                 {% elif friendship_status == 'pending_received' %}
-                    <span style="color: var(--neon-cyan); font-size: 0.9rem; margin-right: 10px;"><i class="fas fa-exclamation-circle"></i> Te ha enviado una solicitud</span>
-                    <a href="{% url 'login:profile' %}" class="profile-primary-btn" style="font-size: 0.9rem; text-decoration: none;">
+                    <span  class="gen-style-a3a470"><i class="fas fa-exclamation-circle"></i> Te ha enviado una solicitud</span>
+                    <a href="{% url 'login:profile' %}" class="profile-primary-btn gen-style-671e07" >
                         Ver en mi perfil
                     </a>
                 
                 {% elif friendship_status == 'friends' %}
-                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn profile-chat-action-btn" style="font-size: 0.9rem; text-decoration: none; display: inline-flex;">
+                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn profile-chat-action-btn gen-style-493bc7" >
                         <i class="fas fa-comment-dots"></i> Chatear
                     </a>
-                    <button class="profile-secondary-btn btn-friends" style="font-size: 0.9rem; border-color: #00ff00; color: #00ff00; cursor: default; margin-left:10px;">
+                    <button class="profile-secondary-btn btn-friends gen-style-af34d0" >
                         <i class="fas fa-user-check"></i> Amigos
                     </button>
-                    <button class="btn-remove-friend" style="background: transparent; border: 1px solid rgba(255,0,0,0.5); color: #ff4444; border-radius: 8px; padding: 8px 12px; margin-left: 10px; cursor: pointer; transition: all 0.2s;" title="Eliminar amigo">
+                    <button class="btn-remove-friend gen-style-b869ba"  title="Eliminar amigo">
                         <i class="fas fa-user-times"></i>
                     </button>
                 {% endif %}
@@ -339,7 +86,7 @@
                         {% if profile.bio %}
                             <p class="profile-bio-text">{{ profile.bio|linebreaksbr }}</p>
                         {% else %}
-                            <p class="profile-bio-text" style="color: #666; font-style: italic;">Este usuario no ha escrito una biografía todavía.</p>
+                            <p class="profile-bio-text gen-style-be1381" >Este usuario no ha escrito una biografía todavía.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -352,7 +99,7 @@
                             <span class="stat-value">{{ user_games|length }}</span>
                             <span class="stat-label">Juegos Publicados</span>
                         </div>
-                        <div class="stat-card" style="margin-top: 10px;">
+                        <div class="stat-card gen-style-07c308" >
                             <i class="fas fa-user-friends stat-icon"></i>
                             <span class="stat-value">{{ profile.friends.count }}</span>
                             <span class="stat-label">Amigos</span>

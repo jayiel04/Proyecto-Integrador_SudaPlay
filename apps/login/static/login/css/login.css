@@ -1,5 +1,18 @@
 /* Auth pages styles (login/register/password reset/social signup) */
 
+:root {
+    --form-group-mb: clamp(6px, 0.85dvh, 9px);
+    --input-pad-y: clamp(14px, 2.2dvh, 20px);
+    --remember-forgot-my: clamp(8px, 1.2dvh, 14px);
+    --btn-login-mt: clamp(18px, 3.2dvh, 36px);
+    --btn-login-pad-y: clamp(13px, 2.6dvh, 26px);
+    --divider-my: clamp(8px, 1dvh, 12px);
+    --social-login-my: clamp(8px, 1dvh, 12px) 0 clamp(6px, 0.9dvh, 10px);
+    
+    --split-grid-cols: 1fr minmax(440px, 920px);
+    --split-card-max-w: 920px;
+}
+
 .body-auth-page .container {
     align-items: flex-start;
     justify-content: flex-end;
@@ -267,31 +280,31 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .form-group {
-    margin-bottom: clamp(4px, 0.65dvh, 7px);
+    margin-bottom: var(--form-group-mb, clamp(6px, 0.85dvh, 9px));
 }
 
 .body-auth-page .auth-page-layout .login-page-card input[type="text"],
 .body-auth-page .auth-page-layout .login-page-card input[type="password"],
 .body-auth-page .auth-page-layout .login-page-card input[type="email"] {
-    padding-top: clamp(10px, 1.5dvh, 13px);
-    padding-bottom: clamp(10px, 1.5dvh, 13px);
+    padding-top: var(--input-pad-y, clamp(14px, 2.2dvh, 20px));
+    padding-bottom: var(--input-pad-y, clamp(14px, 2.2dvh, 20px));
     font-size: clamp(1.05rem, 2.2dvh, 1.3rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .remember-forgot {
-    margin: clamp(6px, 0.9dvh, 10px) 0;
+    margin: var(--remember-forgot-my, clamp(8px, 1.2dvh, 14px)) 0;
     font-size: clamp(1.05rem, 2dvh, 1.2rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .btn-login {
-    margin-top: clamp(12px, 2.2dvh, 22px);
-    padding-top: clamp(11px, 1.8dvh, 16px);
-    padding-bottom: clamp(11px, 1.8dvh, 16px);
+    margin-top: var(--btn-login-mt, clamp(18px, 3.2dvh, 36px));
+    padding-top: var(--btn-login-pad-y, clamp(13px, 2.6dvh, 26px));
+    padding-bottom: var(--btn-login-pad-y, clamp(13px, 2.6dvh, 26px));
     font-size: clamp(1rem, 2.2dvh, 1.6rem);
 }
 
 .body-auth-page .auth-page-layout .login-page-card .divider {
-    margin: clamp(6px, 0.85dvh, 10px) 0;
+    margin: var(--divider-my, clamp(8px, 1dvh, 12px)) 0;
 }
 
 .body-auth-page .auth-page-layout .login-page-card .divider span {
@@ -299,7 +312,7 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .social-login {
-    margin: clamp(6px, 0.85dvh, 10px) 0 clamp(4px, 0.7dvh, 8px);
+    margin: var(--social-login-my, clamp(8px, 1dvh, 12px) 0 clamp(6px, 0.9dvh, 10px));
 }
 
 .body-auth-page .auth-page-layout .login-page-card .google-btn-icon {
@@ -309,7 +322,7 @@
 }
 
 .body-auth-page .auth-page-layout .login-page-card .signup-link {
-    margin-top: clamp(8px, 1.2dvh, 14px);
+    margin-top: clamp(20px, 3.0dvh, 32px);
     font-size: clamp(1.15rem, 2.15dvh, 1.35rem);
 }
 
@@ -724,7 +737,7 @@
     max-width: 100%;
     margin: 0;
     display: grid;
-    grid-template-columns: 1fr minmax(460px, 980px);
+    grid-template-columns: 1fr minmax(440px, 920px);
     align-items: center;
     justify-content: center;
     gap: clamp(18px, 4vw, 72px);
@@ -733,8 +746,8 @@
 .body-auth-page .auth-page-layout.login-split-layout .login-card {
     margin: 0;
     justify-self: end;
-    width: min(980px, 100%);
-    max-width: 980px;
+    width: min(920px, 100%);
+    max-width: 920px;
     justify-content: flex-start;
 }
 
@@ -747,7 +760,7 @@
 }
 
 .body-auth-page .auth-page-layout.login-split-layout .login-page-card .remember-forgot {
-    margin-top: clamp(12px, 1.8dvh, 20px);
+    margin-top: clamp(20px, 3.0dvh, 32px);
     flex-wrap: nowrap;
     align-items: center;
     gap: 14px;
@@ -772,17 +785,17 @@
 .body-auth-page .auth-page-layout.login-split-layout .login-page-card .login-main-submit {
     letter-spacing: 0.22em;
     /* Baja un poco el botón principal */
-    margin-top: clamp(16px, 2.4dvh, 24px);
+    margin-top: clamp(26px, 4.2dvh, 44px);
 }
 
 /* Baja el bloque inferior (divider + social + signup) sin mover la tarjeta */
 .body-auth-page .auth-page-layout.login-split-layout .login-page-card .divider {
-    margin-top: clamp(12px, 1.9dvh, 20px);
+    margin-top: clamp(22px, 4dvh, 64px);
 }
 
 .body-auth-page .auth-page-layout.login-split-layout .login-page-card .social-login {
-    margin-top: clamp(8px, 1.3dvh, 14px);
-    margin-bottom: clamp(10px, 1.8dvh, 18px);
+    margin-top: clamp(10px, 1.8dvh, 18px);
+    margin-bottom: clamp(14px, 2.4dvh, 26px);
 }
 
 .body-auth-page .auth-page-layout.login-split-layout .login-page-card .google-btn-icon {

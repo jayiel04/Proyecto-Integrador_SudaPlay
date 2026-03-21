@@ -6,16 +6,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}SudaPlay{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=3">
-    <link rel="stylesheet" href="{% static 'css/styles-navbar.css' %}?v=4">
-    <link rel="stylesheet" href="{% static 'css/styles-sidebar.css' %}?v=3">
-    <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/styles-navbar.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/styles-sidebar.css' %}?v=4">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=5">
     {% if request.resolver_match.app_name == 'login' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
-    <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=7">
-    <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}?v=7">
     {% endif %}
     {% if request.resolver_match.app_name == 'web' %}
-    <link rel="stylesheet" href="{% static 'web/css/template_overrides.css' %}?v=3">
+    <link rel="stylesheet" href="{% static 'web/css/template_overrides.css' %}?v=4">
     {% endif %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,21 +27,9 @@
     <link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
-    <style>
-        /* El navegador oculta el HTML de inmediato para evitar el "fogonazo" de contenido sin estilos (FOUC) */
-        html { opacity: 0; }
-        
-        /* Regla critica para mostrar el contenido: debe estar aqui para que funcione aunque el CSS externo tarde */
-        html.is-ready {
-            opacity: 1 !important;
-            transition: opacity 0.4s ease-in !important;
-        }
-    </style>
+    
     <noscript>
-        <style>
-            /* Si no hay JS, mostramos la pagina de inmediato sin animaciones */
-            html { opacity: 1 !important; }
-        </style>
+        
     </noscript>
     <script>
         // Fallback de seguridad: si por algun motivo los estilos o el JS fallan, 
@@ -53,7 +41,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %} body-register-page{% endif %}"{% else %} class="has-sidebar{% if request.user.is_authenticated and request.session.sudaplay_sidebar_state == 'open' %} sidebar-open{% endif %}"{% endif %}>
+<body{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} class="body-auth-page{% if request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %} body-register-page{% endif %}"{% else %} class="has-sidebar{% if request.user.is_authenticated and request.session.sudaplay_sidebar_state == 'open' %} sidebar-open{% endif %}{% if request.resolver_match.app_name == 'chat' %} chat-page-body{% endif %}{% if request.resolver_match.url_name == 'game_play' %} body-game-play{% endif %}"{% endif %}>
     <div class="background"></div>
     <div class="floating-icons">
         <i class="fa fa-gamepad floating-icon"></i>
@@ -411,6 +399,11 @@
     {% if user.is_authenticated %}
     {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
     {% endif %}
+    <!-- Inyección segura del modal del juego desde la raíz, fuera del flujo .main-content -->
+    {% if request.resolver_match.app_name == 'web' %}
+        {% include "web/_game_modal.html" %}
+    {% endif %}
+
     {% block extra_js %}{% endblock %}
     </body>
 
