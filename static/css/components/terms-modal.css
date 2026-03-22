@@ -1,0 +1,212 @@
+/* ========== MODAL TÉRMINOS Y CONDICIONES ========== */
+.tc-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 20000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.tc-modal-overlay[hidden] {
+    display: none;
+}
+
+.tc-modal {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    width: 100%;
+    max-width: 680px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+        0 0 40px rgba(var(--accent-cyan-rgb), 0.18),
+        0 8px 32px rgba(0, 0, 0, 0.6);
+    animation: tc-modal-in 0.22s ease;
+}
+
+@keyframes tc-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(-18px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.tc-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+.tc-modal-icon {
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.tc-modal-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.4);
+    margin: 0;
+}
+
+.tc-modal-body {
+    overflow-y: auto;
+    padding: 20px 24px;
+    flex: 1;
+    font-size: 0.85rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.85);
+    scrollbar-width: thin;
+    scrollbar-color: var(--neon-cyan) transparent;
+}
+
+.tc-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tc-modal-body::-webkit-scrollbar-thumb {
+    background: var(--neon-cyan);
+    border-radius: 4px;
+}
+
+.tc-modal-body section {
+    margin-bottom: 18px;
+}
+
+.tc-modal-body section:last-child {
+    margin-bottom: 0;
+}
+
+.tc-modal-body h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-bottom: 6px;
+    letter-spacing: 0.03em;
+}
+
+.tc-modal-body p {
+    margin-bottom: 6px;
+}
+
+.tc-modal-body ul {
+    padding-left: 20px;
+    margin-bottom: 6px;
+}
+
+.tc-modal-body ul li {
+    margin-bottom: 3px;
+}
+
+.tc-modal-body a {
+    color: var(--accent-cyan);
+    text-decoration: underline;
+}
+
+.tc-modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 16px 24px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.tc-accept-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-family: 'Orbitron', sans-serif;
+    user-select: none;
+}
+
+.tc-accept-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    accent-color: var(--accent-cyan);
+    cursor: pointer;
+}
+
+.tc-modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.tc-btn {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
+}
+
+.tc-btn-cancel {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.tc-btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.35);
+    color: #fff;
+}
+
+.tc-btn-confirm {
+    background: linear-gradient(135deg, var(--neon-cyan), var(--accent-violet));
+    border-color: var(--accent-cyan);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(var(--accent-cyan-rgb), 0.35);
+}
+
+.tc-btn-confirm:hover:not(:disabled) {
+    box-shadow: 0 0 26px rgba(var(--accent-cyan-rgb), 0.6);
+    filter: brightness(1.1);
+}
+
+.tc-btn-confirm:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 480px) {
+    .tc-modal-header h2 {
+        font-size: 0.82rem;
+    }
+
+    .tc-modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .tc-btn {
+        width: 100%;
+        text-align: center;
+    }
+}

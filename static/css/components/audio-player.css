@@ -1,0 +1,94 @@
+/* Controles flotantes para manejar el audio de fondo. */
+.music-controls {
+    position: fixed;
+    left: 14px;
+    bottom: 14px;
+    display: flex;
+    gap: 8px;
+    z-index: 11000;
+    /* Colapsado: solo el icono (sin borde / sin contenedor visible). */
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    align-items: center;
+    box-shadow: none;
+}
+
+/* Expandido: muestra el panel con borde y fondo. */
+.music-controls.expanded {
+    background: rgba(6, 18, 24, 0.8);
+    border: 1px solid rgba(143, 233, 230, 0.42);
+    padding: 7px;
+    box-shadow: 0 0 18px rgba(98, 216, 255, 0.16);
+}
+
+/* Ocultar controles flotantes si ya tenemos el sidebar (usuario logueado) */
+body.has-sidebar .music-controls {
+    display: none;
+}
+
+.music-toggle-btn {
+    order: -1;
+}
+
+.music-controls-expanded {
+    display: none;
+    gap: 8px;
+    align-items: center;
+}
+
+.music-controls.expanded .music-controls-expanded {
+    display: flex;
+}
+
+.music-control-btn {
+    border: 1px solid rgba(186, 80, 255, 0.65);
+    background: rgba(163, 42, 255, 0.18);
+    color: #f3ddff;
+    border-radius: 6px;
+    /* Iconos mas grandes en los botones de volumen. */
+    min-width: 42px;
+    padding: 8px 10px;
+    font-family: inherit;
+    font-size: 1.18rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 0 14px rgba(176, 74, 255, 0.4), inset 0 0 10px rgba(210, 145, 255, 0.25);
+}
+
+/* Botón principal de música: más pequeño, sin borde y solo icono azul eléctrico. */
+.music-toggle-btn {
+    border: none;
+    background: transparent;
+    min-width: auto;
+    padding: 6px;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: #00e5ff;
+    box-shadow: none;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.75);
+}
+
+.music-toggle-btn:hover {
+    background: transparent;
+    border: none;
+    color: #7ff6ff;
+    box-shadow: none;
+    text-shadow: 0 0 14px rgba(0, 229, 255, 0.9);
+}
+
+.music-control-btn:hover {
+    background: rgba(169, 48, 255, 0.34);
+    border-color: rgba(228, 178, 255, 0.95);
+    color: #ffffff;
+    box-shadow: 0 0 22px rgba(190, 98, 255, 0.62), inset 0 0 12px rgba(230, 182, 255, 0.42);
+}
+
+.music-control-btn.is-muted {
+    border-color: rgba(255, 99, 99, 0.5);
+    color: #ffd1d1;
+    background: rgba(255, 99, 99, 0.16);
+}
+
