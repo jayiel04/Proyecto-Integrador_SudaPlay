@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+
+{% block extra_css %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'login/css/pages/login-search.css' %}?v=1">
+{% endblock %}
 {% load static %}
 
 {% block title %}Buscar Jugadores - SudaPlay{% endblock %}

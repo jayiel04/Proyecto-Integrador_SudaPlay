@@ -1,0 +1,27 @@
+    <section class="play-hero">
+        <div class="play-hero-text">
+            <p class="play-breadcrumb">Juegos / {{ game.title }}</p>
+            <h1 class="play-title">{{ game.title }}</h1>
+            <p class="play-description">{{ game.short_description }}</p>
+            <div class="play-hero-tags">
+                {% if play_mode == "embedded" %}
+                <span class="play-hero-pill">Modo integrado</span>
+                {% elif play_mode == "external" %}
+                <span class="play-hero-pill">Modo externo</span>
+                {% else %}
+                <span class="play-hero-pill">Solo descarga</span>
+                {% endif %}
+                <span class="play-hero-pill play-hero-pill-soft"><i class="fa fa-star"></i> {{ game.rating|floatformat:1 }}/5 ({{ game.rating_votes }} votos)</span>
+            </div>
+        </div>
+        <div class="play-hero-actions">
+            <div class="play-stat">
+                <p class="play-stat-label">Calificación</p>
+                <p class="play-stat-value">{{ game.rating|floatformat:1 }}<span>/5</span></p>
+            </div>
+            <div class="play-stat">
+                <p class="play-stat-label">Votos</p>
+                <p class="play-stat-value">{{ game.rating_votes }}</p>
+            </div>
+        </div>
+    </section>

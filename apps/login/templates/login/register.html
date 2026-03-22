@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block extra_css %}
+{% load static %}
+    <link rel="stylesheet" href="{% static 'login/css/pages/auth-components.css' %}?v=1">
+{% endblock %}
+
 {% block title %}Crear Cuenta - SudaPlay{% endblock title %}
 
 {% block auth_branding %}{% endblock auth_branding %}

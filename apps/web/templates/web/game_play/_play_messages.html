@@ -1,0 +1,7 @@
+    {% if messages %}
+    <div class="inline-messages play-messages">
+        {% for message in messages %}
+        <p class="inline-message-text">{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}

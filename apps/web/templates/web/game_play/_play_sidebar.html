@@ -1,0 +1,52 @@
+        <aside class="play-side">
+            <div class="play-rating-panel">
+                <p class="play-rating-summary">
+                    Calificación actual:
+                    <strong class="play-rating-score">{{ game.rating|floatformat:1 }}</strong>/5
+                    ({{ game.rating_votes }} votos)
+                </p>
+                {% if user.is_authenticated %}
+                {% if user_has_rated %}
+                <p class="play-user-rated">
+                    Ya calificaste este juego con <strong>{{ user_rating }}/5</strong>.
+                </p>
+                {% else %}
+                <form method="post" class="play-rating-form">
+                    {% csrf_token %}
+                    <label for="id_rating" class="play-rating-label">Tu calificación:</label>
+                    <select name="rating" id="id_rating" required>
+                        <option value="" selected disabled>Selecciona</option>
+                        <option value="1">1 - Muy malo</option>
+                        <option value="2">2 - Malo</option>
+                        <option value="3">3 - Regular</option>
+                        <option value="4">4 - Bueno</option>
+                        <option value="5">5 - Excelente</option>
+                    </select>
+                    <button type="submit" class="btn-login play-rating-btn">
+                        Calificar
+                    </button>
+                </form>
+                {% endif %}
+                {% else %}
+                <p class="play-login-required">
+                    Debes <a href="{% url 'login:login' %}?next={{ request.path|urlencode }}" class="play-login-link">iniciar
+                        sesión</a>
+                    para calificar este juego.
+                </p>
+                {% endif %}
+            </div>
+
+            <div class="play-side-card">
+                <p class="play-side-title">Consejos rápidos</p>
+                <ul class="play-tips">
+                    <li><i class="fa fa-expand"></i> Usa pantalla completa para mejor inmersión.</li>
+                    <li><i class="fa fa-gamepad"></i> Conecta tu gamepad antes de iniciar.</li>
+                    <li><i class="fa fa-volume-up"></i> Ajusta el volumen en la barra lateral.</li>
+                </ul>
+                {% if play_mode == "external" %}
+                <a href="{{ play_url }}" target="_blank" rel="noopener" class="play-alt-link">
+                    Abrir en nueva pestaña <i class="fa fa-arrow-up-right-from-square"></i>
+                </a>
+                {% endif %}
+            </div>
+        </aside>

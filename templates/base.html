@@ -22,8 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/components/info-pages.css' %}?v=1">
     {% if request.resolver_match.app_name == 'login' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=8">
-    <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}?v=7">
-    {% endif %}
+        {% endif %}
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

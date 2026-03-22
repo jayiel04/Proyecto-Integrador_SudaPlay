@@ -1,0 +1,47 @@
+        <div class="play-stage-card">
+            {% if game.is_web_playable %}
+            <button id="fullscreen-btn" class="btn-login play-hero-btn play-fullscreen-btn" aria-label="Pantalla completa">
+                <i class="fas fa-expand"></i>
+            </button>
+            {% endif %}
+            <div class="play-stage" id="play-stage">
+                <div class="play-pause-overlay" id="play-pause-overlay" aria-live="polite">
+                    <div class="play-cta-card">
+                        {% if play_mode == "embedded" %}
+                        <span class="play-cta-pill">Modo integrado</span>
+                        {% elif play_mode == "external" %}
+                        <span class="play-cta-pill">Modo externo</span>
+                        {% endif %}
+                        <h2 class="play-cta-title">Listo para despegar</h2>
+                        <p class="play-cta-subtitle" id="play-cta-subtitle">
+                            {% if play_mode == "external" %}
+                            Se abrirá dentro de SudaPlay.
+                            {% else %}
+                            Haz clic para cargar el juego.
+                            {% endif %}
+                        </p>
+                        <button type="button" id="play-resume-btn" class="btn-login play-resume-btn" aria-pressed="false">
+                            <span class="play-cta-spinner" aria-hidden="true"></span>
+                            <span class="play-cta-text"><i class="fas fa-play"></i> Jugar</span>
+                        </button>
+                    </div>
+                </div>
+                {% if play_mode == "embedded" %}
+                <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+                    allow="autoplay; fullscreen; gamepad *; xr-spatial-tracking"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+                    allowfullscreen></iframe>
+                {% else %}
+                <iframe src="about:blank" data-src="{{ play_url }}" class="play-frame" title="Juego {{ game.title }}"
+                    allow="autoplay; fullscreen; gamepad *"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
+                    allowfullscreen></iframe>
+                {% endif %}
+            </div>
+            {% if play_mode == "external" %}
+            <p class="play-external-note">
+                Si no carga en el marco, abre el juego en
+                <a href="{{ play_url }}" target="_blank" rel="noopener">una nueva pestana</a>.
+            </p>
+            {% endif %}
+        </div>
