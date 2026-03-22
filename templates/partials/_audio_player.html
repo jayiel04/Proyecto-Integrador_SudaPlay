@@ -1,0 +1,20 @@
+    {% if request.resolver_match.url_name != 'game_play' %}
+    <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
+    <!-- preload="none": el audio NO se descarga hasta que el usuario interactúe -->
+    <audio id="background-music" preload="none" loop
+        src="{{ SUPABASE_URL }}/storage/v1/object/public/musica/audio/bouncyrunner-arcade-all-night-396133.mp3">
+    </audio>
+
+    <!-- Controles de volumen del audio de fondo. -->
+    <div class="music-controls" aria-label="Controles de volumen">
+        <button type="button" id="music-toggle-expand" class="music-control-btn music-toggle-btn"
+            title="Mostrar controles de volumen">&#128266;</button>
+        <div class="music-controls-expanded">
+            <button type="button" id="music-volume-down" class="music-control-btn" title="Bajar volumen">-</button>
+            <button type="button" id="music-volume-up" class="music-control-btn" title="Subir volumen">+</button>
+            <button type="button" id="music-mute-toggle" class="music-control-btn"
+                title="Silenciar o activar sonido">&#128263;</button>
+        </div>
+    </div>
+
+    {% endif %}

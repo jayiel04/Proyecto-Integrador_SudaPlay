@@ -1,0 +1,62 @@
+/* Shared info pages */
+.info-page-card-static {
+    max-height: none;
+    overflow-y: hidden;
+}
+
+/* Acerca de */
+#acerca-de {
+    position: relative;
+    padding: clamp(2.5rem, 3vw, 3.5rem);
+    background:
+        radial-gradient(circle at top right, rgba(255, 90, 224, 0.35), transparent 45%),
+        linear-gradient(160deg, rgba(6, 12, 24, 0.98), rgba(2, 15, 32, 0.95)),
+        rgba(3, 8, 18, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 26px;
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.6),
+        0 0 30px rgba(58, 189, 255, 0.25);
+}
+
+#acerca-de::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgba(255, 90, 224, 0.35);
+    border-radius: 22px;
+    pointer-events: none;
+    box-shadow:
+        0 0 12px rgba(255, 90, 224, 0.35),
+        0 0 25px rgba(58, 189, 255, 0.25);
+}
+
+#acerca-de .card-title-small {
+    color: #00e5ff;
+    text-shadow:
+        0 0 8px rgba(0, 0, 0, 0.7),
+        0 0 12px rgba(255, 90, 224, 0.7);
+    margin-bottom: 1rem;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: 700;
+}
+
+#acerca-de .card-muted-text {
+    color: #f4faff;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    margin: 0 0 0.9rem;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    text-align: justify;
+}
+
+@media (max-width: 768px) {
+    #acerca-de {
+        padding: 2rem;
+    }
+
+    #acerca-de .card-title-small {
+        text-align: center;
+    }
+}
+

@@ -13,13 +13,13 @@
     width: 36px;
     height: 36px;
     background:
-        linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 70, 190, 0.1));
+        linear-gradient(135deg, rgba(var(--pure-cyan-rgb), 0.1), rgba(255, 70, 190, 0.1));
     border: none;
     border-radius: 8px;
     box-shadow:
-        0 0 14px rgba(0, 255, 255, 0.34),
+        0 0 14px rgba(var(--pure-cyan-rgb), 0.34),
         0 0 20px rgba(255, 70, 190, 0.2),
-        inset 0 0 12px rgba(0, 255, 255, 0.18);
+        inset 0 0 12px rgba(var(--pure-cyan-rgb), 0.18);
     color: #fff;
     font-size: 1.2rem;
     cursor: pointer;
@@ -46,9 +46,9 @@
 .sidebar-toggle:hover {
     color: #fff;
     background:
-        linear-gradient(135deg, rgba(0, 255, 255, 0.18), rgba(255, 80, 196, 0.2));
+        linear-gradient(135deg, rgba(var(--pure-cyan-rgb), 0.18), rgba(255, 80, 196, 0.2));
     box-shadow:
-        0 0 16px rgba(0, 255, 255, 0.45),
+        0 0 16px rgba(var(--pure-cyan-rgb), 0.45),
         0 0 24px rgba(255, 80, 196, 0.28);
     text-shadow: 0 0 10px #00ffff, 0 0 18px rgba(255, 120, 215, 0.8);
     transform: translateY(-50%) scale(1.08);
@@ -167,7 +167,7 @@ body.sidebar-open .secondary-nav-container {
 }
 
 .secondary-nav-container::-webkit-scrollbar-track {
-    background: rgba(0, 255, 255, 0.1);
+    background: rgba(var(--pure-cyan-rgb), 0.1);
     border-radius: 10px;
 }
 
@@ -177,7 +177,7 @@ body.sidebar-open .secondary-nav-container {
 }
 
 .secondary-nav-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 255, 255, 0.6);
+    background: rgba(var(--pure-cyan-rgb), 0.6);
 }
 
 .secondary-nav-item {
@@ -236,7 +236,7 @@ body.sidebar-open .secondary-nav-item span {
     text-shadow:
         0 0 12px rgba(255, 126, 214, 1),
         0 0 22px rgba(255, 78, 190, 0.78),
-        0 0 36px rgba(143, 107, 255, 0.62);
+        0 0 36px rgba(var(--accent-violet-rgb), 0.62);
     /* Efecto neón intenso en texto */
     transform: translateY(-2px);
 }
@@ -253,7 +253,7 @@ body.sidebar-open .secondary-nav-item span {
     text-shadow:
         0 0 14px rgba(255, 126, 214, 1),
         0 0 28px rgba(255, 78, 190, 0.85),
-        0 0 44px rgba(143, 107, 255, 0.65);
+        0 0 44px rgba(var(--accent-violet-rgb), 0.65);
 }
 
 /* indicador de activo en el sidebar */
@@ -261,7 +261,7 @@ body.sidebar-open .secondary-nav-item span {
     background: radial-gradient(circle, rgba(255, 95, 255, 0.65) 0%, rgba(148, 0, 255, 0.85) 60%, rgba(79, 0, 255, 0.9) 100%);
     box-shadow:
         0 0 20px rgba(148, 0, 255, 0.9),
-        0 0 30px rgba(255, 62, 165, 0.65),
+        0 0 30px rgba(var(--neon-pink-rgb), 0.65),
         inset 0 0 12px rgba(255, 255, 255, 0.4);
     color: #fff;
 }
@@ -350,45 +350,7 @@ body.sidebar-open .secondary-nav-sound-container .secondary-nav-item {
     color: #fff;
     border-color: rgba(170, 224, 255, 0.95);
     background:
-        linear-gradient(145deg, rgba(16, 68, 132, 0.95), rgba(0, 162, 255, 0.86)),
-        linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
-    box-shadow:
-        0 0 22px rgba(0, 162, 255, 0.62),
-        0 0 30px rgba(84, 194, 255, 0.5);
-}
-
-.nav-links-right .nav-item-acerca {
-    margin-left: -400px;
-}
-
-.navbar-auth .nav-links-right .nav-item-acerca,
-.navbar-auth .nav-links-middle:not(.nav-links-middle-auth) .nav-item-subir,
-.navbar-auth .nav-links-middle:not(.nav-links-middle-auth) .nav-item-normas {
-    margin-left: 0;
-}
-
-
-
-.nav-item:hover {
-    color: #fff;
-    text-shadow: 0 0 10px color-mix(in srgb, var(--nav-accent) 54%, #ffffff 35%);
-    transform: translateY(-2px);
-    border-color: color-mix(in srgb, var(--nav-accent) 78%, #00a5a5 22%);
-    box-shadow:
-        0 0 24px color-mix(in srgb, var(--nav-accent) 60%, transparent),
         0 0 38px color-mix(in srgb, var(--nav-accent) 40%, transparent);
-    letter-spacing: 1.6px;
-}
-
-.nav-item:hover::before {
-    left: 120%;
-}
-
-.nav-item.is-active {
-    color: #fff;
-    border-color: color-mix(in srgb, var(--nav-accent) 95%, #ffffff 12%);
-    background:
-        linear-gradient(135deg, color-mix(in srgb, var(--nav-accent) 45%, #062222), rgba(8, 33, 33, 0.95)),
         linear-gradient(120deg, rgba(255, 255, 255, 0.08), transparent);
     box-shadow:
         0 0 26px color-mix(in srgb, var(--nav-accent) 56%, transparent),

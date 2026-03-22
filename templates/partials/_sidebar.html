@@ -1,0 +1,27 @@
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
+    <aside class="secondary-nav">
+        <div class="secondary-nav-container">
+            <a href="/#catalogo-juegos" class="secondary-nav-item secondary-nav-games"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
+            <a href="/juegos/subir/" class="secondary-nav-item secondary-nav-upload"{% if not user.is_authenticated %} data-login-required="true"{% endif %}><i class="fas fa-cloud-upload-alt"></i><span>Subir</span></a>
+            <a href="/juegos/normas/" class="secondary-nav-item secondary-nav-normas"><i class="fas fa-book"></i><span>Normas</span></a>
+            <a href="/juegos/acerca-de/" class="secondary-nav-item secondary-nav-about"><i class="fas fa-info-circle"></i><span>Acerca</span></a>
+            {% if user.is_authenticated %}
+            {% if user.profile.role == 'admin' or user.profile.role == 'moderator' %}
+            <a href="{% url 'web:review_games' %}" class="secondary-nav-item secondary-nav-review"><i class="fas fa-clipboard-check"></i><span>Revisión</span></a>
+            {% endif %}
+            <a href="/auth/jugadores/buscar/" class="secondary-nav-item secondary-nav-search-players"><i class="fas fa-users"></i><span>Jugadores</span></a>
+            {% endif %}
+            <div class="secondary-nav-sound-container mt-auto">
+                <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound" data-no-style-wait="true"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
+            </div>
+            <a href="/soporte/faq/" class="secondary-nav-item secondary-nav-support"><i class="fas fa-headset"></i><span>Soporte</span></a>
+            {% if user.is_authenticated %}
+            <a href="/auth/logout/" class="secondary-nav-item secondary-nav-logout"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
+            {% endif %}
+        </div>
+    </aside>
+    {% endif %}
+
+    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
+    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
+    {% endif %}

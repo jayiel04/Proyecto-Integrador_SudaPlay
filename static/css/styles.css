@@ -8,7 +8,7 @@
     --accent-cyan: #39e7ff;
     --accent-magenta: #ff3ea5;
     --accent-violet: #8f6bff;
-    --border-color: rgba(0, 128, 128, 0.28);
+    --border-color: rgba(var(--neon-cyan-rgb), 0.28);
     --card-bg: rgba(2, 22, 22, 0.9);
     --danger-color: #ff4757;
     --navbar-glow-level: 0.55;
@@ -17,6 +17,13 @@
     --neon-emerald: #009494;
     --neon-green: #008080;
     --neon-pink: #ff3ea5;
+    --neon-pink-rgb: 255, 62, 165;
+    --accent-cyan-rgb: 57, 231, 255;
+    --accent-violet-rgb: 143, 107, 255;
+    --neon-cyan-rgb: 0, 128, 128;
+    --neon-emerald-rgb: 0, 148, 148;
+    --pure-cyan-rgb: 0, 255, 255;
+    --pure-magenta-rgb: 255, 0, 255;
     --navbar-height: 86px;
     --footer-height: 45px;
     --sidebar-width: 60px;
@@ -27,8 +34,8 @@
 body {
     font-family: 'Orbitron', sans-serif;
     background:
-        radial-gradient(circle at 15% 10%, rgba(0, 128, 128, 0.2), transparent 34%),
-        radial-gradient(circle at 90% 85%, rgba(0, 255, 255, 0.11), transparent 36%),
+        radial-gradient(circle at 15% 10%, rgba(var(--neon-cyan-rgb), 0.2), transparent 34%),
+        radial-gradient(circle at 90% 85%, rgba(var(--pure-cyan-rgb), 0.11), transparent 36%),
         linear-gradient(140deg, #031212, #052525, #0a3030);
     color: #fff;
     min-height: 100dvh;
@@ -510,7 +517,7 @@ body.has-sidebar .music-controls {
     display: flex;
     flex-direction: column;
     box-shadow:
-        0 0 40px rgba(57, 231, 255, 0.18),
+        0 0 40px rgba(var(--accent-cyan-rgb), 0.18),
         0 8px 32px rgba(0, 0, 0, 0.6);
     animation: tc-modal-in 0.22s ease;
 }
@@ -546,7 +553,7 @@ body.has-sidebar .music-controls {
     font-size: 1rem;
     font-weight: 700;
     color: var(--accent-cyan);
-    text-shadow: 0 0 10px rgba(57, 231, 255, 0.4);
+    text-shadow: 0 0 10px rgba(var(--accent-cyan-rgb), 0.4);
     margin: 0;
 }
 
@@ -667,11 +674,11 @@ body.has-sidebar .music-controls {
     background: linear-gradient(135deg, var(--neon-cyan), var(--accent-violet));
     border-color: var(--accent-cyan);
     color: #fff;
-    box-shadow: 0 0 16px rgba(57, 231, 255, 0.35);
+    box-shadow: 0 0 16px rgba(var(--accent-cyan-rgb), 0.35);
 }
 
 .tc-btn-confirm:hover:not(:disabled) {
-    box-shadow: 0 0 26px rgba(57, 231, 255, 0.6);
+    box-shadow: 0 0 26px rgba(var(--accent-cyan-rgb), 0.6);
     filter: brightness(1.1);
 }
 

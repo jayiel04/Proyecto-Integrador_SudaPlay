@@ -931,11 +931,11 @@
     letter-spacing: 4px;
     text-transform: uppercase;
     color: rgba(255, 255, 255, 0.92);
-    -webkit-text-stroke: 1px rgba(57, 231, 255, 0.55);
+    -webkit-text-stroke: 1px rgba(var(--accent-cyan-rgb), 0.55);
     text-shadow:
-        0 0 14px rgba(57, 231, 255, 0.55),
-        0 0 24px rgba(57, 231, 255, 0.35),
-        0 0 36px rgba(255, 62, 165, 0.28);
+        0 0 14px rgba(var(--accent-cyan-rgb), 0.55),
+        0 0 24px rgba(var(--accent-cyan-rgb), 0.35),
+        0 0 36px rgba(var(--neon-pink-rgb), 0.28);
     text-align: center;
     user-select: none;
     white-space: normal;
@@ -988,7 +988,7 @@
     color: #00a6a6;
     text-shadow:
         0 0 8px rgba(0, 0, 0, 1),
-        0 0 14px rgba(0, 128, 128, 0.72),
+        0 0 14px rgba(var(--neon-cyan-rgb), 0.72),
         0 0 28px rgba(0, 0, 0, 0.9);
     position: relative;
     left: -75px;

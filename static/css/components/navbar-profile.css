@@ -1,0 +1,195 @@
+
+
+.profile-dropdown {
+    position: relative;
+}
+
+
+
+.profile-dropdown-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    z-index: 5;
+    pointer-events: auto;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+
+
+.profile-dropdown-close:hover,
+.profile-dropdown-close:focus-visible {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+
+
+.profile-dropdown-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.3), rgba(3, 8, 24, 0.98));
+    border: 3px solid transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, 0.25),
+        0 6px 20px rgba(0, 0, 0, 0.65),
+        0 0 24px rgba(143, 195, 255, 0.35);
+    padding: 0;
+}
+
+
+
+.profile-dropdown-toggle:hover,
+.profile-dropdown.open .profile-dropdown-toggle {
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow:
+        inset 0 0 18px rgba(255, 255, 255, 0.3),
+        0 6px 20px rgba(0, 0, 0, 0.45),
+        0 0 18px rgba(83, 166, 255, 0.35);
+}
+
+
+
+.profile-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 180px;
+    background: rgb(7, 10, 32);
+    border: 1px solid rgba(70, 123, 121, 0.35);
+    border-radius: 10px;
+    padding: 0.35rem;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 120;
+}
+
+
+
+.profile-dropdown.open .profile-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+
+.profile-dropdown-menu.profile-dropdown-card {
+    min-width: 340px;
+    width: min(88vw, 380px);
+    padding: 14px;
+}
+
+
+
+.profile-dropdown-card {
+    background: rgb(4, 9, 30);
+    border-radius: 28px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        inset 0 0 40px rgba(71, 170, 255, 0.16);
+}
+
+
+
+.profile-dropdown-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    padding-top: 6px;
+}
+
+
+
+@media (max-width: 640px) {
+
+    .profile-dropdown-card {
+        min-width: 260px;
+        padding: 16px;
+    }
+}
+
+
+
+.profile-dropdown-item {
+    display: block;
+    color: #d5fff8;
+    text-decoration: none;
+    padding: 0.55rem 0.7rem;
+    border-radius: 7px;
+    transition: 0.2s;
+}
+
+
+
+.profile-dropdown-item:hover {
+    color: #fff;
+    background: rgba(70, 123, 121, 0.14);
+}
+
+
+
+.profile-dropdown-item.logout-item {
+    color: var(--neon-green);
+    background: linear-gradient(145deg, rgba(0, 88, 88, 0.74), rgba(var(--neon-cyan-rgb), 0.7));
+    border: 1px solid rgba(var(--neon-cyan-rgb), 0.72);
+    box-shadow:
+        inset 0 0 12px rgba(var(--pure-cyan-rgb), 0.22),
+        0 0 12px rgba(var(--neon-cyan-rgb), 0.22);
+}
+
+
+
+.profile-dropdown-item.logout-item:hover {
+    color: #fff;
+    background: rgba(255, 94, 94, 0.22);
+}
+
+
+
+.profile-dropdown-toggle {
+    border-radius: 50%;
+    padding: 0;
+    background: rgba(18, 21, 47, 0.95);
+    border: 2px solid #9ea3b1;
+    box-shadow: none;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+}
+
+
+
+.profile-dropdown-toggle .fa-chevron-down {
+    font-size: 0.65rem;
+    margin-left: 0.15rem;
+    opacity: 0.7;
+}

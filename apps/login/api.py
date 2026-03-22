@@ -1,0 +1,376 @@
+import uuid
+import requests
+from django.conf import settings
+from django.core.cache import cache
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
+from django.http import JsonResponse
+from django.urls import reverse_lazy
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+
+from .models import FriendRequest, Notification, UserProfile
+from apps.chat.models import ChatMessage
+
+class CheckUserAPIView(View):
+    """
+    API endpoint para verificar disponibilidad de usuario/email en tiempo real.
+    """
+
+    def get(self, request, *args, **kwargs):
+        username = request.GET.get('username', None)
+        email = request.GET.get('email', None)
+        response = {'is_taken': False}
+
+        if username:
+            if User.objects.filter(username__iexact=username).exists():
+                response['is_taken'] = True
+                response['error_message'] = 'Este nombre de usuario ya esta en uso.'
+        elif email:
+            if User.objects.filter(email__iexact=email).exists():
+                response['is_taken'] = True
+                response['error_message'] = 'Este correo electronico ya esta registrado.'
+
+        return JsonResponse(response)
+
+
+class ValidatePasswordAPIView(View):
+    """
+    API endpoint para validar contraseña en tiempo real usando validadores Django.
+    """
+
+    def get(self, request, *args, **kwargs):
+        password = request.GET.get('password', '') or ''
+        username = request.GET.get('username', '') or ''
+        email = request.GET.get('email', '') or ''
+
+        if not password:
+            return JsonResponse({
+                'is_valid': False,
+                'errors': ['La contraseña no puede estar vacía.'],
+            })
+
+        temp_user = User(username=username, email=email)
+
+        try:
+            validate_password(password, user=temp_user)
+        except DjangoValidationError as exc:
+            return JsonResponse({
+                'is_valid': False,
+                'errors': exc.messages,
+            })
+
+        return JsonResponse({
+            'is_valid': True,
+            'errors': [],
+        })
+
+
+def _normalize_auto_message(record):
+    text = record.get('message') or record.get('text') or record.get('content') or ''
+    author = record.get('author') or record.get('sender') or record.get('bot_name') or 'Chat SudaPlay'
+    created_at = record.get('created_at') or record.get('timestamp') or ''
+    return {
+        'id': record.get('id') or record.get('uuid') or str(uuid.uuid4()),
+        'text': text,
+        'author': author,
+        'created_at': created_at,
+    }
+
+
+_SUPABASE_MESSAGES_CACHE_KEY = 'supabase_auto_messages'
+_SUPABASE_MESSAGES_CACHE_TTL = 300  # 5 minutos — los mensajes del chat cambian raramente
+
+
+def _fetch_supabase_messages():
+    # Devolver desde caché si está disponible (evita el request HTTP de hasta 5s)
+    cached = cache.get(_SUPABASE_MESSAGES_CACHE_KEY)
+    if cached is not None:
+        return cached
+
+    endpoint_url = (settings.SUPABASE_URL or '').rstrip('/')
+    api_key = settings.SUPABASE_ANON_KEY
+    table_name = settings.SUPABASE_CHAT_TABLE or 'auto_messages'
+
+    if not (endpoint_url and api_key and table_name):
+        return []
+
+    url = f"{endpoint_url}/rest/v1/{table_name}"
+    headers = {
+        'apikey': api_key,
+        'Authorization': f"Bearer {api_key}",
+        'Accept': 'application/json',
+    }
+    params = {
+        'select': 'id,message,created_at,author,text,content,timestamp,sender',
+        'order': 'created_at.desc',
+        'limit': 8,
+    }
+
+    try:
+        response = requests.get(url, headers=headers, params=params, timeout=5)
+        if response.ok:
+            records = response.json()
+            result = [_normalize_auto_message(record) for record in records]
+            cache.set(_SUPABASE_MESSAGES_CACHE_KEY, result, timeout=_SUPABASE_MESSAGES_CACHE_TTL)
+            return result
+    except requests.RequestException:
+        pass
+
+    return []
+
+
+class AutoMessagesAPIView(View):
+    """
+    API para retornar mensajes automáticos desde Supabase (o plantillas de fallback).
+    """
+
+    def get(self, request, *args, **kwargs):
+        messages = _fetch_supabase_messages()
+        if not messages:
+            messages = [
+                {'id': 'fallback-1', 'text': 'Bienvenido a SudaPlay, ¿quieres ver los juegos más recientes?', 'author': 'Chat SudaPlay', 'created_at': ''},
+                {'id': 'fallback-2', 'text': 'Actualiza tu perfil para aparecer en la lista de creadores.', 'author': 'Chat SudaPlay', 'created_at': ''},
+                {'id': 'fallback-3', 'text': 'Publica tu próximo lanzamiento y recibirás notificaciones.', 'author': 'Chat SudaPlay', 'created_at': ''},
+            ]
+        return JsonResponse({'messages': messages})
+
+
+class NotificationsAPIView(View):
+    """
+    API que devuelve notificaciones cortas para el dropdown del navbar.
+    """
+
+    @method_decorator(login_required(login_url='login:login'))
+    def get(self, request, *args, **kwargs):
+        cache_key = f'notifications_{request.user.id}'
+        cached = cache.get(cache_key)
+        if cached is not None:
+            return JsonResponse(cached)
+
+        notifications = []
+        
+        sys_notifs = request.session.pop('system_notifs', [])
+        if sys_notifs:
+            request.session.modified = True
+            
+        for notif in sys_notifs:
+            notifications.append({
+                'id': f"sys-{uuid.uuid4().hex[:8]}",
+                'type': 'system',
+                'text': notif,
+                'created_at': '',
+                'url': ''
+            })
+
+        pending_requests = list(FriendRequest.objects.filter(
+            to_user=request.user
+        ).select_related('from_user').order_by('-created_at')[:4])
+
+        unread_requests = len(pending_requests)
+        for req in pending_requests:
+            notifications.append({
+                'id': f"fr-{req.id}",
+                'type': 'friend_request',
+                'text': f"{req.from_user.username} te envió una solicitud",
+                'created_at': req.created_at.isoformat(),
+                'url': str(reverse_lazy('login:player_profile', args=[req.from_user.username]))
+            })
+
+        unread_messages = list(ChatMessage.objects.filter(
+            receiver=request.user,
+            is_read=False
+        ).exclude(sender=request.user).select_related('sender').order_by('-timestamp')[:4])
+
+        for msg in unread_messages:
+            notifications.append({
+                'id': f"msg-{msg.id}",
+                'type': 'chat_message',
+                'text': f"Nuevo mensaje de {msg.sender.username}",
+                'created_at': msg.timestamp.isoformat(),
+                'url': str(reverse_lazy('chat:chat', args=[msg.sender.username]))
+            })
+
+        # Notificaciones persistentes (Modelo Notification)
+        db_notifs = list(Notification.objects.filter(
+            user=request.user,
+            is_read=False
+        ).order_by('-created_at')[:5])
+
+        for n in db_notifs:
+            notifications.append({
+                'id': f"db-{n.id}",
+                'type': 'system',
+                'text': n.message,
+                'created_at': n.created_at.isoformat(),
+                'url': n.url
+            })
+
+        unread_count = unread_requests + len(unread_messages) + len(sys_notifs) + len(db_notifs)
+
+        if not notifications:
+            notifications.append({
+                'id': 'none',
+                'type': 'empty',
+                'text': 'No hay notificaciones nuevas',
+                'created_at': '',
+                'url': ''
+            })
+
+        result = {
+            'notifications': notifications,
+            'unread_count': unread_count
+        }
+        cache.set(cache_key, result, timeout=20)  # Cachear 20s por usuario
+        return JsonResponse(result)
+
+class MarkNotificationReadAPIView(View):
+    """
+    API para marcar una notificación como leída.
+    """
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        try:
+            data = json.loads(request.body)
+            notif_id_str = data.get('notification_id', '')
+            
+            if notif_id_str.startswith('db-'):
+                notif_id = notif_id_str.replace('db-', '')
+                Notification.objects.filter(id=notif_id, user=request.user).update(is_read=True)
+                cache.delete(f'notifications_{request.user.id}')
+                return JsonResponse({'success': True})
+            
+            return JsonResponse({'success': False, 'error': 'Tipo de notificación no soportado para persistencia.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+class SendFriendRequestAPIView(View):
+    """API para enviar una solicitud de amistad."""
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        from django.shortcuts import get_object_or_404
+        try:
+            data = json.loads(request.body)
+            to_user_id = data.get('to_user_id')
+            to_user = get_object_or_404(User, id=to_user_id)
+
+            if to_user == request.user:
+                return JsonResponse({'success': False, 'error': 'No puedes enviarte una solicitud a ti mismo.'})
+
+            # Prevent trying to access non-existent profiles directly
+            try:
+                my_profile = request.user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                my_profile = UserProfile.objects.create(user=request.user)
+                
+            try:
+                target_profile = to_user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                target_profile = UserProfile.objects.create(user=to_user)
+
+            # Check if already friends
+            if my_profile.friends.filter(id=target_profile.id).exists():
+                return JsonResponse({'success': False, 'error': 'Ya son amigos.'})
+
+            # Check if request already exists in either direction
+            if FriendRequest.objects.filter(from_user=request.user, to_user=to_user).exists():
+                 return JsonResponse({'success': False, 'error': 'Solicitud ya enviada.'})
+            
+            if FriendRequest.objects.filter(from_user=to_user, to_user=request.user).exists():
+                 return JsonResponse({'success': False, 'error': 'Este usuario ya te ha enviado una solicitud.'})
+
+            FriendRequest.objects.create(from_user=request.user, to_user=to_user)
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+
+class AcceptFriendRequestAPIView(View):
+    """API para aceptar una solicitud de amistad."""
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        from django.shortcuts import get_object_or_404
+        try:
+            data = json.loads(request.body)
+            request_id = data.get('request_id')
+            friend_request = get_object_or_404(FriendRequest, id=request_id, to_user=request.user)
+
+            # Add to each other's friends list
+            try:
+                my_profile = request.user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                my_profile = UserProfile.objects.create(user=request.user)
+                
+            try:
+                from_profile = friend_request.from_user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                from_profile = UserProfile.objects.create(user=friend_request.from_user)
+
+            my_profile.friends.add(from_profile)
+            
+            # Delete the request
+            friend_request.delete()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+
+class RejectFriendRequestAPIView(View):
+    """API para rechazar o cancelar una solicitud de amistad."""
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        from django.shortcuts import get_object_or_404
+        try:
+            data = json.loads(request.body)
+            request_id = data.get('request_id')
+            # User can cancel sent request or reject received request
+            friend_request = get_object_or_404(FriendRequest, id=request_id)
+            if friend_request.to_user == request.user or friend_request.from_user == request.user:
+                friend_request.delete()
+                return JsonResponse({'success': True})
+            return JsonResponse({'success': False, 'error': 'No autorizado.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+class RemoveFriendAPIView(View):
+    """API para eliminar a un usuario de la lista de amigos."""
+    @method_decorator(login_required(login_url='login:login'))
+    def post(self, request, *args, **kwargs):
+        import json
+        from django.shortcuts import get_object_or_404
+        try:
+            data = json.loads(request.body)
+            friend_id = data.get('friend_id')
+            friend_user = get_object_or_404(User, id=friend_id)
+
+            try:
+                my_profile = request.user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                my_profile = UserProfile.objects.create(user=request.user)
+                
+            try:
+                target_profile = friend_user.profile
+            except User.profile.RelatedObjectDoesNotExist:
+                from .models import UserProfile
+                target_profile = UserProfile.objects.create(user=friend_user)
+
+            if my_profile.friends.filter(id=target_profile.id).exists():
+                my_profile.friends.remove(target_profile)
+                return JsonResponse({'success': True})
+            
+            return JsonResponse({'success': False, 'error': 'No son amigos.'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+

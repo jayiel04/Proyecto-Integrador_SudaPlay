@@ -1,4 +1,9 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'web/css/pages/web-info.css' %}?v=1">
+{% endblock %}
+
 
 {% block title %}Acerca de SudaPlay - SudaPlay{% endblock %}
 

@@ -1,0 +1,243 @@
+<script>
+(function () {
+    const overlay   = document.getElementById('tc-modal-overlay');
+    const openBtn   = document.getElementById('open-tc-modal-btn');
+    const cancelBtn = document.getElementById('tc-cancel-btn');
+    const confirmBtn= document.getElementById('tc-confirm-btn');
+    const checkbox  = document.getElementById('tc-accept-checkbox');
+    const form      = document.getElementById('game-upload-form');
+    const successUrl= "{% url 'web:home' %}";
+
+    const getCookie = (name) => {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return '';
+    };
+
+    function openModal() {
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+        checkbox.checked = false;
+        confirmBtn.disabled = true;
+    }
+
+    function closeModal() {
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    cancelBtn.addEventListener('click', closeModal);
+
+    // Close on backdrop click
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    // Enable/disable confirm button based on checkbox
+    checkbox.addEventListener('change', function () {
+        confirmBtn.disabled = !this.checked;
+    });
+
+    const submitWithProgress = () => {
+        if (!form) return;
+        const fileInput = document.getElementById('id_game_file');
+        const supportsAjax = !!window.XMLHttpRequest && !!window.FormData;
+        const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+
+        // Fallback: no file or no AJAX support.
+        if (!supportsAjax || !hasFile) {
+            form.submit();
+            return;
+        }
+
+        const notifier = window.sudaplayUploadNotifier || null;
+        notifier?.start('Preparando subida…');
+
+        const xhr = new XMLHttpRequest();
+        xhr.open(form.method || 'POST', form.action);
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        const csrfToken = getCookie('csrftoken');
+        if (csrfToken) {
+            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+        }
+
+        xhr.upload.onprogress = (event) => {
+            if (!event.lengthComputable) return;
+            const percent = (event.loaded / event.total) * 100;
+            notifier?.update(percent, `Subiendo ${Math.round(percent)}%`);
+        };
+
+        xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 400) {
+                notifier?.success('Procesando archivo…');
+                setTimeout(() => {
+                    window.location.href = xhr.responseURL || successUrl;
+                }, 500);
+            } else {
+                notifier?.error('Error al subir');
+                confirmBtn.disabled = false;
+                openBtn.disabled = false;
+                confirmBtn.textContent = 'Intentar de nuevo';
+                openBtn.textContent = 'Guardar juego';
+            }
+        };
+
+        xhr.onerror = () => {
+            notifier?.error('Error de red');
+            confirmBtn.disabled = false;
+            openBtn.disabled = false;
+            confirmBtn.textContent = 'Intentar de nuevo';
+            openBtn.textContent = 'Guardar juego';
+        };
+
+        const formData = new FormData(form);
+        xhr.send(formData);
+    };
+
+    // Submit the real form (AJAX con progreso)
+    confirmBtn.addEventListener('click', function () {
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Publicando…';
+        openBtn.disabled = true;
+        openBtn.textContent = 'Publicando…';
+        closeModal();
+        submitWithProgress();
+    });
+
+    // Keyboard accessibility: close on Escape
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !overlay.hidden) closeModal();
+    });
+
+    // Custom file input displays
+    function setupFileInput(inputId, displayId) {
+        const input = document.getElementById(inputId);
+        const display = document.getElementById(displayId);
+        // Find the label that acts as the button (it should be right before the display span)
+        const mainLabel = input ? document.querySelector(`label[for="${inputId}"].custom-file-upload`) : null;
+        const originalLabelText = mainLabel ? mainLabel.textContent.trim() : '';
+
+        if (input && display) {
+            input.addEventListener('change', function() {
+                if (this.files && this.files.length > 0) {
+                    const fileName = this.files[0].name;
+                    display.textContent = fileName;
+                    if (mainLabel) {
+                        mainLabel.innerHTML = `✅ ${fileName}`;
+                    }
+                } else {
+                    display.textContent = 'Ningún archivo seleccionado';
+                    if (mainLabel) {
+                        mainLabel.textContent = originalLabelText;
+                    }
+                }
+            });
+        }
+    }
+
+    // Call the setup function for each file input
+    setupFileInput('id_cover_image', 'cover_image_display');
+    setupFileInput('id_game_file', 'game_file_display');
+
+    // Live Preview functionality
+    const titleInput = document.getElementById('id_title');
+    const shortDescriptionInput = document.getElementById('id_short_description');
+    const descriptionInput = document.getElementById('id_description');
+    const coverImageInput = document.getElementById('id_cover_image');
+    const previewCard = document.getElementById('preview-card');
+    const defaultPreviewImage = previewCard ? previewCard.dataset.gameImage : '';
+    
+    const previewTitle = document.getElementById('preview-title');
+    const previewShortDescription = document.getElementById('preview-short-description');
+    const previewImage = document.getElementById('preview-image');
+    const previewImagePlaceholder = document.getElementById('preview-image-container');
+
+    if (titleInput && previewTitle) {
+        titleInput.addEventListener('input', function() {
+            previewTitle.textContent = this.value || 'Título del Juego';
+            if (previewCard) {
+                previewCard.dataset.gameTitle = previewTitle.textContent;
+            }
+        });
+        // Initial set if editing
+        if (titleInput.value) {
+            previewTitle.textContent = titleInput.value;
+        }
+        if (previewCard) {
+            previewCard.dataset.gameTitle = previewTitle.textContent;
+        }
+    }
+
+    if (shortDescriptionInput && previewShortDescription) {
+        shortDescriptionInput.addEventListener('input', function() {
+            previewShortDescription.textContent = this.value || 'Descripción corta del juego.';
+            if (previewCard && (!descriptionInput || !descriptionInput.value)) {
+                previewCard.dataset.gameDescription = previewShortDescription.textContent;
+            }
+        });
+        if (shortDescriptionInput.value) {
+            previewShortDescription.textContent = shortDescriptionInput.value;
+        }
+    }
+
+    if (descriptionInput) {
+        const updateDescription = () => {
+            if (!previewCard) return;
+            const descriptionValue = descriptionInput.value || previewShortDescription?.textContent || 'Descripción completa del juego.';
+            previewCard.dataset.gameDescription = descriptionValue;
+        };
+        descriptionInput.addEventListener('input', updateDescription);
+        updateDescription();
+    }
+
+    if (coverImageInput) {
+        coverImageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                    previewImagePlaceholder.style.display = 'none';
+                    if (previewCard) {
+                        previewCard.dataset.gameImage = e.target.result;
+                    }
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                previewImage.src = '';
+                previewImage.style.display = 'none';
+                previewImagePlaceholder.style.display = 'flex';
+                if (previewCard) {
+                    previewCard.dataset.gameImage = defaultPreviewImage;
+                }
+            }
+        });
+    }
+
+    // --- OPTIMIZACIÓN DE GPU DURANTE ANIMACIÓN DEL SIDEBAR ---
+    // Ocultar la columna derecha (GPU intensive) estrictamente cuando el sidebar
+    // entra en estado hover, para evitar caída de FPS.
+    const sidebar = document.querySelector('aside.secondary-nav');
+    const previewCol = document.querySelector('.upload-preview-column');
+    if (sidebar && previewCol) {
+        let timerOut;
+        sidebar.addEventListener('mouseenter', () => {
+            clearTimeout(timerOut);
+            // Hacerlo transicionar a opacidad cero rápido
+            previewCol.style.opacity = '0';
+            previewCol.style.pointerEvents = 'none';
+        });
+        sidebar.addEventListener('mouseleave', () => {
+            // Dar tiempo (350ms, la duración del slide del content) antes de
+            // pedir a la GPU que vuelva a dibujar la tarjeta
+            timerOut = setTimeout(() => {
+                previewCol.style.opacity = '1';
+                previewCol.style.pointerEvents = 'auto';
+            }, 350);
+        });
+    }
+
+})();
+</script>

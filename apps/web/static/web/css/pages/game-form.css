@@ -1,0 +1,489 @@
+/* Game form */
+.game-upload-card {
+    max-width: 700px;
+    width: 100%;
+    background:
+        radial-gradient(circle at top left, rgba(var(--accent-cyan-rgb), 0.08), transparent 45%),
+        linear-gradient(160deg, rgba(2, 6, 12, 0.95), rgba(5, 8, 16, 0.95), rgba(7, 12, 22, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        inset 0 0 24px rgba(255, 255, 255, 0.05),
+        0 18px 35px rgba(0, 0, 0, 0.65);
+}
+
+.game-upload-card::before,
+.login-card.game-upload-card::before {
+    display: none !important;
+    animation: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+#game-upload-form input[type="text"],
+#game-upload-form input[type="url"],
+#game-upload-form textarea,
+#game-upload-form select,
+#game-upload-form input[type="file"] {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-family: inherit;
+}
+
+#game-upload-form textarea {
+    resize: vertical;
+}
+
+#game-upload-form option {
+    color: #111;
+}
+
+.game-upload-non-field-error {
+    margin-bottom: 10px;
+}
+
+.game-upload-help-text {
+    font-size: 0.75rem;
+    color: #999;
+    margin-top: 4px;
+}
+
+.game-upload-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.game-upload-submit-btn {
+    margin-bottom: 0;
+}
+
+.game-upload-cancel-link {
+    text-align: center;
+    text-decoration: none;
+    background: transparent;
+    color: var(--neon-green);
+    border: 1px solid var(--neon-green);
+}
+
+/* Extracted from game_form.html */
+.game-upload-card {
+        max-width: 1100px !important;
+        width: 100%;
+        padding: clamp(2.5rem, 3vw, 3.5rem) !important;
+        background: #0f162d; /* Fondo sólido oscuro optimizado */
+        border: 1px solid rgba(var(--pure-cyan-rgb), 0.25);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.65);
+        border-radius: 24px;
+        will-change: transform;
+        transform: translateZ(0);
+        /* backdrop-filter: blur(14px); ELIMINADO POR RENDIMIENTO (causaba lag en animación de sidebar) */
+    }
+
+    /* ELIMINADO POR RENDIMIENTO: El anillo giratorio (conic-gradient + mask) de .login-card::before 
+       destruye los FPS durante las animaciones del sidebar. Lo ocultamos aquí. */
+    .game-upload-card::before,
+    .game-upload-card::after {
+        display: none !important;
+        animation: none !important;
+    }
+
+    .game-upload-header h1 {
+        font-size: clamp(2rem, 3vw, 2.5rem);
+        text-transform: uppercase;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        color: #00e5ff;
+        text-shadow:
+            0 0 6px rgba(var(--pure-cyan-rgb), 0.65),
+            0 0 18px rgba(255, 86, 255, 0.45);
+        margin-bottom: 0.5rem;
+    }
+
+    .game-upload-subtitle {
+        color: #ffffff;
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.4),
+            0 0 18px rgba(171, 26, 255, 0.9);
+    }
+
+    .game-upload-subtitle.cta-gray {
+        color: #ffffff !important;
+        text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.6),
+            0 0 18px rgba(175, 20, 255, 0.95);
+    }
+
+    .game-upload-form-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+        .game-upload-form-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .game-upload-actions {
+        margin-top: 1.5rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .cancel-btn {
+        background: linear-gradient(135deg, rgba(0, 229, 255, 0.9), rgba(76, 148, 255, 0.95));
+        color: #ffffff;
+        text-decoration: none;
+        text-align: center;
+        padding-inline: 1.4rem;
+        box-shadow:
+            0 0 18px rgba(255, 50, 138, 0.5),
+            inset 0 0 10px rgba(255, 255, 255, 0.4);
+        font-size: 0.95rem;
+        letter-spacing: 0.2em;
+    }
+
+    .cancel-btn:hover {
+        box-shadow:
+            0 0 26px rgba(255, 50, 138, 0.7),
+            inset 0 0 14px rgba(255, 255, 255, 0.5);
+    }
+
+    .game-upload-form-grid .form-group {
+        position: relative;
+    }
+
+    .game-upload-form-grid label {
+        display: inline-block;
+        margin-bottom: 6px;
+        font-size: 0.8rem;
+        color: #b5e0ff;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        text-shadow:
+            0 0 6px rgba(0, 0, 0, 0.7),
+            0 0 12px rgba(77, 181, 255, 0.5);
+    }
+
+    .game-upload-form-grid input[type="text"],
+    .game-upload-form-grid input[type="url"],
+    .game-upload-form-grid textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(85, 255, 255, 0.45);
+        background: #010c18; /* Sólido en vez de translucido con boxShadow */
+        color: #fdfcff;
+        box-shadow: none; /* ELIMINADOS BOX SHADOWS INTERNOS POR RENDIMIENTO */
+        transition: border-color 0.2s ease;
+    }
+
+    .game-upload-form-grid select {
+        appearance: none;
+        width: 100%;
+        padding: 10px 12px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 86, 255, 0.7);
+        background: #05050f; /* Color sólido, antes 2 divs de gradientes */
+        color: #fdfcff;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: none;
+    }
+
+    .game-upload-form-grid select::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .game-upload-form-grid select:focus {
+        outline: none;
+        border-color: rgba(0, 229, 255, 0.9);
+        box-shadow:
+            0 0 18px rgba(0, 229, 255, 0.6),
+            inset 0 0 18px rgba(255, 86, 255, 0.4);
+    }
+
+    .game-upload-form-grid select option {
+        background: rgba(0, 0, 0, 0.9);
+        color: #eef4ff;
+    }
+
+    .game-upload-form-grid select option:checked {
+        background: rgba(0, 229, 255, 0.25);
+        color: #00e5ff;
+    }
+
+    .game-upload-form-grid input[type="text"]:focus,
+    .game-upload-form-grid input[type="url"]:focus,
+    .game-upload-form-grid textarea:focus,
+    .game-upload-form-grid select:focus {
+        outline: none;
+        border-color: rgba(255, 103, 255, 0.9);
+        box-shadow:
+            0 0 16px rgba(255, 255, 255, 0.25),
+            inset 0 0 20px rgba(var(--pure-magenta-rgb), 0.2);
+    }
+
+    .game-upload-form-grid input::placeholder,
+    .game-upload-form-grid textarea::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .game-upload-form-grid input[type="file"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+    }
+
+    .custom-file-upload {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 12px;
+        background: rgba(1, 12, 24, 0.75);
+        border: 1px dashed rgba(85, 255, 255, 0.45);
+        border-radius: 10px;
+        color: #fdfcff;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: inset 0 0 14px rgba(var(--pure-cyan-rgb), 0.05);
+        margin-top: 4px;
+    }
+
+    .custom-file-upload:hover {
+        border-color: rgba(0, 229, 255, 0.9);
+        background: rgba(0, 229, 255, 0.1);
+        box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2), 0 0 12px rgba(0, 229, 255, 0.3);
+        color: #00e5ff;
+    }
+
+    .file-name-display {
+        display: block;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #00e5ff;
+        word-break: break-all;
+    }
+
+    .col-span-2 {
+        grid-column: span 1;
+    }
+
+    @media (min-width: 768px) {
+        .col-span-2 {
+            grid-column: span 2;
+        }
+    }
+
+    .form-section-title {
+        grid-column: 1 / -1;
+        font-size: 1.1rem;
+        color: rgba(255, 86, 255, 0.9);
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 86, 255, 0.3);
+        padding-bottom: 0.5rem;
+        text-shadow: 0 0 8px rgba(255, 86, 255, 0.5);
+    }
+
+    .game-upload-help-text {
+        font-size: 0.75rem;
+        color: #a0c4ff;
+        margin-top: 6px;
+        opacity: 0.8;
+    }
+
+    .game-upload-form-grid select option {
+        background: #01060f;
+        color: #f7f8ff;
+    }
+
+    .game-upload-form-grid select:focus option,
+    .game-upload-form-grid select:hover option {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00e5ff;
+    }
+
+
+/* Extracted from game_form.html */
+.upload-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            align-items: flex-start; /* flex-start para permitir que sticky funcione correctamente */
+            justify-content: center;
+        }
+        .upload-form-column {
+            flex: 1 1 min(100%, 600px);
+            max-width: 1100px;
+        }
+        .upload-preview-column {
+            flex: 1 1 min(100%, 450px);
+            max-width: 450px;
+            min-width: 250px;
+            width: 100%;
+            transition: opacity 0.2s ease-out; /* Transición por defecto más rápida para ocultar */
+            will-change: transform;
+            transform: translateZ(0);
+        }
+        
+        /* Se ha eliminado el ocultamiento con `:has()` ya que el recálculo ralentizaba la página. 
+           Además, translateZ(0) alivia la carga durante la animación del sidebar. */
+
+        @media (min-width: 1181px) {
+            .upload-preview-column {
+                position: sticky;
+                top: 4rem; /* Un margen fijo en lugar de centrar dinámicamente */
+                /* transform: translateY(-50%); ELIMINADO para evitar layer-thrashing con el padre animado */
+                will-change: transform;
+            }
+        }
+
+        .preview-title-neon {
+            color: #00e5ff;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            letter-spacing: 0.15em;
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.6), 0 0 20px rgba(0, 229, 255, 0.3);
+        }
+
+        .catalogo-preview {
+            width: 100%;
+        }
+
+        .catalogo-preview .game-item {
+            border: 1px solid rgba(var(--pure-cyan-rgb), 0.35);
+            background: #0a1929; /* Totalmente sólido en vez de gradiente o opaco calculado */
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.55); /* Solo 1 shadow */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            text-decoration: none;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .catalogo-preview .game-item::after {
+            display: none; /* Anulado: este div se pintaba en rgba en cada frame */
+        }
+
+        .catalogo-preview .game-img,
+        .catalogo-preview .game-img-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            object-fit: cover;
+        }
+
+        .catalogo-preview .game-img {
+            transition: transform 0.2s ease;
+        }
+
+        .catalogo-preview .game-img-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #060c18; /* Sólido en vez de gradiente radial */
+            color: rgba(0, 247, 255, 0.65);
+            font-size: 2.2rem;
+        }
+
+        .catalogo-preview .game-info {
+            padding: 18px;
+            background: #050f19; /* Sólido oscuro sin renderizado de degradado linear */
+            position: relative;
+            z-index: 2;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .catalogo-preview .game-title {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: #00f7ff;
+            text-shadow: 0 0 15px rgba(0, 247, 255, 0.45);
+            margin: 0;
+        }
+
+        .catalogo-preview .game-short-description {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: #a8d7e6;
+            opacity: 0.85;
+            margin: 0;
+            flex-grow: 1;
+        }
+
+        .catalogo-preview .game-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .catalogo-preview .game-stats span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(var(--pure-cyan-rgb), 0.05);
+            border: 1px solid rgba(var(--pure-cyan-rgb), 0.25);
+            color: #e0ffff;
+            font-size: 0.75rem;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .catalogo-preview .game-detail-link {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: auto;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.7rem;
+            background: linear-gradient(90deg, #00f7ff, #0099ff);
+            color: #030f19;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 247, 255, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0.85;
+        }
+
+/* Inline styles extracted from game_form.html */
+.gen-style-32c16d { padding: 20px; }
+.gen-style-224b51 { display: none; }

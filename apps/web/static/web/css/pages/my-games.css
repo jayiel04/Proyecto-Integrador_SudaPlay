@@ -1,0 +1,111 @@
+/* My Games cards: electric purple + pink + cyan */
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-item {
+    border: 1px solid rgba(var(--pure-cyan-rgb), 0.55);
+    box-shadow:
+        0 0 0 1px rgba(141, 92, 255, 0.25) inset,
+        0 14px 26px rgba(0, 0, 0, 0.52),
+        0 0 24px rgba(255, 70, 200, 0.18);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-item:hover {
+    border-color: rgba(255, 78, 214, 0.95);
+    box-shadow:
+        0 0 0 1px rgba(255, 96, 219, 0.35) inset,
+        0 0 30px rgba(var(--pure-cyan-rgb), 0.35),
+        0 0 30px rgba(149, 88, 255, 0.36),
+        0 20px 34px rgba(0, 0, 0, 0.62);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-info {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 5%, rgba(10, 8, 28, 0.9) 50%, rgba(15, 7, 32, 0.97) 100%);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-title {
+    color: #e9f8ff;
+    text-shadow: 0 0 10px rgba(0, 245, 255, 0.55), 0 0 14px rgba(255, 90, 210, 0.35);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-short-description {
+    color: #d7c6f3;
+    text-shadow: 0 0 8px rgba(255, 98, 223, 0.25);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-stats {
+    color: #8ffeff;
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 6px;
+    border-radius: 999px;
+    border: 1px solid rgba(168, 90, 255, 0.6);
+    background: rgba(16, 28, 48, 0.5);
+    box-shadow: 0 0 10px rgba(168, 90, 255, 0.24);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-detail-link {
+    border-radius: 10px;
+    border: 1px solid rgba(var(--pure-cyan-rgb), 0.68);
+    background: linear-gradient(135deg, rgba(37, 176, 255, 0.65), rgba(138, 79, 255, 0.78), rgba(255, 72, 196, 0.72));
+    color: #f7f7ff;
+    text-shadow: 0 0 10px rgba(255, 95, 219, 0.45);
+    box-shadow: 0 0 12px rgba(var(--pure-cyan-rgb), 0.28), 0 0 18px rgba(160, 85, 255, 0.28) inset;
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .game-item:hover .game-detail-link {
+    border-color: rgba(255, 137, 231, 0.95);
+    color: #ffffff;
+    box-shadow: 0 0 16px rgba(var(--pure-cyan-rgb), 0.45), 0 0 22px rgba(225, 102, 255, 0.42);
+}
+
+.page-stack-container-left .my-games-upload-wrap + .game-grid .badge-new {
+    background: linear-gradient(135deg, rgba(0, 243, 255, 0.9), rgba(143, 83, 255, 0.9));
+    color: #f3fbff;
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+}
+
+
+.card-title-small {
+    margin-bottom: 8px;
+}
+
+.card-muted-text {
+    color: #bbb;
+}
+
+.my-games-upload-wrap {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.my-games-upload-btn {
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    padding: 10px 16px;
+    text-decoration: none;
+    color: #fdf6ff;
+    border: 1px solid rgba(197, 127, 255, 0.8);
+    background: linear-gradient(135deg, rgba(66, 175, 255, 0.95), rgba(189, 80, 255, 0.9), rgba(255, 89, 197, 0.9));
+    box-shadow:
+        0 0 14px rgba(91, 209, 255, 0.5),
+        0 0 20px rgba(209, 98, 255, 0.45);
+}
+
+.my-games-upload-btn:hover,
+.my-games-upload-btn:focus-visible {
+    transform: translateY(-1px);
+    color: #ffffff;
+    border-color: rgba(237, 176, 255, 0.95);
+    box-shadow:
+        0 0 18px rgba(91, 209, 255, 0.65),
+        0 0 26px rgba(225, 108, 255, 0.6);
+}
+
+.badge-pending {
+    background: #ffae00;
+    color: #111;
+}
+

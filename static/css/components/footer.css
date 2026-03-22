@@ -1,0 +1,30 @@
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    color: #fff;
+    font-size: 0.85rem;
+    background:
+        linear-gradient(90deg, rgba(8, 18, 28, 0.98), rgba(8, 24, 24, 0.98)),
+        var(--card-bg);
+    /* backdrop-filter: blur(15px); REMOVED FOR PERFORMANCE */
+    /* -webkit-backdrop-filter: blur(15px); */
+    z-index: 10000;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+    border-top: 1px solid rgba(98, 216, 255, 0.34);
+    box-shadow: 0 -5px 22px rgba(98, 216, 255, 0.14);
+}
+
+.footer.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+

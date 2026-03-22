@@ -640,9 +640,9 @@
 }
 
 .friends-tab.search-tab-active {
-    background: linear-gradient(145deg, rgba(143, 107, 255, 0.95), rgba(133, 96, 255, 0.95));
+    background: linear-gradient(145deg, rgba(var(--accent-violet-rgb), 0.95), rgba(133, 96, 255, 0.95));
     border-color: #000;
-    box-shadow: 0 0 18px rgba(143, 107, 255, 0.7);
+    box-shadow: 0 0 18px rgba(var(--accent-violet-rgb), 0.7);
 }
 
 .search-form {
@@ -659,7 +659,7 @@
     max-width: 600px;
     padding: 0.95rem 1.4rem;
     border-radius: 999px;
-    border: 2px solid rgba(0, 255, 255, 0.45);
+    border: 2px solid rgba(var(--pure-cyan-rgb), 0.45);
     background: rgba(0, 0, 0, 0.6);
     color: #f3fbff;
     font-size: 1.1rem;
@@ -817,10 +817,10 @@
     }
     .profile-card {
         background: rgb(2, 22, 22);
-        border: 1px solid rgba(0, 255, 255, 0.2);
+        border: 1px solid rgba(var(--pure-cyan-rgb), 0.2);
         border-radius: 1.25rem;
         padding: 2.25rem;
-        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(0, 255, 255, 0.05);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px rgba(var(--pure-cyan-rgb), 0.05);
     }
     .profile-hero {
         display: flex;
@@ -837,7 +837,7 @@
         background: linear-gradient(140deg, #a878ff, #f95bff, #5ba7ff);
         padding: 4px;
         border: 3px solid var(--neon-cyan, #00ffff);
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+        box-shadow: 0 0 25px rgba(var(--pure-cyan-rgb), 0.3);
         overflow: hidden;
         display: flex;
         align-items: center;
@@ -913,7 +913,7 @@
     }
     .role-admin { background: rgba(255, 59, 59, 0.2); color: #ff3b3b; border: 1px solid rgba(255, 59, 59, 0.5); }
     .role-mod { background: rgba(255, 165, 0, 0.2); color: #ffa500; border: 1px solid rgba(255, 165, 0, 0.5); }
-    .role-user { background: rgba(0, 255, 255, 0.1); color: var(--neon-cyan, #00ffff); border: 1px solid rgba(0, 255, 255, 0.3); }
+    .role-user { background: rgba(var(--pure-cyan-rgb), 0.1); color: var(--neon-cyan, #00ffff); border: 1px solid rgba(var(--pure-cyan-rgb), 0.3); }
     
     .profile-content-grid {
         display: grid;
@@ -1007,8 +1007,8 @@
     }
     .game-mini-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 5px 15px rgba(0, 255, 255, 0.2);
-        border-color: rgba(0, 255, 255, 0.4);
+        box-shadow: 0 5px 15px rgba(var(--pure-cyan-rgb), 0.2);
+        border-color: rgba(var(--pure-cyan-rgb), 0.4);
     }
     .game-mini-thumb {
         width: 100%;
@@ -1041,16 +1041,16 @@
     .game-mini-link {
         display: inline-block;
         padding: 5px 10px;
-        background: rgba(0, 255, 255, 0.1);
+        background: rgba(var(--pure-cyan-rgb), 0.1);
         color: var(--neon-cyan, #00ffff);
         text-decoration: none;
         border-radius: 5px;
         font-size: 0.85rem;
-        border: 1px solid rgba(0, 255, 255, 0.3);
+        border: 1px solid rgba(var(--pure-cyan-rgb), 0.3);
         transition: background 0.2s;
     }
     .game-mini-link:hover {
-        background: rgba(0, 255, 255, 0.3);
+        background: rgba(var(--pure-cyan-rgb), 0.3);
     }
     .empty-state-card {
         text-align: center;

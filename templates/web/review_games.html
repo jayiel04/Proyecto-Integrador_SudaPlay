@@ -1,4 +1,9 @@
 {% extends 'base.html' %}
+
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'web/css/pages/review-games.css' %}?v=1">
+{% endblock %}
 {% load static %}
 
 {% block title %}Juegos en Revisión - SudaPlay{% endblock %}

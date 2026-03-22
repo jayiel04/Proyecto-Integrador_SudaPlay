@@ -9,14 +9,22 @@
     <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=4">
     <link rel="stylesheet" href="{% static 'css/styles-navbar.css' %}?v=5">
     <link rel="stylesheet" href="{% static 'css/styles-sidebar.css' %}?v=4">
-    <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}?v=6">
+    <link rel="stylesheet" href="{% static 'css/components/navbar-profile.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/navbar-chat.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/navbar-notifications.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/profile.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/auth-extra.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/footer.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/games.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/game-modals.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/chat.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/components/info-pages.css' %}?v=1">
     {% if request.resolver_match.app_name == 'login' or request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <link rel="stylesheet" href="{% static 'login/css/login.css' %}?v=8">
     <link rel="stylesheet" href="{% static 'login/css/template_overrides.css' %}?v=7">
     {% endif %}
-    {% if request.resolver_match.app_name == 'web' %}
-    <link rel="stylesheet" href="{% static 'web/css/template_overrides.css' %}?v=4">
-    {% endif %}
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Fuentes: carga no bloqueante para no retrasar el primer render -->
@@ -67,223 +75,8 @@
     {% endif %}
     {% endblock auth_branding %}
 
-    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
-    <aside class="secondary-nav">
-        <div class="secondary-nav-container">
-            <a href="/#catalogo-juegos" class="secondary-nav-item secondary-nav-games"><i class="fas fa-gamepad"></i><span>Juegos</span></a>
-            <a href="/juegos/subir/" class="secondary-nav-item secondary-nav-upload"{% if not user.is_authenticated %} data-login-required="true"{% endif %}><i class="fas fa-cloud-upload-alt"></i><span>Subir</span></a>
-            <a href="/juegos/normas/" class="secondary-nav-item secondary-nav-normas"><i class="fas fa-book"></i><span>Normas</span></a>
-            <a href="/juegos/acerca-de/" class="secondary-nav-item secondary-nav-about"><i class="fas fa-info-circle"></i><span>Acerca</span></a>
-            {% if user.is_authenticated %}
-            {% if user.profile.role == 'admin' or user.profile.role == 'moderator' %}
-            <a href="{% url 'web:review_games' %}" class="secondary-nav-item secondary-nav-review"><i class="fas fa-clipboard-check"></i><span>Revisión</span></a>
-            {% endif %}
-            <a href="/auth/jugadores/buscar/" class="secondary-nav-item secondary-nav-search-players"><i class="fas fa-users"></i><span>Jugadores</span></a>
-            {% endif %}
-            <div class="secondary-nav-sound-container mt-auto">
-                <a href="/juegos/sonido/configuraciones-avanzadas/" class="secondary-nav-item secondary-nav-sound" data-no-style-wait="true"><i class="fas fa-volume-up"></i><span>Sonido</span></a>
-            </div>
-            <a href="/soporte/faq/" class="secondary-nav-item secondary-nav-support"><i class="fas fa-headset"></i><span>Soporte</span></a>
-            {% if user.is_authenticated %}
-            <a href="/auth/logout/" class="secondary-nav-item secondary-nav-logout"><i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span></a>
-            {% endif %}
-        </div>
-    </aside>
-    {% endif %}
-
-    {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
-    <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Abrir/Cerrar Menú"><i class="fas fa-bars"></i></button>
-    {% endif %}
-    <header class="site-header">
-        <nav
-            class="navbar{% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %} navbar-auth{% endif %}">
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
-            <div class="navbar-container">
-            {% endif %}
-
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
-            <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
-                <span class="navbar-brand-letter-logo-wrap"><img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay"
-                        class="navbar-brand-letter-logo"></span>
-                <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
-            </a>
-            {% endif %}
-
-            <div class="nav-links nav-links-centered">
-                {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'account_reset_password' or request.resolver_match.url_name == 'account_reset_password_from_key' or request.resolver_match.url_name == 'account_reset_password_done' or request.resolver_match.url_name == 'account_reset_password_from_key_done' or request.resolver_match.url_name == 'socialaccount_signup' %}
-                <div class="nav-links-left">
-                    <a href="{% url 'web:home' %}#catalogo-juegos" class="nav-item nav-item-juegos">Juegos</a>
-                </div>
-                <div class="nav-links-middle">
-                    <a href="{% url 'web:game_create' %}" class="nav-item nav-item-subir" data-login-required="true">Subir juego</a>
-                    <a href="{% url 'web:normas' %}" class="nav-item nav-item-normas">Normas</a>
-                </div>
-                <div class="nav-links-right">
-                    <a href="{% url 'web:about' %}" class="nav-item nav-item-acerca">Acerca de</a>
-                </div>
-                {% else %}
-                <div class="nav-links-middle nav-links-middle-auth">
-                    <!-- El icono de casa se eliminó del header, la navegación principal se encuentra en el sidebar -->
-                </div>
-                {% endif %}
-            </div>
-
-            {% if request.resolver_match.app_name == 'web' and request.resolver_match.url_name == 'home' %}
-            <div class="navbar-catalog-search">
-                <div class="catalog-search-input-wrap">
-                    <span class="search-light search-light-top"></span>
-                    <span class="search-light search-light-bottom"></span>
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    <input
-                        id="catalog-search-input"
-                        type="search"
-                        class="catalog-search-input"
-                        aria-label="Buscar juegos en el catalogo"
-                        placeholder="Busca por título o descripción"
-                        autocomplete="off">
-                </div>
-            </div>
-            {% endif %}
-
-            <div
-                class="navbar-menu{% if not user.is_authenticated and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %} navbar-menu-guest{% endif %}">
-                {% if user.is_authenticated %}
-                <div class="navbar-profile-actions">
-
-                    <div class="profile-dropdown">
-                        <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de perfil">
-                            {% if navbar_avatar_url %}
-                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar"
-                                 onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
-                            <i class="fa fa-user-circle navbar-avatar-fallback is-hidden"></i>
-                            {% else %}
-                            <i class="fa fa-user-circle navbar-avatar-fallback"></i>
-                            {% endif %}
-                        </button>
-                        <div class="profile-dropdown-menu profile-dropdown-card" role="menu">
-                            <button class="profile-dropdown-close" type="button" aria-label="Cerrar perfil">&times;</button>
-                            <div class="profile-dropdown-hero">
-                                <div class="profile-avatar-ring" aria-hidden="true">
-                                    {% if navbar_avatar_url %}
-                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar"
-                                         onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
-                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback is-hidden"></i>
-                                    {% else %}
-                                    <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback"></i>
-                                    {% endif %}
-                                </div>
-                                <div class="profile-hero-meta">
-                                    <p class="profile-username">{{ user.username }}</p>
-                                    <p class="profile-email">{{ user.email }}</p>
-                                </div>
-                            </div>
-                            <div class="profile-divider"></div>
-                            <div class="profile-action-row">
-                                <a href="{% url 'chat:inbox' %}" class="profile-primary-btn profile-chat-messages-btn" role="menuitem">
-                                    <i class="fas fa-comment-dots"></i>
-                                    Mensajes
-                                </a>
-                                <a href="{% url 'login:profile' %}" class="profile-primary-btn" role="menuitem">
-                                    <i class="fa fa-user"></i>
-                                    Perfil
-                                </a>
-                                <a href="{% url 'web:my_games' %}" class="profile-menu-item profile-menu-mygames" role="menuitem">
-                                    <i class="fa fa-gamepad"></i>
-                                    <span>Mis juegos</span>
-                                </a>
-                                <a href="{% url 'login:profile_edit' %}" class="profile-menu-item profile-menu-edit" role="menuitem">
-                                    <i class="fa fa-pencil-alt"></i>
-                                    <span>Editar perfil</span>
-                                </a>
-                                <div class="profile-divider"></div>
-                                <a href="{% url 'login:logout' %}" class="profile-menu-item profile-logout-btn" role="menuitem">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Cerrar sesión</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="profile-chat-widget">
-                        <button
-                            type="button"
-                            class="profile-chat-toggle"
-                            aria-expanded="false"
-                            aria-haspopup="true"
-                            aria-label="Abrir chat de soporte"
-                            data-messages-endpoint="{% url 'login:auto_messages_api' %}">
-                            <i class="fas fa-robot profile-chat-symbol" aria-hidden="true"></i>
-                        </button>
-                        <div
-                            class="profile-chat-panel"
-                            aria-hidden="true"
-                            data-bot-avatar="{{ default_avatar_url }}"
-                            data-user-avatar="{{ navbar_avatar_url }}">
-                            <div class="profile-chat-panel-header">
-                                <div class="profile-chatbot-avatar">
-                                    <img class="profile-chatbot-avatar-img" src="" alt="Avatar del asistente">
-                                </div>
-                                <div class="profile-chatbot-meta">
-                                    <p>Chat SudaPlay</p>
-                                    <small>Asistente virtual</small>
-                                </div>
-                                <div class="profile-chat-panel-actions">
-                                    <span class="profile-chat-status"></span>
-                                    <button type="button" class="profile-chat-close" aria-label="Cerrar chat">&times;</button>
-                                </div>
-                            </div>
-                            <div class="profile-chat-body">
-                                <div class="profile-chat-messages"></div>
-                                <form class="profile-chat-input-form" autocomplete="off">
-                                    <input
-                                        type="text"
-                                        class="profile-chat-input"
-                                        placeholder="Escribe un mensaje..."
-                                        maxlength="300"
-                                        aria-label="Mensaje de chat">
-                                    <button type="submit" class="profile-chat-send" aria-label="Enviar">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="profile-notification-widget">
-                        <button
-                            type="button"
-                            class="notification-toggle"
-                            aria-expanded="false"
-                            aria-haspopup="true"
-                            aria-label="Mostrar notificaciones"
-                            data-notifications-endpoint="{% url 'login:notifications_api' %}">
-                            <i class="fas fa-bell" aria-hidden="true"></i>
-                            <span class="notification-badge" aria-hidden="true"></span>
-                        </button>
-                        <div class="notification-panel" aria-hidden="true">
-                            <div class="notification-panel-header">
-                                <span>Notificaciones</span>
-                                <button class="notification-panel-close" type="button" aria-label="Cerrar notificaciones">&times;</button>
-                            </div>
-                            <ul class="notification-list" role="list"></ul>
-                            <div class="notification-panel-footer">
-                                <a href="{% url 'login:player_profile' user.username %}?tab=activity" class="notification-view-all">Ver todas</a>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                {% else %}
-                {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' %}
-                <a href="{% url 'login:login' %}" class="navbar-link navbar-auth-link">Iniciar sesión</a>
-                {% endif %}
-                {% endif %}
-            </div>
-
-            {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'account_reset_password' and request.resolver_match.url_name != 'account_reset_password_from_key' and request.resolver_match.url_name != 'account_reset_password_done' and request.resolver_match.url_name != 'account_reset_password_from_key_done' and request.resolver_match.url_name != 'socialaccount_signup' %}
-            </div>
-            {% endif %}
-        </nav>
-    </header>
+    {% include "partials/_sidebar.html" %}
+    {% include "partials/_navbar.html" %}
 
     <main class="main-content">
 
@@ -296,34 +89,7 @@
     </footer>
     {% endif %}
 
-    {% if not user.is_authenticated %}
-    <div id="login-required-panel" class="login-required-panel" aria-hidden="true"
-        data-login-base="{% url 'login:login' %}">
-        <div class="login-required-card" role="dialog" aria-modal="true" aria-labelledby="login-required-title">
-            <h3 id="login-required-title">Se requiere iniciar sesión</h3>
-            <p>Para acceder a esta funcionalidad debes iniciar sesión.</p>
-            <div class="login-required-actions">
-                <button type="button" id="close-login-required-panel"
-                    class="login-required-btn secondary">Cancelar</button>
-                <a href="{% url 'login:login' %}" id="continue-login-required-panel"
-                    class="login-required-btn primary">Iniciar sesión</a>
-            </div>
-        </div>
-    </div>
-    {% endif %}
-
-    <div id="success-popup-panel" class="success-popup-panel" aria-hidden="true">
-        <div class="success-popup-card" role="dialog" aria-modal="true" aria-labelledby="success-popup-title">
-            <div class="success-popup-icon">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h3 id="success-popup-title">¡Éxito!</h3>
-            <p id="success-popup-message"></p>
-            <div class="success-popup-actions">
-                <button type="button" id="close-success-popup" class="success-popup-btn primary">Aceptar</button>
-            </div>
-        </div>
-    </div>
+    {% include "partials/_modals.html" %}
 
     {% if messages %}
     <script>
@@ -374,28 +140,14 @@
         });
     </script>
 
-    {% if request.resolver_match.url_name != 'game_play' %}
-    <!-- Audio de fondo global del sitio (se activa con la primera interacción). -->
-    <!-- preload="none": el audio NO se descarga hasta que el usuario interactúe -->
-    <audio id="background-music" preload="none" loop
-        src="{{ SUPABASE_URL }}/storage/v1/object/public/musica/audio/bouncyrunner-arcade-all-night-396133.mp3">
-    </audio>
-
-    <!-- Controles de volumen del audio de fondo. -->
-    <div class="music-controls" aria-label="Controles de volumen">
-        <button type="button" id="music-toggle-expand" class="music-control-btn music-toggle-btn"
-            title="Mostrar controles de volumen">&#128266;</button>
-        <div class="music-controls-expanded">
-            <button type="button" id="music-volume-down" class="music-control-btn" title="Bajar volumen">-</button>
-            <button type="button" id="music-volume-up" class="music-control-btn" title="Subir volumen">+</button>
-            <button type="button" id="music-mute-toggle" class="music-control-btn"
-                title="Silenciar o activar sonido">&#128263;</button>
-        </div>
-    </div>
-
-    {% endif %}
+    {% include "partials/_audio_player.html" %}
     <!-- defer: el navegador parsea el HTML completo antes de ejecutar el script -->
-    <script src="{% static 'js/main.js' %}?v=2" defer></script>
+    <!-- Módulos divididos -->
+    <script src="{% static 'js/modules/utils.js' %}?v=1" defer></script>
+    <script src="{% static 'js/modules/routing.js' %}?v=1" defer></script>
+    <script src="{% static 'js/modules/audio.js' %}?v=1" defer></script>
+    <script src="{% static 'js/modules/ui.js' %}?v=1" defer></script>
+    <script src="{% static 'js/modules/dropdowns.js' %}?v=1" defer></script>
     {% if user.is_authenticated %}
     {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
     {% endif %}
