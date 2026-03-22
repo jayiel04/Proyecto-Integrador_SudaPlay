@@ -165,6 +165,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Security settings for production
 if not DEBUG:
+    # Confiar en el proxy de Render para el protocolo HTTPS (Vital para Google OAuth)
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -185,11 +188,17 @@ SOCIALACCOUNT_PROVIDERS = {
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
+        },
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID', default=''),
+            'secret': config('GOOGLE_CLIENT_SECRET', default=''),
+            'key': ''
         }
     }
 }
 
 # Allauth Settings
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = config('ACCOUNT_DEFAULT_HTTP_PROTOCOL', default='http')
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True
@@ -203,9 +212,10 @@ SOCIALACCOUNT_FORMS = {
     'signup': 'apps.login.forms.CustomSocialSignupForm',
 }
 
-# Supabase (chat automático)
-SUPABASE_URL = config('SUPABASE_URL', default='')
-SUPABASE_ANON_KEY = config('SUPABASE_ANON_KEY', default='')
+# Supabase Configuration
+SUPABASE_URL = config('SUPABASE_URL', default='https://uqontjetlobocgmfoojd.supabase.co')
+SUPABASE_KEY = config('SUPABASE_KEY', default='')
+SUPABASE_ANON_KEY = config('SUPABASE_ANON_KEY', default=SUPABASE_KEY)
 SUPABASE_CHAT_TABLE = config('SUPABASE_CHAT_TABLE', default='auto_messages')
 
 
@@ -231,10 +241,6 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
-
-# Supabase (avatares y conexión directa)
-SUPABASE_URL = config('SUPABASE_URL', default='https://uqontjetlobocgmfoojd.supabase.co')
-SUPABASE_KEY = config('SUPABASE_KEY', default='')
 
 # ---------------------------------------------------------------------------
 # Configuración de Supabase Storage (compatible con S3 via django-storages)
