@@ -176,7 +176,7 @@ if not DEBUG:
 
 # Login settings
 LOGIN_URL = 'login:login'
-LOGIN_REDIRECT_URL = 'web:home'
+LOGIN_REDIRECT_URL = '/#catalogo-juegos'
 LOGOUT_REDIRECT_URL = 'web:home'
 
 # Google OAuth Settings
