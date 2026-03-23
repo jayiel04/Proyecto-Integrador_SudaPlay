@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="my-games-stack">
-    <section class="my-games-hero">
+    <section class="my-games-hero cyber-card">
         <div class="my-games-hero__title">
             <p class="eyebrow">Panel creador</p>
             <h1>Resumen</h1>
@@ -20,14 +20,14 @@
                 <span class="status-chip status-chip--error" aria-label="Juegos con error">{{ stats.errored }} con error</span>
                 <span class="status-chip status-chip--rejected" aria-label="Juegos rechazados">{{ stats.rejected }} rechazados</span>
             </div>
-            <a class="btn-primary-glow" href="{% url 'web:game_create' %}">
+            <a class="btn-cyber" href="{% url 'web:game_create' %}">
                 <i class="fas fa-cloud-upload-alt"></i>
                 Subir nuevo juego
             </a>
         </div>
     </section>
 
-    <section class="status-card status-card--all">
+    <section class="status-card status-card--all cyber-card">
         <div class="status-card__header">
             <div>
                 <p class="eyebrow">Mis juegos</p>
@@ -59,9 +59,8 @@
                         </div>
                         <div class="game-actions">
                             {% if game.is_web_playable or game.external_url %}
-                            <a class="btn-chip" href="{% if game.is_web_playable %}{% url 'web:game_play' game.pk %}{% else %}{{ game.external_url }}{% endif %}" {% if not game.is_web_playable %}target="_blank" rel="noopener"{% endif %}>Jugar</a>
-                            {% else %}
-                            <a class="btn-chip" href="{% url 'web:game_play' game.pk %}">Ver</a>
+                            <a class="btn-cyber-purple" href="{% if game.is_web_playable %}{% url 'web:game_play' game.pk %}{% else %}{{ game.external_url }}{% endif %}" {% if not game.is_web_playable %}target="_blank" rel="noopener"{% endif %}>Jugar</a>
+                            <a class="btn-cyber-purple" href="{% url 'web:game_play' game.pk %}">Ver</a>
                             {% endif %}
                             {% if game.game_file %}
                             <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_download' game.pk %}">Descargar</a>
@@ -100,7 +99,7 @@
                             <span><i class="fas fa-star"></i>{{ game.rating }} ({{ game.rating_votes }})</span>
                         </div>
                         <div class="game-actions">
-                            <span class="btn-chip btn-chip--ghost" aria-disabled="true">En revisión</span>
+                            <span class="btn-cyber-purple btn-cyber-ghost opacity-50 cursor-not-allowed" aria-disabled="true">En revisión</span>
                             {% if game.game_file %}
                             <a class="btn-chip btn-chip--ghost" href="{% url 'web:game_download' game.pk %}">Descargar</a>
                             {% endif %}

@@ -1,7 +1,7 @@
-    <div class="login-card full-width-card">
+    <div class="login-card full-width-card cyber-card">
         <h2 class="play-unavailable-title">Juego no disponible</h2>
         <p class="play-meta-description">Este juego no tiene una version jugable en web.</p>
-        <a href="{% url 'web:game_download' game.pk %}" class="btn-login play-download-btn" 
+        <a href="{% url 'web:game_download' game.pk %}" class="btn-cyber play-download-btn" 
         {% if not user.is_authenticated %} data-login-required="true" {% endif %}> Descargar archivo</a>
     </div>
     {% endif %}

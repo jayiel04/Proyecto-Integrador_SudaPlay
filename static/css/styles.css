@@ -28,6 +28,14 @@
     --footer-height: 45px;
     --sidebar-width: 60px;
     --sidebar-width-expanded: 200px;
+    
+    /* Global Cyberpunk Visuals */
+    --shadow-neon-cyan: 0 0 16px rgba(var(--accent-cyan-rgb), 0.4), inset 0 0 12px rgba(var(--accent-cyan-rgb), 0.2);
+    --shadow-neon-pink: 0 0 16px rgba(var(--neon-pink-rgb), 0.4), inset 0 0 12px rgba(var(--neon-pink-rgb), 0.2);
+    --shadow-cyber-card: inset 0 0 24px rgba(255, 255, 255, 0.05), 0 18px 35px rgba(0, 0, 0, 0.65);
+    
+    --bg-cyber-card: radial-gradient(circle at top left, rgba(var(--accent-cyan-rgb), 0.08), transparent 45%), linear-gradient(160deg, rgba(2, 6, 12, 0.95), rgba(5, 8, 16, 0.95), rgba(7, 12, 22, 0.95));
+    --bg-glass-panel: rgba(4, 22, 22, 0.55);
 }
 
 /* ========== ESTILOS GLOBALES ========== */
@@ -128,3 +136,84 @@ body.body-register-page {
     padding-bottom: 0;
 }
 
+/* ================== GLOBAL BUTTONS ================== */
+.btn-cyber {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--neon-emerald), var(--accent-cyan));
+    color: #0b1c1c !important; /* Texto oscuro para mejor contraste con turquesa claro */
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 18px rgba(var(--accent-cyan-rgb), 0.45);
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.btn-cyber:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 0 28px rgba(var(--accent-cyan-rgb), 0.65), inset 0 0 12px rgba(255, 255, 255, 0.3);
+    filter: brightness(1.1);
+}
+
+.btn-cyber-purple {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1b0033, #330066);
+    color: #ff3ea5 !important; /* Texto magenta para mejor look tech */
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(255, 62, 165, 0.5); /* Borde magenta nítido */
+    box-shadow: 0 0 10px rgba(255, 62, 165, 0.15); /* Sombra MUCHO más reducida */
+    transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-cyber-purple:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #330066, #ff007f33);
+    border-color: #ff3ea5;
+    box-shadow: 0 0 15px rgba(255, 62, 165, 0.3), inset 0 0 8px rgba(255, 62, 165, 0.2);
+}
+
+.btn-cyber-ghost {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #f6fbff !important;
+    box-shadow: none;
+}
+.btn-cyber-ghost:hover {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* ================== GLOBAL CARDS ================== */
+.cyber-card {
+    background: var(--bg-cyber-card);
+    border: 1px solid rgba(var(--pure-cyan-rgb), 0.35);
+    box-shadow: var(--shadow-cyber-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 16px; 
+    position: relative;
+    overflow: hidden;
+}

@@ -8,7 +8,7 @@
 {% block title %}Mis juegos - SudaPlay{% endblock %}
 
 {% block content %}
-<div class="container page-stack-container page-stack-container-left">
+<div class="container page-stack-container page-stack-container-left cyber-card">
     <div class="profile-back-row">
         <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la página anterior">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -34,14 +34,14 @@
     {% endif %}
 
     <div class="my-games-upload-wrap">
-        <a href="{% url 'web:game_create' %}" class="my-games-upload-btn">
+        <a href="{% url 'web:game_create' %}" class="btn-cyber">
             <i class="fa fa-upload"></i> Subir nuevo juego
         </a>
     </div>
 
     <div class="game-grid">
         {% for game in games %}
-        <a class="game-item" href="javascript:void(0)" 
+        <a class="game-item cyber-card" href="javascript:void(0)" 
            aria-label="Ver detalles de {{ game.title }}"
            data-game-id="{{ game.pk }}"
            data-game-title="{{ game.title }}"
@@ -87,7 +87,7 @@
                 </div>
                 {% endif %}
 
-                <span class="navbar-link game-detail-link">Ver detalles</span>
+                <span class="btn-cyber-purple">Ver detalles</span>
             </div>
         </a>
         {% empty %}

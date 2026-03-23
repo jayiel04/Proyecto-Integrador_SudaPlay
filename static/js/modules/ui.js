@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.querySelector('.secondary-nav');
+    const closeButtons = document.querySelectorAll('.close');
 
     closeButtons.forEach(button => {
         button.addEventListener('click', function () {
@@ -35,13 +37,39 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('touchstart', showFooter, { passive: true });
     }
 
+    const normalizePath = (value) => {
+        const path = (value || '/').replace(/\/+$/, '');
+        return path === '' ? '/' : path;
+    };
+
+    // también marcamos el icono correspondiente en el sidebar
+    const updateSidebarActive = () => {
+        const currentPath = normalizePath(window.location.pathname);
+        const currentHash = (window.location.hash || '').toLowerCase();
+        if (!sidebar) return;
+        const container = sidebar.querySelector('.secondary-nav-container');
+        if (!container) return;
+        const mappings = [
+            { selector: '.secondary-nav-games', path: normalizePath('/'), hash: '#catalogo-juegos' },
+            { selector: '.secondary-nav-upload', path: normalizePath('/juegos/subir/') },
+            { selector: '.secondary-nav-normas', path: normalizePath('/juegos/normas/') },
+            { selector: '.secondary-nav-about', path: normalizePath('/juegos/acerca-de/') },
+        ];
+        mappings.forEach(item => {
+            const el = container.querySelector(item.selector);
+            if (!el) return;
+            let active = false;
+            if (item.hash) {
+                active = currentPath === item.path && currentHash === item.hash;
+            } else {
+                active = currentPath === item.path;
+            }
+            el.classList.toggle('is-active', active);
+        });
+    };
+
     const centeredNavLinks = Array.from(document.querySelectorAll('.nav-links-centered .nav-item'));
     if (centeredNavLinks.length > 0) {
-        const normalizePath = (value) => {
-            const path = (value || '/').replace(/\/+$/, '');
-            return path === '' ? '/' : path;
-        };
-
         const updateHeaderActiveLink = () => {
             const currentPath = normalizePath(window.location.pathname);
             const currentHash = (window.location.hash || '').toLowerCase();
@@ -77,35 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         updateHeaderActiveLink();
         window.addEventListener('hashchange', updateHeaderActiveLink);
-
-        // también marcamos el icono correspondiente en el sidebar
-        const updateSidebarActive = () => {
-            const currentPath = normalizePath(window.location.pathname);
-            const currentHash = (window.location.hash || '').toLowerCase();
-            if (!sidebar) return;
-            const container = sidebar.querySelector('.secondary-nav-container');
-            if (!container) return;
-            const mappings = [
-                { selector: '.secondary-nav-games', path: normalizePath('/'), hash: '#catalogo-juegos' },
-                { selector: '.secondary-nav-upload', path: normalizePath('/juegos/subir/') },
-                { selector: '.secondary-nav-normas', path: normalizePath('/juegos/normas/') },
-                { selector: '.secondary-nav-about', path: normalizePath('/juegos/acerca-de/') },
-            ];
-            mappings.forEach(item => {
-                const el = container.querySelector(item.selector);
-                if (!el) return;
-                let active = false;
-                if (item.hash) {
-                    active = currentPath === item.path && currentHash === item.hash;
-                } else {
-                    active = currentPath === item.path;
-                }
-                el.classList.toggle('is-active', active);
-            });
-        };
-        window.addEventListener('hashchange', updateSidebarActive);
-        updateSidebarActive();
     }
+
+    // Activar sidebar links active state
+    window.addEventListener('hashchange', updateSidebarActive);
+    updateSidebarActive();
 
     const backLinks = Array.from(document.querySelectorAll('[data-back-link="true"]'));
     backLinks.forEach((link) => {
@@ -192,11 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-
-        // Marcar active state en el sidebar (la lógica de URL ya está arriba en updateSidebarActive)
-        if (typeof updateSidebarActive === 'function') updateSidebarActive();
+        // Marcar active state en el sidebar
+        updateSidebarActive();
     }
-
-
-
 });

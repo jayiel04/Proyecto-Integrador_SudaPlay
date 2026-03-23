@@ -1,4 +1,4 @@
-﻿{% extends "base.html" %}
+{% extends "base.html" %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,7 +10,7 @@
 
 {% block content %}
 <div class="container finalizar-registro-page center-page-layout">
-    <div class="login-card finalizar-registro-card">
+    <div class="login-card finalizar-registro-card cyber-card">
         <div class="login-header">
             <h1 class="finalizar-registro-title">Finalizar Registro</h1>
         </div>
@@ -51,8 +51,8 @@
             <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
             {% endif %}
 
-            <button type="submit" class="btn-login finalizar-registro-submit" id="submit-btn">
-                Crea tu Cuenta
+            <button type="submit" class="btn-cyber w-full" id="submit-btn">
+                Completar Registro
             </button>
         </form>
 

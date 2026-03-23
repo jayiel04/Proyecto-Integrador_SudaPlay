@@ -4,11 +4,153 @@
 {% block title %}Mensajes - SudaPlay{% endblock %}
 
 {% block extra_css %}
+<style>
+    /* Inbox - Total Magenta Theme */
+    .chat-app-container {
+        display: flex !important;
+        width: 100%;
+        max-width: 1400px;
+        height: 85vh;
+        min-height: 600px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
 
+    .chat-sidebar {
+        width: 320px;
+        background: rgba(0, 0, 0, 0.4);
+        border-right: 1px solid rgba(255, 62, 165, 0.25);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+    }
+
+    .chat-main-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.15);
+        position: relative;
+    }
+
+    .chat-sidebar-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid rgba(255, 62, 165, 0.2);
+    }
+
+    .chat-sidebar-title {
+        color: var(--accent-magenta, #ff3ea5);
+        font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-shadow: 0 0 12px rgba(255, 62, 165, 0.5);
+    }
+
+    .contact-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px;
+        cursor: pointer;
+        transition: 0.3s;
+        border-left: 3px solid transparent;
+        border-bottom: 1px solid rgba(255, 62, 165, 0.05);
+    }
+
+    .contact-card:hover { 
+        background: rgba(255, 62, 165, 0.05);
+        transform: translateX(5px);
+    }
+
+    .contact-card.active {
+        background: rgba(255, 62, 165, 0.12);
+        border-left-color: var(--accent-magenta);
+    }
+
+    .contact-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 2px solid var(--accent-magenta);
+        box-shadow: 0 0 10px rgba(255, 62, 165, 0.4);
+    }
+    
+    .contact-avatar-fallback {
+        width: 48px; height: 48px; border-radius: 50%;
+        background: #0a0a0a; display: flex; align-items: center; justify-content: center;
+        color: var(--accent-magenta); border: 2px solid var(--accent-magenta);
+    }
+
+    .contact-info { flex: 1; min-width: 0; }
+    .contact-name { font-weight: bold; color: #fff; font-size: 1.05rem; }
+    .contact-last-msg { font-size: 0.82rem; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    #active-chat-interface {
+        display: none;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    /* Message Areas with Magenta Hints */
+    .chat-header {
+        border-bottom: 1px solid rgba(255, 62, 165, 0.2) !important;
+    }
+
+    .chat-input-area {
+        border-top: 1px solid rgba(255, 62, 165, 0.2) !important;
+    }
+
+    .chat-input-wrapper {
+        border: 1px solid rgba(255, 62, 165, 0.3) !important;
+    }
+
+    .chat-input-wrapper:focus-within {
+        border-color: var(--accent-magenta) !important;
+        box-shadow: 0 0 15px rgba(255, 62, 165, 0.25) !important;
+    }
+
+    .btn-send-msg {
+        background: linear-gradient(135deg, #ff2abf, #9c00ff) !important;
+        box-shadow: 0 0 15px rgba(255, 62, 165, 0.5) !important;
+    }
+
+    /* Perfil Button - Estilo Tech Refinado */
+    .btn-cyber-purple {
+        background: linear-gradient(135deg, #1b0033, #330066) !important;
+        border: 1px solid rgba(255, 62, 165, 0.6) !important;
+        padding: 8px 16px !important;
+        border-radius: 12px !important;
+        color: #ff3ea5 !important;
+        font-size: 0.8rem !important;
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.12em;
+        text-decoration: none !important;
+        box-shadow: 0 0 10px rgba(255, 62, 165, 0.2) !important;
+        transition: 0.25s !important;
+    }
+
+    .btn-cyber-purple:hover {
+        transform: translateY(-2px) !important;
+        background: rgba(255, 62, 165, 0.1) !important;
+        box-shadow: 0 0 15px rgba(255, 62, 165, 0.3) !important;
+    }
+
+    .chat-main-empty { margin: auto; text-align: center; color: #888; }
+    .chat-main-empty i { font-size: 4.5rem; color: var(--accent-magenta); margin-bottom: 1.5rem; filter: drop-shadow(0 0 18px rgba(255, 62, 165, 0.5)); }
+    .chat-main-empty h3 { color: #fff; margin-bottom: 5px; }
+
+    @media (max-width: 768px) {
+        .chat-sidebar { width: 85px; }
+        .contact-info, .chat-sidebar-title span { display: none; }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="chat-app-container">
+<div class="chat-app-container cyber-card">
         
         <!-- SIDEBAR -->
         <div class="chat-sidebar">
@@ -32,9 +174,9 @@
                     </div>
                     {% endfor %}
                 {% else %}
-                    <div  class="gen-style-4bb3e4">
-                        <i class="fas fa-user-friends gen-style-4e95d3" ></i><br>
-                        Aún no tienes amigos.<br>Busca jugadores para chatear.
+                    <div class="chat-empty-contacts">
+                        <i class="fas fa-user-friends"></i>
+                        <p>Aún no tienes amigos.<br>Busca jugadores para chatear.</p>
                     </div>
                 {% endif %}
             </div>
@@ -51,7 +193,7 @@
             </div>
 
             <!-- Active Chat Interface -->
-            <div  id="active-chat-interface" class="gen-style-41566f">
+            <div id="active-chat-interface">
                 <!-- Header -->
                 <div class="chat-header">
                     <div id="active-chat-avatar-container">
@@ -67,7 +209,7 @@
                     </div>
 
                     <div class="chat-header-actions">
-                        <a href="#" class="btn-view-profile" id="active-chat-profile-link">
+                        <a href="#" class="btn-cyber-purple" id="active-chat-profile-link">
                             <i class="fas fa-user-circle"></i> Ver Perfil
                         </a>
                     </div>
@@ -172,8 +314,8 @@
         currentChatUser = username;
         renderedMessageIds.clear();
         messagesContainer.innerHTML = `
-            <div  class="gen-style-5de01c">
-                <i class="fas fa-circle-notch fa-spin gen-style-520d70" ></i>
+            <div class="chat-loading-state">
+                <i class="fas fa-circle-notch fa-spin"></i>
                 <p>Cargando mensajes...</p>
             </div>`;
         
@@ -226,8 +368,8 @@
                     messagesContainer.innerHTML = ''; 
                     if (data.messages.length === 0) {
                         messagesContainer.innerHTML = `
-                            <div  class="gen-style-c6f235">
-                                <i class="fas fa-comment-dots gen-style-9aa101" ></i>
+                            <div class="chat-empty-messages">
+                                <i class="fas fa-comment-dots"></i>
                                 <p>Este es el inicio de tu chat con <strong>${currentChatUser}</strong>.</p>
                             </div>
                         `;

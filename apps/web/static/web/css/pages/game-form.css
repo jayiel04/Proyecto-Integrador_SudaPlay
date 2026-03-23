@@ -376,112 +376,15 @@
             width: 100%;
         }
 
-        .catalogo-preview .game-item {
-            border: 1px solid rgba(var(--pure-cyan-rgb), 0.35);
-            background: #0a1929; /* Totalmente sólido en vez de gradiente o opaco calculado */
-            border-radius: 20px;
-            overflow: hidden;
-            transition: transform 0.2s ease;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.55); /* Solo 1 shadow */
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            text-decoration: none;
-            height: 100%;
-            cursor: pointer;
-        }
-
-        .catalogo-preview .game-item::after {
-            display: none; /* Anulado: este div se pintaba en rgba en cada frame */
-        }
-
-        .catalogo-preview .game-img,
-        .catalogo-preview .game-img-placeholder {
-            width: 100%;
-            aspect-ratio: 16/9;
-            object-fit: cover;
-        }
-
-        .catalogo-preview .game-img {
-            transition: transform 0.2s ease;
-        }
-
         .catalogo-preview .game-img-placeholder {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #060c18; /* Sólido en vez de gradiente radial */
+            background: #060c18;
             color: rgba(0, 247, 255, 0.65);
             font-size: 2.2rem;
-        }
-
-        .catalogo-preview .game-info {
-            padding: 18px;
-            background: #050f19; /* Sólido oscuro sin renderizado de degradado linear */
-            position: relative;
-            z-index: 2;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .catalogo-preview .game-title {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            letter-spacing: 0.05em;
-            color: #00f7ff;
-            text-shadow: 0 0 15px rgba(0, 247, 255, 0.45);
-            margin: 0;
-        }
-
-        .catalogo-preview .game-short-description {
-            font-size: 0.85rem;
-            line-height: 1.5;
-            color: #a8d7e6;
-            opacity: 0.85;
-            margin: 0;
-            flex-grow: 1;
-        }
-
-        .catalogo-preview .game-stats {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 5px;
-        }
-
-        .catalogo-preview .game-stats span {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 8px;
-            background: rgba(var(--pure-cyan-rgb), 0.05);
-            border: 1px solid rgba(var(--pure-cyan-rgb), 0.25);
-            color: #e0ffff;
-            font-size: 0.75rem;
-            font-family: 'Rajdhani', sans-serif;
-            transition: all 0.3s ease;
-        }
-
-        .catalogo-preview .game-detail-link {
-            display: block;
             width: 100%;
-            padding: 10px;
-            margin-top: auto;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.7rem;
-            background: linear-gradient(90deg, #00f7ff, #0099ff);
-            color: #030f19;
-            border: none;
-            box-shadow: 0 4px 15px rgba(0, 247, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            opacity: 0.85;
+            aspect-ratio: 16/9;
         }
 
 /* Inline styles extracted from game_form.html */

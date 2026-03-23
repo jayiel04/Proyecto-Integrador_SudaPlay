@@ -98,61 +98,7 @@ input:focus {
     box-shadow: 0 0 16px rgba(98, 216, 255, 0.2);
 }
 
-.btn-login {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta), var(--accent-violet));
-    color: #f4fffe;
-    border: none;
-    border-radius: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: 0.3s;
-    box-shadow: 0 0 22px rgba(var(--accent-cyan-rgb), 0.32), 0 0 18px rgba(var(--neon-pink-rgb), 0.24);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.45);
-    animation: cyberFlicker 2.4s infinite;
-    will-change: opacity, transform;
-    transform: translateZ(0);
-}
-
-.btn-login:hover {
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 0 30px rgba(var(--accent-cyan-rgb), 0.42), 0 0 26px rgba(var(--neon-pink-rgb), 0.3);
-    filter: brightness(1.28);
-}
-
-/* Reducir espacio entre el input de arriba y el botón de Crear Cuenta */
-.register-card .btn-login.login-main-submit {
-    margin-top: -3px;
-}
-
-/* Boton principal del login con tema cyberpunk teal */
-.login-main-submit {
-    background: linear-gradient(150deg, #008080, #005f5f);
-    border: 2px solid #006c6c;
-    color: #f6fbff;
-    text-shadow: 0 0 12px rgba(255, 255, 255, 0.85);
-    box-shadow:
-        0 0 32px rgba(var(--neon-cyan-rgb), 0.8),
-        0 0 18px rgba(0, 0, 0, 0.45),
-        inset 0 0 16px rgba(var(--neon-cyan-rgb), 0.6);
-    padding: 14px 0;
-    border-radius: 16px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    transition: box-shadow 0.2s ease, filter 0.2s ease;
-}
-
-.login-main-submit:hover {
-    filter: brightness(1.08);
-    box-shadow:
-        0 0 44px rgba(var(--neon-cyan-rgb), 0.9),
-        inset 0 0 18px rgba(var(--neon-cyan-rgb), 0.8);
-}
+/* Botones refactorizados: migraron a .btn-cyber en styles.css */
 
 @keyframes pulseElectric {
 
