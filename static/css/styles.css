@@ -1524,6 +1524,25 @@ body.body-register-page {
         display: none !important;
     }
 
+    .navbar-brand span,
+    .body-left-brand-name > span,
+    .body-left-brand-tagline-text,
+    .navbar-brand::before,
+    .navbar-brand::after {
+        animation: none !important;
+        transform: none !important;
+    }
+
+    /* En móvil: ocultar texto "SudaPlay" y dejar solo el logo */
+    .navbar-brand span,
+    .body-left-brand-name > span {
+        display: none !important;
+    }
+
+    .navbar-brand::after {
+        content: none !important;
+    }
+
 
 
     .navbar-auth .navbar-container {

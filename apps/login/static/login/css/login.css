@@ -674,6 +674,29 @@
 }
 
 @media (max-width: 767px) {
+    /* Centrado vertical real del login en celular */
+    .body-auth-page .main-content {
+        min-height: calc(100dvh - var(--navbar-height));
+        height: calc(100dvh - var(--navbar-height));
+        max-height: none;
+        padding: 10px 12px 12px;
+        justify-content: center;
+        align-items: center;
+        overflow-y: auto;
+    }
+
+    .body-auth-page .auth-page-layout.login-page-layout {
+        min-height: 100%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .body-auth-page .auth-page-layout.login-page-layout .login-card {
+        flex: 0 0 auto;
+        margin: auto;
+        max-height: none;
+    }
+
     .body-auth-page .auth-page-layout .login-page-card {
         padding: 10px 12px;
     }
