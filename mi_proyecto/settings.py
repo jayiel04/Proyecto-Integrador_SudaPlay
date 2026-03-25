@@ -234,7 +234,8 @@ CACHES = {
 # Render free tier bloquea salida a puertos SMTP 25/465/587; Gmail SMTP no llegará a
 # conectar ahí. Usa RESEND_API_KEY (HTTPS) en producción sin plan de pago, o sube de
 # plan en Render para seguir con SMTP. Ver: https://render.com/docs/free#free-web-services
-RESEND_API_KEY = config('RESEND_API_KEY', default='')
+# Sin espacios/saltos al pegar la clave en Render
+RESEND_API_KEY = config('RESEND_API_KEY', default='').strip()
 
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
@@ -244,8 +245,15 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 # Sin timeout el connect SMTP puede colgar; Gunicorn mata el worker (WORKER TIMEOUT).
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=20, cast=int)
 
-_default_from = config('DEFAULT_FROM_EMAIL', default='')
-DEFAULT_FROM_EMAIL = _default_from or EMAIL_HOST_USER or 'noreply@firegames.com'
+_default_from = config('DEFAULT_FROM_EMAIL', default='').strip()
+# Resend solo acepta dominios verificados; sin DEFAULT_FROM_EMAIL, usar remitente de prueba.
+# En plan trial suele poder enviarse solo al correo con el que abriste Resend.
+if RESEND_API_KEY:
+    DEFAULT_FROM_EMAIL = (
+        _default_from or EMAIL_HOST_USER or 'onboarding@resend.dev'
+    )
+else:
+    DEFAULT_FROM_EMAIL = _default_from or EMAIL_HOST_USER or 'noreply@firegames.com'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 if RESEND_API_KEY:
