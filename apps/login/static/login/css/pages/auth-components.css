@@ -191,10 +191,6 @@
     margin-bottom: 0;
 }
 
-.finalizar-registro-submit {
-    margin-top: 10px;
-}
-
 .finalizar-registro-page .finalizar-registro-title {
     font-size: clamp(2rem, 5vw, 2.4rem);
     margin-bottom: 6px;
@@ -351,12 +347,5 @@
 .password-reset-card .signup-link a:hover {
     color: var(--neon-emerald);
     text-decoration: underline;
-}
-
-.password-reset-done-btn {
-    display: block;
-    text-decoration: none;
-    color: #000;
-    text-align: center;
 }
 

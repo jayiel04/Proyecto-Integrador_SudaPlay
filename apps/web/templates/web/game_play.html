@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'web/css/pages/game-play.css' %}?v=1">
+<link rel="stylesheet" href="{% static 'web/css/pages/game-play.css' %}?v=2">
 {% endblock %}
 
 {% block title %}Jugar {{ game.title }} - SudaPlay{% endblock %}
@@ -26,3 +26,4 @@
 {% block extra_js %}
 {% include "web/game_play/_play_js.html" %}
 {% endblock %}
+

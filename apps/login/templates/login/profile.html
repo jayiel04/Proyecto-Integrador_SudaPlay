@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Perfil de {{ request.user.username }} — SudaPlay{% endblock %}
+{% block title %}Perfil de {{ request.user.username }} â€” SudaPlay{% endblock %}
 
 {% block extra_css %}
 {% load static %}
-    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=2">
 
 {% endblock %}
 
@@ -92,32 +92,32 @@
 
     <!-- Friend Requests Section -->
     {% if friend_requests %}
-    <div  class="gen-style-257995">
+    <div  class="profile-section-block">
         <h2 class="profile-section-title">
             <i class="fas fa-bell"></i>
             Solicitudes Pendientes
         </h2>
-        <div  class="gen-style-9b8a0b">
+        <div  class="profile-requests-grid">
             {% for req in friend_requests %}
-            <div class="profile-hero-card gen-style-ead87f"  id="request-{{ req.id }}">
-                <div  class="gen-style-87e404">
+            <div class="profile-hero-card profile-request-card"  id="request-{{ req.id }}">
+                <div  class="profile-request-row">
                     {% if req.avatar_url %}
-                        <img src="{{ req.avatar_url }}" alt="Avatar"  class="gen-style-867a16">
+                        <img src="{{ req.avatar_url }}" alt="Avatar"  class="profile-mini-avatar-img">
                     {% else %}
-                        <div  class="gen-style-1357cb">
+                        <div  class="profile-mini-avatar-fallback">
                             <i class="fas fa-user"></i>
                         </div>
                     {% endif %}
-                    <div  class="gen-style-49cdf8">
-                        <a href="{% url 'login:player_profile' req.from_user.username %}"  class="gen-style-f638af">
+                    <div  class="profile-request-main">
+                        <a href="{% url 'login:player_profile' req.from_user.username %}"  class="profile-request-user-link">
                             {{ req.from_user.username }}
                         </a>
                     </div>
-                    <div  class="gen-style-5fa1c6">
-                        <button class="profile-primary-btn btn-accept-request gen-style-9e3f2f"  data-id="{{ req.id }}" data-url="{% url 'login:accept_friend_request' %}">
+                    <div  class="profile-request-actions">
+                        <button class="profile-primary-btn btn-accept-request profile-request-accept-btn"  data-id="{{ req.id }}" data-url="{% url 'login:accept_friend_request' %}">
                             <i class="fas fa-check"></i>
                         </button>
-                        <button class="profile-secondary-btn btn-reject-request gen-style-ce9d69"  data-id="{{ req.id }}" data-url="{% url 'login:reject_friend_request' %}">
+                        <button class="profile-secondary-btn btn-reject-request profile-request-reject-btn"  data-id="{{ req.id }}" data-url="{% url 'login:reject_friend_request' %}">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
@@ -129,37 +129,37 @@
     {% endif %}
 
     <!-- Friends List Section -->
-    <div  class="gen-style-257995">
+    <div  class="profile-section-block">
         <h2 class="profile-section-title">
             <i class="fas fa-user-friends"></i>
             Mis Amigos
         </h2>
         
         {% if friends %}
-        <div  class="gen-style-e4bf03">
+        <div  class="profile-friends-grid">
             {% for friend in friends %}
-            <div class="profile-hero-card gen-style-c8505b" >
-                <a href="{% url 'login:player_profile' friend.user.username %}"  class="gen-style-e29884">
+            <div class="profile-hero-card profile-friend-card" >
+                <a href="{% url 'login:player_profile' friend.user.username %}"  class="profile-friend-link">
                     {% if friend.avatar_url %}
-                        <img src="{{ friend.avatar_url }}" alt="Avatar"  class="gen-style-867a16">
+                        <img src="{{ friend.avatar_url }}" alt="Avatar"  class="profile-mini-avatar-img">
                     {% else %}
-                        <div  class="gen-style-1357cb">
+                        <div  class="profile-mini-avatar-fallback">
                             <i class="fas fa-user"></i>
                         </div>
                     {% endif %}
-                    <div  class="gen-style-6ec2d9">
+                    <div  class="profile-friend-meta">
                         <div class="friend-name-row">
-                            <span  class="gen-style-cd04fa">{{ friend.user.username }}</span>
+                            <span  class="profile-friend-name">{{ friend.user.username }}</span>
                             <span class="friend-online-dot{% if friend.is_online %} online{% endif %}"
-                                  title="{% if friend.is_online %}En línea{% else %}Desconectado{% endif %}"
+                                  title="{% if friend.is_online %}En lÃ­nea{% else %}Desconectado{% endif %}"
                                   aria-hidden="true"></span>
                         </div>
                         {% if friend.bio %}
-                            <span  class="gen-style-d5b4df">{{ friend.bio }}</span>
+                            <span  class="profile-friend-bio">{{ friend.bio }}</span>
                         {% endif %}
                     </div>
                 </a>
-                <a href="{% url 'chat:chat' friend.user.username %}" class="profile-primary-btn gen-style-63cf32"  title="Chatear">
+                <a href="{% url 'chat:chat' friend.user.username %}" class="profile-primary-btn profile-friend-chat-btn"  title="Chatear">
                     <i class="fas fa-comment-dots"></i>
                 </a>
             </div>
@@ -168,7 +168,7 @@
         {% else %}
         <div class="profile-empty-games">
             <i class="fas fa-users-slash" aria-hidden="true"></i>
-            <p>Aún no tienes amigos agregados.</p>
+            <p>AÃºn no tienes amigos agregados.</p>
             <a href="{% url 'login:search_players' %}" class="profile-action-btn primary">
                 <i class="fas fa-search"></i>
                 Encontrar jugadores
@@ -217,7 +217,7 @@
         {% else %}
         <div class="profile-empty-games">
             <i class="fa fa-gamepad" aria-hidden="true"></i>
-            <p>Aún no has subido ningún juego.</p>
+            <p>AÃºn no has subido ningÃºn juego.</p>
             <a href="{% url 'web:game_create' %}" class="profile-action-btn primary">
                 <i class="fa fa-upload"></i>
                 Subir mi primer juego
@@ -292,3 +292,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+
+

@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'web/css/pages/my-games.css' %}?v=1">
+<link rel="stylesheet" href="{% static 'web/css/pages/my-games.css' %}?v=2">
 {% endblock %}
 
 
@@ -10,7 +10,7 @@
 {% block content %}
 <div class="container page-stack-container page-stack-container-left cyber-card">
     <div class="profile-back-row">
-        <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la página anterior">
+        <a href="{% url 'web:home' %}#catalogo-juegos" class="profile-back-link" data-back-link="true" aria-label="Volver a la pÃ¡gina anterior">
             <i class="fa fa-arrow-left" aria-hidden="true"></i>
             <span>Volver</span>
         </a>
@@ -59,7 +59,7 @@
                 <span class="badge badge-hot">Destacado</span>
                 {% endif %}
                 {% if game.is_processing %}
-                <span class="badge badge-processing">Procesando…</span>
+                <span class="badge badge-processing">Procesandoâ€¦</span>
                 {% elif game.is_approved %}
                 <span class="badge badge-new">Publicado</span>
                 {% elif game.is_rejected %}
@@ -92,8 +92,8 @@
         </a>
         {% empty %}
         <div class="login-card full-width-card">
-            <h2 class="card-title-small">Aún no has subido juegos</h2>
-            <p class="card-muted-text">Usa el botón "Subir nuevo juego" para publicar el primero.</p>
+            <h2 class="card-title-small">AÃºn no has subido juegos</h2>
+            <p class="card-muted-text">Usa el botÃ³n "Subir nuevo juego" para publicar el primero.</p>
         </div>
         {% endfor %}
     </div>
@@ -101,3 +101,4 @@
 
 
 {% endblock %}
+

@@ -18,4 +18,4 @@ venv/
 # IDEs
 .vscode/
 .idea/
-
+.kiro

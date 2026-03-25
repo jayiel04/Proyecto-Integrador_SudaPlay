@@ -1,11 +1,11 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Perfil de {{ target_user.username }} - SudaPlay{% endblock %}
 
 {% block extra_css %}
 {% load static %}
-    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=2">
 
 {% endblock %}
 
@@ -36,13 +36,13 @@
                 </p>
                 <p class="profile-joined"><i class="far fa-calendar-alt"></i> Miembro desde {{ target_user.date_joined|date:"M Y" }}</p>
                 <div class="profile-online-status">
-                    <span class="profile-online-indicator{% if target_is_online %} online{% else %} offline{% endif %}" title="{% if target_is_online %}En línea{% else %}Desconectado{% endif %}" aria-hidden="true"></span>
-                    <span class="profile-online-label">{% if target_is_online %}En línea{% else %}Desconectado{% endif %}</span>
+                    <span class="profile-online-indicator{% if target_is_online %} online{% else %} offline{% endif %}" title="{% if target_is_online %}En lÃ­nea{% else %}Desconectado{% endif %}" aria-hidden="true"></span>
+                    <span class="profile-online-label">{% if target_is_online %}En lÃ­nea{% else %}Desconectado{% endif %}</span>
                 </div>
             </div>
 
             <!-- Friend Actions -->
-            <div class="profile-friend-actions gen-style-e3127c"  
+            <div class="profile-friend-actions profile-friend-actions-inline"  
                  data-target-id="{{ target_user.id }}" 
                  data-request-url="{% url 'login:send_friend_request' %}"
                  data-remove-url="{% url 'login:remove_friend' %}">
@@ -50,30 +50,30 @@
                 {% csrf_token %}
                 
                 {% if friendship_status == 'none' %}
-                    <button class="profile-primary-btn btn-send-request gen-style-33dd45" >
-                        <i class="fas fa-user-plus"></i> Añadir amigo
+                    <button class="profile-primary-btn btn-send-request profile-send-request-btn-sm" >
+                        <i class="fas fa-user-plus"></i> AÃ±adir amigo
                     </button>
-                    <span class="action-feedback gen-style-485bbb" ></span>
+                    <span class="action-feedback profile-action-feedback-inline" ></span>
                 
                 {% elif friendship_status == 'pending_sent' %}
-                    <button class="profile-secondary-btn gen-style-601027" disabled >
+                    <button class="profile-secondary-btn profile-friends-btn-disabled" disabled >
                         <i class="fas fa-clock"></i> Solicitud enviada
                     </button>
                 
                 {% elif friendship_status == 'pending_received' %}
-                    <span  class="gen-style-a3a470"><i class="fas fa-exclamation-circle"></i> Te ha enviado una solicitud</span>
-                    <a href="{% url 'login:profile' %}" class="profile-primary-btn gen-style-671e07" >
+                    <span  class="profile-request-warning"><i class="fas fa-exclamation-circle"></i> Te ha enviado una solicitud</span>
+                    <a href="{% url 'login:profile' %}" class="profile-primary-btn profile-view-own-profile-link" >
                         Ver en mi perfil
                     </a>
                 
                 {% elif friendship_status == 'friends' %}
-                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn profile-chat-action-btn gen-style-493bc7" >
+                    <a href="{% url 'chat:chat' profile.user.username %}" class="profile-primary-btn profile-chat-action-btn profile-chat-action-inline" >
                         <i class="fas fa-comment-dots"></i> Chatear
                     </a>
-                    <button class="profile-secondary-btn btn-friends gen-style-af34d0" >
+                    <button class="profile-secondary-btn btn-friends profile-friends-btn-static" >
                         <i class="fas fa-user-check"></i> Amigos
                     </button>
-                    <button class="btn-remove-friend gen-style-b869ba"  title="Eliminar amigo">
+                    <button class="btn-remove-friend profile-remove-friend-btn"  title="Eliminar amigo">
                         <i class="fas fa-user-times"></i>
                     </button>
                 {% endif %}
@@ -83,25 +83,25 @@
         <div class="profile-content-grid">
             <div class="profile-sidebar">
                 <div class="profile-section">
-                    <h3 class="profile-section-title"><i class="fas fa-address-card"></i> Sobre mí</h3>
+                    <h3 class="profile-section-title"><i class="fas fa-address-card"></i> Sobre mÃ­</h3>
                     <div class="profile-bio-box">
                         {% if profile.bio %}
                             <p class="profile-bio-text">{{ profile.bio|linebreaksbr }}</p>
                         {% else %}
-                            <p class="profile-bio-text gen-style-be1381" >Este usuario no ha escrito una biografía todavía.</p>
+                            <p class="profile-bio-text profile-bio-empty-text" >Este usuario no ha escrito una biografÃ­a todavÃ­a.</p>
                         {% endif %}
                     </div>
                 </div>
 
                 <div class="profile-section stats-section">
-                    <h3 class="profile-section-title"><i class="fas fa-chart-line"></i> Estadísticas</h3>
+                    <h3 class="profile-section-title"><i class="fas fa-chart-line"></i> EstadÃ­sticas</h3>
                     <div class="profile-stats-grid">
                         <div class="stat-card">
                             <i class="fas fa-gamepad stat-icon"></i>
                             <span class="stat-value">{{ user_games|length }}</span>
                             <span class="stat-label">Juegos Publicados</span>
                         </div>
-                        <div class="stat-card gen-style-07c308" >
+                        <div class="stat-card profile-stat-card-offset" >
                             <i class="fas fa-user-friends stat-icon"></i>
                             <span class="stat-value">{{ profile.friends.count }}</span>
                             <span class="stat-label">Amigos</span>
@@ -137,8 +137,8 @@
                     {% else %}
                         <div class="empty-state-card">
                             <div class="empty-state-icon"><i class="fas fa-box-open"></i></div>
-                            <h4>Sin juegos públicos</h4>
-                            <p>{{ target_user.username }} no ha publicado ningún juego todavía.</p>
+                            <h4>Sin juegos pÃºblicos</h4>
+                            <p>{{ target_user.username }} no ha publicado ningÃºn juego todavÃ­a.</p>
                         </div>
                     {% endif %}
                 </div>
@@ -185,20 +185,20 @@
                         feedback.style.display = 'inline-block';
                     } else {
                         btnSend.disabled = false;
-                        btnSend.innerHTML = '<i class="fas fa-user-plus"></i> Añadir amigo';
-                        alert(data.error || 'Ocurrió un error.');
+                        btnSend.innerHTML = '<i class="fas fa-user-plus"></i> AÃ±adir amigo';
+                        alert(data.error || 'OcurriÃ³ un error.');
                     }
                 } catch (err) {
                     btnSend.disabled = false;
-                    btnSend.innerHTML = '<i class="fas fa-user-plus"></i> Añadir amigo';
-                    alert('Error de conexión.');
+                    btnSend.innerHTML = '<i class="fas fa-user-plus"></i> AÃ±adir amigo';
+                    alert('Error de conexiÃ³n.');
                 }
             });
         }
 
         if (btnRemove) {
             btnRemove.addEventListener('click', async () => {
-                if (!confirm("¿Seguro que quieres eliminar a este jugador de tus amigos?")) return;
+                if (!confirm("Â¿Seguro que quieres eliminar a este jugador de tus amigos?")) return;
                 
                 btnRemove.disabled = true;
                 btnRemove.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -219,15 +219,17 @@
                     } else {
                         btnRemove.disabled = false;
                         btnRemove.innerHTML = '<i class="fas fa-user-times"></i>';
-                        alert(data.error || 'Ocurrió un error.');
+                        alert(data.error || 'OcurriÃ³ un error.');
                     }
                 } catch (err) {
                     btnRemove.disabled = false;
                     btnRemove.innerHTML = '<i class="fas fa-user-times"></i>';
-                    alert('Error de conexión.');
+                    alert('Error de conexiÃ³n.');
                 }
             });
         }
     });
 </script>
 {% endblock %}
+
+

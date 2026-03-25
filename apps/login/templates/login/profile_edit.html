@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block extra_css %}
 {% load static %}
-    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'login/css/pages/login-profile.css' %}?v=2">
 {% endblock %}
 {% load static %}
 
@@ -51,11 +51,11 @@
                         <p class="profile-section-label">Seguridad de la cuenta</p>
                         {% if user.has_usable_password %}
                             <a href="{% url 'login:account_change_password' %}" class="profile-secondary-btn">
-                                <i class="fas fa-key"></i> Cambiar contraseña
+                                <i class="fas fa-key"></i> Cambiar contraseÃ±a
                             </a>
                         {% else %}
                             <a href="{% url 'login:account_set_password' %}" class="profile-secondary-btn">
-                                <i class="fas fa-plus-circle"></i> Establecer contraseña
+                                <i class="fas fa-plus-circle"></i> Establecer contraseÃ±a
                             </a>
                         {% endif %}
                     </div>
@@ -120,3 +120,4 @@
     });
 </script>
 {% endblock %}
+

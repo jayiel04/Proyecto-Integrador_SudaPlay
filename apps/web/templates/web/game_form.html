@@ -1,11 +1,10 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Subir juego - SudaPlay{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'web/css/pages/game-form.css' %}?v=1">
-<link rel="stylesheet" href="{% static 'css/components/terms-modal.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'web/css/pages/game-form.css' %}?v=3">
 
 {% endblock %}
 
@@ -68,7 +67,7 @@
                         <div class="form-group">
                             <label for="{{ form.cover_image.id_for_label }}">{{ form.cover_image.label }}</label>
                             <label for="{{ form.cover_image.id_for_label }}" class="custom-file-upload">
-                                📁 Seleccionar Imagen
+                                Seleccionar imagen
                             </label>
                             {{ form.cover_image }}
                             <span class="file-name-display" id="cover_image_display">Ningún archivo seleccionado</span>
@@ -85,8 +84,8 @@
 
                         <div class="form-group col-span-2">
                             <label for="{{ form.game_file.id_for_label }}">{{ form.game_file.label }}</label>
-                            <label for="{{ form.game_file.id_for_label }}" class="custom-file-upload gen-style-32c16d" >
-                                📦 Seleccionar Archivo ZIP
+                            <label for="{{ form.game_file.id_for_label }}" class="custom-file-upload" style="padding: 20px;" >
+                                Seleccionar archivo ZIP
                             </label>
                             {{ form.game_file }}
                             <span class="file-name-display" id="game_file_display">Ningún archivo seleccionado</span>
@@ -125,7 +124,7 @@
                     <div id="preview-image-container" class="game-img-placeholder">
                         <i class="fa fa-gamepad"></i>
                     </div>
-                    <img id="preview-image" src="" alt="Portada" class="game-img gen-style-224b51" >
+                    <img id="preview-image" src="" alt="Portada" class="game-img" style="display: none;" >
 
                     <div class="game-info">
                         <div id="preview-title" class="game-title">Título del Juego</div>
@@ -154,5 +153,6 @@
 
 {% include "web/partials/_game_form_js.html" %}
 {% endblock %}
+
 
 

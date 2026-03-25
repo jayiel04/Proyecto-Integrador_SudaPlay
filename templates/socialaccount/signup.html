@@ -1,8 +1,8 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 
 {% block extra_css %}
 {% load static %}
-    <link rel="stylesheet" href="{% static 'login/css/pages/auth-components.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'login/css/pages/auth-components.css' %}?v=2">
 {% endblock %}
 {% load static %}
 
@@ -26,7 +26,7 @@
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">
                     {% if field.name == 'username' %}Nombre de Usuario (Apodo)
-                    {% elif 'password' in field.name %}Nueva Contraseña
+                    {% elif 'password' in field.name %}Nueva ContraseÃ±a
                     {% else %}{{ field.label }}{% endif %}
                 </label>
                 <div class="input-wrapper" id="wrapper-{{ field.auto_id }}">
@@ -40,7 +40,7 @@
                 <div class="validation-msg" id="msg-{{ field.auto_id }}"></div>
                 {% if field.errors %}
                 <div class="form-error">
-                    {% for error in field.errors %}<p>✗ {{ error }}</p>{% endfor %}
+                    {% for error in field.errors %}<p>âœ— {{ error }}</p>{% endfor %}
                 </div>
                 {% endif %}
             </div>
@@ -57,7 +57,7 @@
         </form>
 
         <div class="signup-footer">
-            <p>¿Ya tienes cuenta? <a href="{% url 'login:login' %}" class="signup-login-link">Inicia sesión</a></p>
+            <p>Â¿Ya tienes cuenta? <a href="{% url 'login:login' %}" class="signup-login-link">Inicia sesiÃ³n</a></p>
         </div>
     </div>
 </div>
@@ -77,7 +77,7 @@
             submitBtn.style.opacity = submitBtn.disabled ? '0.5' : '1';
         }
 
-        // Validación de Username
+        // ValidaciÃ³n de Username
         if (usernameInput) {
             usernameInput.addEventListener('input', async function () {
                 const value = this.value;
@@ -94,13 +94,13 @@
                         const data = await response.json();
 
                         if (data.is_taken) {
-                            msgDiv.innerHTML = '✗ Apodo ya en uso';
+                            msgDiv.innerHTML = 'âœ— Apodo ya en uso';
                             msgDiv.className = 'validation-msg visible msg-error';
                             wrapper.classList.add('invalid-field');
                             wrapper.classList.remove('valid-field');
                             isUsernameValid = false;
                         } else {
-                            msgDiv.innerHTML = '✓ ¡Apodo disponible!';
+                            msgDiv.innerHTML = 'âœ“ Â¡Apodo disponible!';
                             msgDiv.className = 'validation-msg visible msg-success';
                             wrapper.classList.add('valid-field');
                             wrapper.classList.remove('invalid-field');
@@ -114,7 +114,7 @@
             });
         }
 
-        // Validación de Password 1
+        // ValidaciÃ³n de Password 1
         if (pass1Input) {
             pass1Input.addEventListener('input', function () {
                 const value = this.value;
@@ -126,13 +126,13 @@
                     wrapper.classList.remove('valid-field', 'invalid-field');
                     isPasswordValid = false;
                 } else if (value.length < 8) {
-                    msgDiv.innerHTML = '✗ Mínimo 8 caracteres';
+                    msgDiv.innerHTML = 'âœ— MÃ­nimo 8 caracteres';
                     msgDiv.className = 'validation-msg visible msg-error';
                     wrapper.classList.add('invalid-field');
                     wrapper.classList.remove('valid-field');
                     isPasswordValid = false;
                 } else {
-                    msgDiv.innerHTML = '✓ Contraseña segura';
+                    msgDiv.innerHTML = 'âœ“ ContraseÃ±a segura';
                     msgDiv.className = 'validation-msg visible msg-success';
                     wrapper.classList.add('valid-field');
                     wrapper.classList.remove('invalid-field');
@@ -143,7 +143,7 @@
             });
         }
 
-        // Validación de Match
+        // ValidaciÃ³n de Match
         function checkMatch() {
             if (!pass2Input) return;
             const p1 = pass1Input.value;
@@ -156,13 +156,13 @@
                 wrapper.classList.remove('valid-field', 'invalid-field');
                 passwordsMatch = false;
             } else if (p1 === p2) {
-                msgDiv.innerHTML = '✓ Las contraseñas coinciden';
+                msgDiv.innerHTML = 'âœ“ Las contraseÃ±as coinciden';
                 msgDiv.className = 'validation-msg visible msg-success';
                 wrapper.classList.add('valid-field');
                 wrapper.classList.remove('invalid-field');
                 passwordsMatch = true;
             } else {
-                msgDiv.innerHTML = '✗ Las contraseñas no coinciden';
+                msgDiv.innerHTML = 'âœ— Las contraseÃ±as no coinciden';
                 msgDiv.className = 'validation-msg visible msg-error';
                 wrapper.classList.add('invalid-field');
                 wrapper.classList.remove('valid-field');
@@ -179,5 +179,6 @@
     });
 </script>
 {% endblock %}
+
 
 

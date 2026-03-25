@@ -1,4 +1,4 @@
-/* Profile edit */
+﻿/* Profile edit */
 .profile-edit-card {
     width: 100%;
     max-width: none;
@@ -462,7 +462,7 @@
 
 
 /* Extracted from profile.html */
-/* ── Profile Page ──────────────────────────────────────────────── */
+/* â”€â”€ Profile Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
     .profile-page {
         max-width: 860px;
         margin: 2.5rem auto;
@@ -762,34 +762,35 @@
     .profile-empty-games p { margin: 0 0 1rem; }
 
 /* Inline styles extracted from player_profile.html */
-.gen-style-e3127c { margin-left: auto; display: flex; align-items: center; }
-.gen-style-33dd45 { font-size: 0.9rem; }
-.gen-style-485bbb { display:none; color: #00ff00; font-size: 0.85rem; margin-left: 10px; }
-.gen-style-601027 { opacity: 0.7; cursor: default; font-size: 0.9rem; }
-.gen-style-a3a470 { color: var(--neon-cyan); font-size: 0.9rem; margin-right: 10px; }
-.gen-style-671e07 { font-size: 0.9rem; text-decoration: none; }
-.gen-style-493bc7 { font-size: 0.9rem; text-decoration: none; display: inline-flex; }
-.gen-style-af34d0 { font-size: 0.9rem; border-color: #00ff00; color: #00ff00; cursor: default; margin-left:10px; }
-.gen-style-b869ba { background: transparent; border: 1px solid rgba(255,0,0,0.5); color: #ff4444; border-radius: 8px; padding: 8px 12px; margin-left: 10px; cursor: pointer; transition: all 0.2s; }
-.gen-style-be1381 { color: #666; font-style: italic; }
-.gen-style-07c308 { margin-top: 10px; }
+.profile-friend-actions-inline { margin-left: auto; display: flex; align-items: center; }
+.profile-send-request-btn-sm { font-size: 0.9rem; }
+.profile-action-feedback-inline { display:none; color: #00ff00; font-size: 0.85rem; margin-left: 10px; }
+.profile-friends-btn-disabled { opacity: 0.7; cursor: default; font-size: 0.9rem; }
+.profile-request-warning { color: var(--neon-cyan); font-size: 0.9rem; margin-right: 10px; }
+.profile-view-own-profile-link { font-size: 0.9rem; text-decoration: none; }
+.profile-chat-action-inline { font-size: 0.9rem; text-decoration: none; display: inline-flex; }
+.profile-friends-btn-static { font-size: 0.9rem; border-color: #00ff00; color: #00ff00; cursor: default; margin-left:10px; }
+.profile-remove-friend-btn { background: transparent; border: 1px solid rgba(255,0,0,0.5); color: #ff4444; border-radius: 8px; padding: 8px 12px; margin-left: 10px; cursor: pointer; transition: all 0.2s; }
+.profile-bio-empty-text { color: #666; font-style: italic; }
+.profile-stat-card-offset { margin-top: 10px; }
 
 /* Inline styles extracted from profile.html */
-.gen-style-257995 { margin-bottom: 2rem; }
-.gen-style-9b8a0b { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
-.gen-style-ead87f { padding: 1rem; margin-bottom: 0; min-height: 80px; }
-.gen-style-87e404 { display: flex; align-items: center; gap: 1rem; width: 100%; }
-.gen-style-867a16 { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
-.gen-style-1357cb { width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; }
-.gen-style-49cdf8 { flex: 1; }
-.gen-style-f638af { text-decoration: none; color: #fff; font-weight: 600; font-size: 1.1rem; }
-.gen-style-5fa1c6 { display: flex; gap: 0.5rem; }
-.gen-style-9e3f2f { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
-.gen-style-ce9d69 { padding: 0.4rem 0.8rem; font-size: 0.85rem; border-color: rgba(255,0,0,0.5); color: #ff4444; }
-.gen-style-e4bf03 { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
-.gen-style-c8505b { padding: 1rem; margin: 0; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; }
-.gen-style-e29884 { display: flex; align-items: center; gap: 1rem; flex: 1; text-decoration: none; overflow: hidden; }
-.gen-style-6ec2d9 { min-width: 0; }
-.gen-style-cd04fa { display: block; font-weight: 600; color: #fff; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gen-style-d5b4df { font-size: 0.8rem; color: #aaa; display: block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.gen-style-63cf32 { width: 40px; height: 40px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.profile-section-block { margin-bottom: 2rem; }
+.profile-requests-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+.profile-request-card { padding: 1rem; margin-bottom: 0; min-height: 80px; }
+.profile-request-row { display: flex; align-items: center; gap: 1rem; width: 100%; }
+.profile-mini-avatar-img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+.profile-mini-avatar-fallback { width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; }
+.profile-request-main { flex: 1; }
+.profile-request-user-link { text-decoration: none; color: #fff; font-weight: 600; font-size: 1.1rem; }
+.profile-request-actions { display: flex; gap: 0.5rem; }
+.profile-request-accept-btn { padding: 0.4rem 0.8rem; font-size: 0.85rem; }
+.profile-request-reject-btn { padding: 0.4rem 0.8rem; font-size: 0.85rem; border-color: rgba(255,0,0,0.5); color: #ff4444; }
+.profile-friends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.profile-friend-card { padding: 1rem; margin: 0; display: flex; align-items: center; justify-content: space-between; transition: transform 0.2s; }
+.profile-friend-link { display: flex; align-items: center; gap: 1rem; flex: 1; text-decoration: none; overflow: hidden; }
+.profile-friend-meta { min-width: 0; }
+.profile-friend-name { display: block; font-weight: 600; color: #fff; font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-friend-bio { font-size: 0.8rem; color: #aaa; display: block; max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-friend-chat-btn { width: 40px; height: 40px; padding: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+

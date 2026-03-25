@@ -1,10 +1,10 @@
-{% extends "base.html" %}
+﻿{% extends "base.html" %}
 {% load static %}
 
 {% block title %}Configuraciones avanzadas de sonido - SudaPlay{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'web/css/pages/audio-settings.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'web/css/pages/audio-settings.css' %}?v=2">
 
 {% endblock %}
 
@@ -42,7 +42,7 @@
             </div>
 
             <div class="audio-setting-item">
-                <label for="advanced-audio-track">Canción de fondo</label>
+                <label for="advanced-audio-track">CanciÃ³n de fondo</label>
                 <select id="advanced-audio-track" class="audio-track-select">
                     {% for audio in audio_files %}
                         <option value="{{ audio.url }}">{{ audio.display_name }}</option>
@@ -177,3 +177,4 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 {% endblock %}
+
