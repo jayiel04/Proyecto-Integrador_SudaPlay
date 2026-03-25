@@ -15,6 +15,7 @@ from django.db.models import F, Q, Count, Case, When, IntegerField
 from django.contrib.auth.models import User
 from decimal import Decimal, ROUND_HALF_UP
 from django.core.cache import cache
+from django.core.paginator import Paginator
 from apps.web.forms import GameForm
 from apps.web.models import Game, GameRating
 from apps.web.services import process_uploaded_web_build_async
@@ -32,15 +33,38 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         """Pasar contexto adicional al template."""
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
-        context['username'] = self.request.user.username
-        context["games"] = (
+        query = (self.request.GET.get("q") or "").strip()
+        page_number = self.request.GET.get("page")
+
+        games_qs = (
             Game.objects
             .filter(is_approved=True)
             .select_related('uploaded_by')
-            .only('pk', 'title', 'short_description', 'cover_image',
-                  'downloads', 'rating', 'is_featured', 'uploaded_by')
+            .only(
+                'pk', 'title', 'description', 'short_description', 'cover_image',
+                'views', 'downloads', 'rating', 'is_featured',
+                'is_processing', 'is_web_playable', 'game_file',
+                'uploaded_by__username'
+            )
         )
+
+        if query:
+            games_qs = games_qs.filter(
+                Q(title__icontains=query)
+                | Q(short_description__icontains=query)
+                | Q(description__icontains=query)
+                | Q(uploaded_by__username__icontains=query)
+            )
+
+        paginator = Paginator(games_qs, 12)
+        page_obj = paginator.get_page(page_number)
+
+        context['user'] = self.request.user
+        context['username'] = self.request.user.username
+        context["games"] = page_obj.object_list
+        context["page_obj"] = page_obj
+        context["catalog_query"] = query
+        context["is_paginated"] = page_obj.has_other_pages()
         context["show_post_login_welcome"] = self.request.session.pop("show_post_login_welcome", False)
         return context
 

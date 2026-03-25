@@ -44,7 +44,8 @@
                         class="catalog-search-input"
                         aria-label="Buscar juegos en el catalogo"
                         placeholder="Busca por título o descripción"
-                        autocomplete="off">
+                        autocomplete="off"
+                        value="{{ catalog_query|default:'' }}">
                 </div>
             </div>
             {% endif %}

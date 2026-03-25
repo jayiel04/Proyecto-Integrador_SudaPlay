@@ -7,14 +7,22 @@
             {% else %}
             <span class="catalogo-panel-greeting">Hola, invitado</span>
             {% endif %}
-            <h1 class="catalogo-panel-title">Catálogo de juegos</h1>
-            <p class="catalogo-panel-subtitle">Explora, juega y diviértete</p>
+            <h1 class="catalogo-panel-title">Catalogo de juegos</h1>
+            <p class="catalogo-panel-subtitle">Explora, juega y diviertete</p>
         </div>
+
+        <p class="catalogo-results-meta">
+            {% if catalog_query %}
+            Resultados para "{{ catalog_query }}" - {{ page_obj.paginator.count }} juego{{ page_obj.paginator.count|pluralize }}
+            {% else %}
+            {{ page_obj.paginator.count }} juego{{ page_obj.paginator.count|pluralize }} disponibles
+            {% endif %}
+        </p>
 
         {% if games %}
         <div id="catalog-game-grid" class="game-grid">
             {% for game in games %}
-            <a class="game-item" href="javascript:void(0)" 
+            <a class="game-item" href="javascript:void(0)"
                aria-label="Ver detalles de {{ game.title }}"
                data-game-id="{{ game.pk }}"
                data-game-title="{{ game.title }}"
@@ -50,53 +58,96 @@
             </a>
             {% endfor %}
         </div>
-        <div id="catalog-no-results" class="login-card full-width-card cyber-card catalog-no-results" hidden>
-            <h2 class="card-title-small">No se encontraron juegos</h2>
-            <p class="card-muted-text">Prueba con otro termino de busqueda.</p>
-        </div>
+
+        {% if is_paginated %}
+        <nav class="catalog-pagination" aria-label="Paginacion del catalogo">
+            {% if page_obj.has_previous %}
+            <a class="catalog-pagination-link"
+               href="?page={{ page_obj.previous_page_number }}{% if catalog_query %}&q={{ catalog_query|urlencode }}{% endif %}#catalogo-juegos">
+                Anterior
+            </a>
+            {% else %}
+            <span class="catalog-pagination-link is-disabled" aria-disabled="true">Anterior</span>
+            {% endif %}
+
+            <span class="catalog-pagination-meta">
+                Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a class="catalog-pagination-link"
+               href="?page={{ page_obj.next_page_number }}{% if catalog_query %}&q={{ catalog_query|urlencode }}{% endif %}#catalogo-juegos">
+                Siguiente
+            </a>
+            {% else %}
+            <span class="catalog-pagination-link is-disabled" aria-disabled="true">Siguiente</span>
+            {% endif %}
+        </nav>
+        {% endif %}
         {% else %}
         <div class="login-card full-width-card cyber-card">
+            {% if catalog_query %}
+            <h2 class="card-title-small">No se encontraron juegos</h2>
+            <p class="card-muted-text">Prueba con otro termino de busqueda.</p>
+            {% else %}
             <h2 class="card-title-small">Aun no hay juegos publicados</h2>
             <p class="card-muted-text">Todavia no hay juegos disponibles en el catalogo.</p>
+            {% endif %}
         </div>
         {% endif %}
 
     </div>
 </section>
 
-
-
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('catalog-search-input');
-        const grid = document.getElementById('catalog-game-grid');
-        const noResults = document.getElementById('catalog-no-results');
-
-        if (!searchInput || !grid) {
+        if (!searchInput) {
             return;
         }
 
-        const cards = Array.from(grid.querySelectorAll('.game-item'));
-        const normalize = (value) => (value || '').toLowerCase().trim();
+        let searchTimer = null;
+        let lastSubmittedQuery = (searchInput.value || '').trim();
+
+        const navigateWithQuery = (rawQuery) => {
+            const query = (rawQuery || '').trim();
+            if (query === lastSubmittedQuery) {
+                return;
+            }
+
+            lastSubmittedQuery = query;
+            const url = new URL(window.location.href);
+
+            if (query) {
+                url.searchParams.set('q', query);
+            } else {
+                url.searchParams.delete('q');
+            }
+
+            // Cada nueva busqueda debe iniciar desde la primera pagina.
+            url.searchParams.delete('page');
+            url.hash = 'catalogo-juegos';
+            window.location.assign(url.toString());
+        };
 
         searchInput.addEventListener('input', function () {
-            const query = normalize(searchInput.value);
-            let visibleCount = 0;
-
-            cards.forEach((card) => {
-                const title = normalize(card.querySelector('.game-title')?.textContent);
-                const description = normalize(card.querySelector('.game-short-description')?.textContent);
-                const matches = !query || title.includes(query) || description.includes(query);
-
-                card.style.display = matches ? '' : 'none';
-                if (matches) {
-                    visibleCount += 1;
-                }
-            });
-
-            if (noResults) {
-                noResults.style.display = visibleCount === 0 ? '' : 'none';
+            if (searchTimer) {
+                clearTimeout(searchTimer);
             }
+            searchTimer = setTimeout(() => {
+                navigateWithQuery(searchInput.value);
+            }, 450);
+        });
+
+        searchInput.addEventListener('keydown', function (event) {
+            if (event.key !== 'Enter') {
+                return;
+            }
+            event.preventDefault();
+            if (searchTimer) {
+                clearTimeout(searchTimer);
+            }
+            navigateWithQuery(searchInput.value);
         });
     });
 </script>
