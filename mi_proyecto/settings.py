@@ -193,7 +193,10 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 # Allauth Settings
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = config('ACCOUNT_DEFAULT_HTTP_PROTOCOL', default='http')
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = config(
+    'ACCOUNT_DEFAULT_HTTP_PROTOCOL',
+    default='https' if not DEBUG else 'http',
+)
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_UNIQUE_EMAIL = True

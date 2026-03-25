@@ -34,7 +34,10 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Case, When, IntegerField, Q
 
+from django.contrib.sites.models import Site
+
 from allauth.account.views import PasswordChangeView, PasswordSetView, PasswordResetView
+from allauth.core.exceptions import ImmediateHttpResponse
 
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest, Notification
@@ -222,17 +225,34 @@ class CustomPasswordSetView(PasswordSetView):
 
 class CustomPasswordResetView(PasswordResetView):
     """
-    Evita un error 500 si falla la entrega del correo SMTP en produccion.
+    Evita 500 si falla el envío de correo o la configuración (Sites, SMTP, etc.).
+    allauth solo captura un subconjunto de errores de red; otros backends o
+    Site.DoesNotExist propagaban hasta Django.
     """
 
     def form_valid(self, form):
+        email = form.cleaned_data.get('email')
         try:
             return super().form_valid(form)
-        except (OSError, TimeoutError, smtplib.SMTPException):
-            # Dejamos el error en logs y devolvemos un mensaje amigable.
+        except ImmediateHttpResponse:
+            raise
+        except Site.DoesNotExist:
             logger.exception(
-                "Fallo al enviar correo de recuperacion para %s",
-                form.cleaned_data.get('email'),
+                'Site faltante para SITE_ID=%s (revisa django.contrib.sites en admin)',
+                getattr(settings, 'SITE_ID', None),
+            )
+            form.add_error(
+                None,
+                (
+                    'La recuperación de contraseña no está configurada correctamente en el servidor. '
+                    'Contacta al administrador.'
+                ),
+            )
+            return self.form_invalid(form)
+        except Exception:
+            logger.exception(
+                'Fallo en recuperacion de contrasena para %s',
+                email,
             )
             form.add_error(
                 None,
