@@ -3,6 +3,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const styleLinks = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
     let stylesReadyPromise = null;
     let navigationLocked = false;
+    let navigationUnlockTimer = null;
+
+    const lockNavigation = (durationMs) => {
+        navigationLocked = true;
+        if (navigationUnlockTimer) {
+            clearTimeout(navigationUnlockTimer);
+        }
+        navigationUnlockTimer = setTimeout(() => {
+            navigationLocked = false;
+            navigationUnlockTimer = null;
+        }, durationMs);
+    };
 
     const isStylesheetReady = (linkEl) => {
         if (linkEl.dataset.stylesheetReady === '1') {
@@ -64,15 +76,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navigationLocked) {
             return;
         }
-        navigationLocked = true;
-        setTimeout(() => { navigationLocked = false; }, 2000);
 
         // Si los estilos ya están listos, navegar inmediatamente sin esperar la Promise.
         if (styleLinks.every(l => l.dataset.stylesheetReady === '1')) {
+            // Lock corto para evitar dobles taps sin penalizar fluidez.
+            lockNavigation(450);
             callback();
             return;
         }
 
+        // Lock más largo solo cuando realmente hay espera de estilos.
+        lockNavigation(1200);
         waitForStylesReady().finally(() => {
             callback();
         });
@@ -82,6 +96,10 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('pageshow', () => {
         // Al volver con historial (BFCache), desbloquea la navegacion.
         navigationLocked = false;
+        if (navigationUnlockTimer) {
+            clearTimeout(navigationUnlockTimer);
+            navigationUnlockTimer = null;
+        }
     });
 
     document.addEventListener('click', (event) => {

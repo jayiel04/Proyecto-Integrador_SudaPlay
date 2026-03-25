@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const CHATBOT_AVATAR_STORAGE_KEY = 'sudaplay.chatbot_avatar_frozen_src';
         const CHATBOT_AVATAR_ROTATE_MS = 2000;
         const CHATBOT_AVATAR_FREEZE_AFTER_MS = 30000;
+        const mobileOrReducedMotion = window.matchMedia('(max-width: 980px)').matches
+            || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         if (chatbotAvatarImg && rotationAvatars.length) {
             let frozenAvatarSrc = '';
@@ -101,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 chatbotAvatarImg.src = rotationAvatars[0];
 
-                if (rotationAvatars.length > 1) {
+                if (rotationAvatars.length > 1 && !mobileOrReducedMotion) {
                     const rotationIntervalId = setInterval(() => {
                         avatarIndex = (avatarIndex + 1) % rotationAvatars.length;
                         chatbotAvatarImg.src = rotationAvatars[avatarIndex];
@@ -457,8 +459,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Actualizar notificaciones al cambiar de página (carga inicial) y cada 5 minutos
-        loadNotifications();
-        setInterval(loadNotifications, 300000); // 5 * 60 * 1000 = 300000 ms
+        const runNotificationRefresh = () => {
+            if (document.visibilityState !== 'visible') {
+                return;
+            }
+            loadNotifications();
+        };
+        const refreshIntervalMs = window.matchMedia('(max-width: 980px)').matches ? 600000 : 300000;
+        runNotificationRefresh();
+        setInterval(runNotificationRefresh, refreshIntervalMs);
+        document.addEventListener('visibilitychange', runNotificationRefresh);
     }
 
 

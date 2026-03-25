@@ -528,6 +528,11 @@
     .catalog-search-input::placeholder {
         animation: none;
     }
+
+    #catalogo-juegos .game-item,
+    .catalogo-preview .game-item {
+        transition: none;
+    }
 }
 
 @media (max-width: 980px) {
@@ -538,6 +543,38 @@
     .catalog-search-input {
         height: 44px;
         font-size: 0.95rem;
+    }
+
+    .catalog-search-input-wrap,
+    .catalog-search-input-wrap:hover,
+    .catalog-search-input-wrap:focus-within {
+        animation: none;
+        transform: none;
+        box-shadow:
+            inset 0 0 8px rgba(0, 255, 204, 0.1),
+            0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+
+    .catalog-search-input,
+    .catalog-search-input::placeholder {
+        animation: none;
+    }
+
+    #catalogo-juegos .game-item,
+    .catalogo-preview .game-item {
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    #catalogo-juegos .game-item:hover,
+    .catalogo-preview .game-item:hover {
+        transform: translateY(-3px) scale(1.01);
+    }
+
+    .catalogo-panel::after {
+        filter: none;
+        opacity: 0.55;
     }
 }
 

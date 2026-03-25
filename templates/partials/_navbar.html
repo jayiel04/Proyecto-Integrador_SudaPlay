@@ -8,7 +8,7 @@
             {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'register' and request.resolver_match.url_name != 'socialaccount_signup' %}
             <a href="{% url 'web:home' %}#catalogo-juegos" class="navbar-brand">
                 <span class="navbar-brand-letter-logo-wrap"><img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay"
-                        class="navbar-brand-letter-logo"></span>
+                        class="navbar-brand-letter-logo" decoding="async"></span>
                 <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
             </a>
             {% endif %}
@@ -57,7 +57,7 @@
                     <div class="profile-dropdown">
                         <button type="button" class="profile-dropdown-toggle" aria-expanded="false" aria-haspopup="true" aria-label="Abrir menú de perfil">
                             {% if navbar_avatar_url %}
-                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar"
+                            <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="navbar-avatar" decoding="async"
                                  onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
                             <i class="fa fa-user-circle navbar-avatar-fallback is-hidden"></i>
                             {% else %}
@@ -69,7 +69,7 @@
                             <div class="profile-dropdown-hero">
                                 <div class="profile-avatar-ring" aria-hidden="true">
                                     {% if navbar_avatar_url %}
-                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar"
+                                    <img src="{{ navbar_avatar_url }}" alt="Avatar de {{ user.username }}" class="profile-avatar" loading="lazy" decoding="async"
                                          onerror="this.classList.add('is-hidden');this.nextElementSibling.classList.remove('is-hidden');">
                                     <i class="fa fa-user-circle profile-avatar profile-avatar-icon-fallback is-hidden"></i>
                                     {% else %}

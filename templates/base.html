@@ -49,10 +49,10 @@
     {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
     <a href="{% url 'web:home' %}#catalogo-juegos" class="body-left-brand" aria-label="Ir a la sección de juegos">
         <span class="body-left-brand-logo-sitting" aria-hidden="true">
-            <img src="{{ SUPABASE_ADORNOS_BASE }}/Jorgito.png" alt="" class="body-left-brand-logo-sitting-img">
+            <img src="{{ SUPABASE_ADORNOS_BASE }}/Jorgito.png" alt="" class="body-left-brand-logo-sitting-img" decoding="async">
         </span>
         <span class="body-left-brand-name">
-            <img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay" class="body-left-brand-inline-logo">
+            <img src="{{ sudaplay_logo_url }}" alt="Logo de SudaPlay" class="body-left-brand-inline-logo" decoding="async">
             <span>S</span><span>u</span><span>d</span><span>a</span><span>P</span><span>l</span><span>a</span><span>y</span>
         </span>
         {% if request.resolver_match.url_name == 'login' or request.resolver_match.url_name == 'register' or request.resolver_match.url_name == 'socialaccount_signup' %}
@@ -132,11 +132,13 @@
     <!-- Módulos divididos -->
     <script src="{% static 'js/modules/utils.js' %}?v=1" defer></script>
     <script src="{% static 'js/modules/routing.js' %}?v=1" defer></script>
+    {% if request.resolver_match.url_name != 'game_play' %}
     <script src="{% static 'js/modules/audio.js' %}?v=1" defer></script>
+    {% endif %}
     <script src="{% static 'js/modules/ui.js' %}?v=1" defer></script>
-    <script src="{% static 'js/modules/dropdowns.js' %}?v=1" defer></script>
     {% if user.is_authenticated %}
     {{ navbar_avatar_variants|json_script:"navbar-avatar-variants-data" }}
+    <script src="{% static 'js/modules/dropdowns.js' %}?v=1" defer></script>
     {% endif %}
     <!-- Inyección segura del modal del juego desde la raíz, fuera del flujo .main-content -->
     {% if request.resolver_match.app_name == 'web' %}
