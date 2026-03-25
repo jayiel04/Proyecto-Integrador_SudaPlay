@@ -51,11 +51,11 @@
                         <p class="profile-section-label">Seguridad de la cuenta</p>
                         {% if user.has_usable_password %}
                             <a href="{% url 'login:account_change_password' %}" class="profile-secondary-btn">
-                                <i class="fas fa-key"></i> Cambiar contraseÃ±a
+                                <i class="fas fa-key"></i> Cambiar contraseña
                             </a>
                         {% else %}
                             <a href="{% url 'login:account_set_password' %}" class="profile-secondary-btn">
-                                <i class="fas fa-plus-circle"></i> Establecer contraseÃ±a
+                                <i class="fas fa-plus-circle"></i> Establecer contraseña
                             </a>
                         {% endif %}
                     </div>

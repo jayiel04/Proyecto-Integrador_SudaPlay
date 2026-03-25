@@ -30,12 +30,12 @@ class RegisterForm(UserCreationForm):
         widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apodo'}),
     )
     password1 = forms.CharField(
-        label='Contrasena',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Contrasena'}),
+        label='contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'contraseña'}),
     )
     password2 = forms.CharField(
-        label='Confirmar contrasena',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar contrasena'}),
+        label='Confirmar contraseña',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Confirmar contraseña'}),
     )
 
     class Meta:
@@ -60,9 +60,9 @@ class RegisterForm(UserCreationForm):
         p2 = cleaned_data.get('password2')
         if p1 and p2:
             if p1 != p2:
-                self.add_error('password2', 'Las contrasenas no coinciden.')
+                self.add_error('password2', 'Las contraseñas no coinciden.')
             elif len(p1) < 8:
-                self.add_error('password1', 'La contrasena debe tener al menos 8 caracteres.')
+                self.add_error('password1', 'La contraseña debe tener al menos 8 caracteres.')
         return cleaned_data
 
 

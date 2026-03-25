@@ -7,6 +7,8 @@ Mejores prácticas:
 - Manejo de mensajes
 - Decoradores de autenticación
 """
+import logging
+import smtplib
 import uuid
 from pathlib import Path
 
@@ -32,7 +34,7 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Case, When, IntegerField, Q
 
-from allauth.account.views import PasswordChangeView, PasswordSetView
+from allauth.account.views import PasswordChangeView, PasswordSetView, PasswordResetView
 
 from .forms import RegisterForm, ProfileUpdateForm
 from .models import UserProfile, FriendRequest, Notification
@@ -41,6 +43,8 @@ from apps.chat.models import ChatMessage
 
 from apps.login.context_processors import _AVATAR_NAME_CACHE
 from apps.web.storage_backends import AvatarStorage
+
+logger = logging.getLogger(__name__)
 
 def _available_avatar_names():
     return _AVATAR_NAME_CACHE
@@ -214,6 +218,30 @@ class CustomPasswordSetView(PasswordSetView):
         cache.delete(f'notifications_{self.request.user.id}')
         
         return super().form_valid(form)
+
+
+class CustomPasswordResetView(PasswordResetView):
+    """
+    Evita un error 500 si falla la entrega del correo SMTP en produccion.
+    """
+
+    def form_valid(self, form):
+        try:
+            return super().form_valid(form)
+        except (OSError, TimeoutError, smtplib.SMTPException):
+            # Dejamos el error en logs y devolvemos un mensaje amigable.
+            logger.exception(
+                "Fallo al enviar correo de recuperacion para %s",
+                form.cleaned_data.get('email'),
+            )
+            form.add_error(
+                None,
+                (
+                    'No pudimos enviar el correo de restablecimiento en este momento. '
+                    'Intenta de nuevo en unos minutos.'
+                ),
+            )
+            return self.form_invalid(form)
 
 
 class ProfileView(View):

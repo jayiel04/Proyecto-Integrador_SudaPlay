@@ -26,7 +26,7 @@
             <div class="form-group">
                 <label for="{{ field.id_for_label }}">
                     {% if field.name == 'username' %}Nombre de Usuario (Apodo)
-                    {% elif 'password' in field.name %}Nueva ContraseÃ±a
+                    {% elif 'password' in field.name %}Nueva contraseña
                     {% else %}{{ field.label }}{% endif %}
                 </label>
                 <div class="input-wrapper" id="wrapper-{{ field.auto_id }}">
@@ -40,7 +40,7 @@
                 <div class="validation-msg" id="msg-{{ field.auto_id }}"></div>
                 {% if field.errors %}
                 <div class="form-error">
-                    {% for error in field.errors %}<p>âœ— {{ error }}</p>{% endfor %}
+                    {% for error in field.errors %}<p> {{ error }}</p>{% endfor %}
                 </div>
                 {% endif %}
             </div>
@@ -57,7 +57,7 @@
         </form>
 
         <div class="signup-footer">
-            <p>Â¿Ya tienes cuenta? <a href="{% url 'login:login' %}" class="signup-login-link">Inicia sesiÃ³n</a></p>
+            <p>¿Ya tienes cuenta? <a href="{% url 'login:login' %}" class="signup-login-link">Inicia sesión</a></p>
         </div>
     </div>
 </div>
@@ -94,13 +94,13 @@
                         const data = await response.json();
 
                         if (data.is_taken) {
-                            msgDiv.innerHTML = 'âœ— Apodo ya en uso';
+                            msgDiv.innerHTML = 'Apodo ya en uso';
                             msgDiv.className = 'validation-msg visible msg-error';
                             wrapper.classList.add('invalid-field');
                             wrapper.classList.remove('valid-field');
                             isUsernameValid = false;
                         } else {
-                            msgDiv.innerHTML = 'âœ“ Â¡Apodo disponible!';
+                            msgDiv.innerHTML = '¡Apodo disponible!';
                             msgDiv.className = 'validation-msg visible msg-success';
                             wrapper.classList.add('valid-field');
                             wrapper.classList.remove('invalid-field');
@@ -126,13 +126,13 @@
                     wrapper.classList.remove('valid-field', 'invalid-field');
                     isPasswordValid = false;
                 } else if (value.length < 8) {
-                    msgDiv.innerHTML = 'âœ— MÃ­nimo 8 caracteres';
+                    msgDiv.innerHTML = 'mínimo 8 caracteres';
                     msgDiv.className = 'validation-msg visible msg-error';
                     wrapper.classList.add('invalid-field');
                     wrapper.classList.remove('valid-field');
                     isPasswordValid = false;
                 } else {
-                    msgDiv.innerHTML = 'âœ“ ContraseÃ±a segura';
+                    msgDiv.innerHTML = '“ Contraseña segura';
                     msgDiv.className = 'validation-msg visible msg-success';
                     wrapper.classList.add('valid-field');
                     wrapper.classList.remove('invalid-field');
@@ -156,13 +156,13 @@
                 wrapper.classList.remove('valid-field', 'invalid-field');
                 passwordsMatch = false;
             } else if (p1 === p2) {
-                msgDiv.innerHTML = 'âœ“ Las contraseÃ±as coinciden';
+                msgDiv.innerHTML = '“ Las contraseñas coinciden';
                 msgDiv.className = 'validation-msg visible msg-success';
                 wrapper.classList.add('valid-field');
                 wrapper.classList.remove('invalid-field');
                 passwordsMatch = true;
             } else {
-                msgDiv.innerHTML = 'âœ— Las contraseÃ±as no coinciden';
+                msgDiv.innerHTML = 'Las contraseñas no coinciden';
                 msgDiv.className = 'validation-msg visible msg-error';
                 wrapper.classList.add('invalid-field');
                 wrapper.classList.remove('valid-field');

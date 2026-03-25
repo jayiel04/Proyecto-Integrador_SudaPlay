@@ -143,17 +143,17 @@
                     }
 
                     if (data.is_valid) {
-                        msgDiv.innerHTML = 'âœ“ ContraseÃ±a segura';
+                        msgDiv.innerHTML = 'âœ“ contraseña segura';
                         msgDiv.className = 'validation-msg visible msg-success';
                         wrapper.classList.add('valid-field');
                         wrapper.classList.remove('invalid-field');
                         isPasswordValid = true;
                     } else {
-                        const errors = Array.isArray(data.errors) ? data.errors : ['ContraseÃ±a invÃ¡lida'];
-                        const firstError = errors.length > 0 ? errors[0] : 'ContraseÃ±a invÃ¡lida';
+                        const errors = Array.isArray(data.errors) ? data.errors : ['contraseña invÃ¡lida'];
+                        const firstError = errors.length > 0 ? errors[0] : 'contraseña invÃ¡lida';
                         let friendlyError = firstError;
                         if (friendlyError && friendlyError.toLowerCase().includes('demasiado corta')) {
-                            friendlyError = 'La contraseÃ±a debe contener por lo menos 8 caracteres';
+                            friendlyError = 'La contraseña debe contener por lo menos 8 caracteres';
                         }
                         msgDiv.innerHTML = `âœ— ${friendlyError}`;
                         msgDiv.className = 'validation-msg visible msg-error';
@@ -182,13 +182,13 @@
                 wrapper.classList.remove('valid-field', 'invalid-field');
                 passwordsMatch = false;
             } else if (p1 === p2) {
-                msgDiv.innerHTML = 'âœ“ Las contraseÃ±as coinciden';
+                msgDiv.innerHTML = 'âœ“ Las contraseñas coinciden';
                 msgDiv.className = 'validation-msg visible msg-success';
                 wrapper.classList.add('valid-field');
                 wrapper.classList.remove('invalid-field');
                 passwordsMatch = true;
             } else {
-                msgDiv.innerHTML = 'âœ— Las contraseÃ±as no coinciden';
+                msgDiv.innerHTML = 'âœ— Las contraseñas no coinciden';
                 msgDiv.className = 'validation-msg visible msg-error';
                 wrapper.classList.add('invalid-field');
                 wrapper.classList.remove('valid-field');
