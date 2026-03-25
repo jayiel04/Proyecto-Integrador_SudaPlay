@@ -237,6 +237,9 @@ EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+# Sin timeout el connect SMTP puede colgar indefinidamente; Gunicorn mata el worker
+# (WORKER TIMEOUT) y aparece SystemExit, no un error capturable en la vista.
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=20, cast=int)
 DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
 
