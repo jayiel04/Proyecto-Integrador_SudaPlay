@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'storages',
+    'anymail',
 
     # Allauth apps
     'allauth',
@@ -229,19 +230,34 @@ CACHES = {
     }
 }
 
-# Email Configuration
-EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-# These will be used if a real SMTP backend is configured later
+# Email
+# Render free tier bloquea salida a puertos SMTP 25/465/587; Gmail SMTP no llegará a
+# conectar ahí. Usa RESEND_API_KEY (HTTPS) en producción sin plan de pago, o sube de
+# plan en Render para seguir con SMTP. Ver: https://render.com/docs/free#free-web-services
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
+
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-# Sin timeout el connect SMTP puede colgar indefinidamente; Gunicorn mata el worker
-# (WORKER TIMEOUT) y aparece SystemExit, no un error capturable en la vista.
+# Sin timeout el connect SMTP puede colgar; Gunicorn mata el worker (WORKER TIMEOUT).
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=20, cast=int)
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
-SERVER_EMAIL = config('EMAIL_HOST_USER', default='noreply@firegames.com')
+
+_default_from = config('DEFAULT_FROM_EMAIL', default='')
+DEFAULT_FROM_EMAIL = _default_from or EMAIL_HOST_USER or 'noreply@firegames.com'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+if RESEND_API_KEY:
+    EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
+    ANYMAIL = {
+        'RESEND_API_KEY': RESEND_API_KEY,
+    }
+else:
+    EMAIL_BACKEND = config(
+        'EMAIL_BACKEND',
+        default='django.core.mail.backends.console.EmailBackend',
+    )
 
 # ---------------------------------------------------------------------------
 # Configuración de Supabase Storage (compatible con S3 via django-storages)
