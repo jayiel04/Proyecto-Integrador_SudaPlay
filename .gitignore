@@ -14,7 +14,10 @@ media/
 
 # Environments
 venv/
+env
 .env
+.env.local
+
 
 # IDEs
 .vscode/
