@@ -20,4 +20,3 @@ django-storages
 boto3
 whitenoise
 gunicorn
-django-anymail[resend]

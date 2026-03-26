@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-changeme-en-produccion')
 
 # DEBUG: Cambiar a False en producción
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS: Especificar dominios permitidos
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'storages',
-    'anymail',
 
     # Allauth apps
     'allauth',
@@ -230,43 +229,30 @@ CACHES = {
     }
 }
 
-# Email
-# Render free tier bloquea salida a puertos SMTP 25/465/587; Gmail SMTP no llegará a
-# conectar ahí. Usa RESEND_API_KEY (HTTPS) en producción sin plan de pago, o sube de
-# plan en Render para seguir con SMTP. Ver: https://render.com/docs/free#free-web-services
-# Sin espacios/saltos al pegar la clave en Render
-RESEND_API_KEY = config('RESEND_API_KEY', default='').strip()
-
+# Email (SMTP)
+# Configuración simple para recuperación de contraseña en proyectos pequeños.
+# En producción usa SMTP; en local puedes cambiar EMAIL_BACKEND a console para pruebas.
+EMAIL_BACKEND = config(
+    'EMAIL_BACKEND',
+    default=(
+        'django.core.mail.backends.smtp.EmailBackend'
+        if not DEBUG
+        else 'django.core.mail.backends.console.EmailBackend'
+    ),
+)
 EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+EMAIL_USE_SSL = config('EMAIL_USE_SSL', default=False, cast=bool)
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
-# Sin timeout el connect SMTP puede colgar; Gunicorn mata el worker (WORKER TIMEOUT).
+# Evita bloqueos largos al conectar SMTP.
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=20, cast=int)
-
-_default_from = config('DEFAULT_FROM_EMAIL', default='').strip()
-# Resend solo acepta dominios verificados; sin DEFAULT_FROM_EMAIL, usar remitente de prueba.
-# En plan trial suele poder enviarse solo al correo con el que abriste Resend.
-if RESEND_API_KEY:
-    # Resend valida el dominio del "From" (p.ej. gmail.com debe estar verificado).
-    # No usemos EMAIL_HOST_USER (tu Gmail) por defecto; usa un remitente permitido
-    # o el DEFAULT_FROM_EMAIL que definas explícitamente en Render.
-    DEFAULT_FROM_EMAIL = _default_from or 'onboarding@resend.dev'
-else:
-    DEFAULT_FROM_EMAIL = _default_from or EMAIL_HOST_USER or 'noreply@firegames.com'
+DEFAULT_FROM_EMAIL = config(
+    'DEFAULT_FROM_EMAIL',
+    default=EMAIL_HOST_USER or 'noreply@sudaplay.com',
+).strip()
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-if RESEND_API_KEY:
-    EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
-    ANYMAIL = {
-        'RESEND_API_KEY': RESEND_API_KEY,
-    }
-else:
-    EMAIL_BACKEND = config(
-        'EMAIL_BACKEND',
-        default='django.core.mail.backends.console.EmailBackend',
-    )
 
 # ---------------------------------------------------------------------------
 # Configuración de Supabase Storage (compatible con S3 via django-storages)
