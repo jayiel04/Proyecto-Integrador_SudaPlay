@@ -249,9 +249,10 @@ _default_from = config('DEFAULT_FROM_EMAIL', default='').strip()
 # Resend solo acepta dominios verificados; sin DEFAULT_FROM_EMAIL, usar remitente de prueba.
 # En plan trial suele poder enviarse solo al correo con el que abriste Resend.
 if RESEND_API_KEY:
-    DEFAULT_FROM_EMAIL = (
-        _default_from or EMAIL_HOST_USER or 'onboarding@resend.dev'
-    )
+    # Resend valida el dominio del "From" (p.ej. gmail.com debe estar verificado).
+    # No usemos EMAIL_HOST_USER (tu Gmail) por defecto; usa un remitente permitido
+    # o el DEFAULT_FROM_EMAIL que definas explícitamente en Render.
+    DEFAULT_FROM_EMAIL = _default_from or 'onboarding@resend.dev'
 else:
     DEFAULT_FROM_EMAIL = _default_from or EMAIL_HOST_USER or 'noreply@firegames.com'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
